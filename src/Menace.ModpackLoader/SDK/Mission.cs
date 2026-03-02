@@ -297,8 +297,8 @@ public static class Mission
                         // Get name/description via GetTitle() method (no Description method exists)
                         var getTitleMethod = objType.GetMethod("GetTitle", BindingFlags.Public | BindingFlags.Instance);
                         var getDescMethod = objType.GetMethod("GetTranslatedObjectiveText", BindingFlags.Public | BindingFlags.Instance);
-                        if (getTitleMethod != null) info.Name = getTitleMethod.Invoke(objProxy, null)?.ToString();
-                        if (getDescMethod != null) info.Description = getDescMethod.Invoke(objProxy, null)?.ToString();
+                        if (getTitleMethod != null) info.Name = Il2CppUtils.ToManagedString(getTitleMethod.Invoke(objProxy, null));
+                        if (getDescMethod != null) info.Description = Il2CppUtils.ToManagedString(getDescMethod.Invoke(objProxy, null));
 
                         // Get completed status via IsCompleted() method
                         var isCompletedMethod = objType.GetMethod("IsCompleted", BindingFlags.Public | BindingFlags.Instance);

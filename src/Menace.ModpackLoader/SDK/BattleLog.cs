@@ -395,7 +395,7 @@ public static class BattleLog
             var prop = proxy.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (prop == null) return null;
 
-            return prop.GetValue(proxy)?.ToString();
+            return Il2CppUtils.ToManagedString(prop.GetValue(proxy));
         }
         catch
         {
@@ -429,7 +429,7 @@ public static class BattleLog
                 var nameProp = template.GetType().GetProperty("name", flags);
                 if (nameProp != null)
                 {
-                    var n = nameProp.GetValue(template)?.ToString();
+                    var n = Il2CppUtils.ToManagedString(nameProp.GetValue(template));
                     if (!string.IsNullOrEmpty(n)) return n;
                 }
             }
@@ -439,7 +439,7 @@ public static class BattleLog
             {
                 var prop = type.GetProperty(propName, flags);
                 if (prop == null) continue;
-                var val = prop.GetValue(skillProxy)?.ToString();
+                var val = Il2CppUtils.ToManagedString(prop.GetValue(skillProxy));
                 if (!string.IsNullOrEmpty(val)) return val;
             }
 

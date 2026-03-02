@@ -117,28 +117,18 @@ public static class Perks
             };
 
             // PerkTemplate inherits from SkillTemplate
-            // Get Title (LocalizedLine)
+            // Get Title (LocalizedLine) - read text directly from m_DefaultTranslation at offset 0x38
             var title = perkTemplate.ReadObj("Title");
             if (!title.IsNull)
             {
-                var type = title.GetGameType().ManagedType;
-                if (type != null)
-                {
-                    var proxy = GetManagedProxy(title, type);
-                    info.Title = proxy?.ToString() ?? info.Name;
-                }
+                info.Title = ReadLocalizedText(title) ?? info.Name;
             }
 
-            // Get Description
+            // Get Description (LocalizedLine)
             var desc = perkTemplate.ReadObj("Description");
             if (!desc.IsNull)
             {
-                var type = desc.GetGameType().ManagedType;
-                if (type != null)
-                {
-                    var proxy = GetManagedProxy(desc, type);
-                    info.Description = proxy?.ToString();
-                }
+                info.Description = ReadLocalizedText(desc);
             }
 
             // Get ActionPointCost
@@ -170,11 +160,56 @@ public static class Perks
 
             // Get leader's template
             var template = Roster.GetLeaderTemplate(leader);
-            if (template.IsNull) return result;
+            if (template.IsNull)
+            {
+                SdkLogger.Warning("[Perks.GetPerkTrees] Leader template is null");
+                return result;
+            }
 
             // Get PerkTrees array from template
             var perkTrees = template.ReadObj("PerkTrees");
-            if (perkTrees.IsNull) return result;
+            if (perkTrees.IsNull)
+            {
+                // Try alternate field names
+                perkTrees = template.ReadObj("m_PerkTrees");
+                if (perkTrees.IsNull)
+                {
+                    perkTrees = template.ReadObj("perkTrees");
+                }
+                if (perkTrees.IsNull)
+                {
+                    // List available fields for debugging
+                    var typeName = template.GetTypeName();
+                    SdkLogger.Warning($"[Perks.GetPerkTrees] PerkTrees field not found on template {template.GetName()} (type: {typeName})");
+
+                    // Try to list fields via IL2CPP reflection
+                    try
+                    {
+                        var klass = Il2CppInterop.Runtime.IL2CPP.il2cpp_object_get_class(template.Pointer);
+                        if (klass != IntPtr.Zero)
+                        {
+                            var fieldIter = IntPtr.Zero;
+                            var fields = new List<string>();
+                            IntPtr field;
+                            while ((field = Il2CppInterop.Runtime.IL2CPP.il2cpp_class_get_fields(klass, ref fieldIter)) != IntPtr.Zero)
+                            {
+                                var namePtr = Il2CppInterop.Runtime.IL2CPP.il2cpp_field_get_name(field);
+                                if (namePtr != IntPtr.Zero)
+                                {
+                                    var name = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(namePtr);
+                                    if (!string.IsNullOrEmpty(name))
+                                        fields.Add(name);
+                                }
+                            }
+                            if (fields.Count > 0)
+                                SdkLogger.Warning($"[Perks.GetPerkTrees] Available fields: {string.Join(", ", fields)}");
+                        }
+                    }
+                    catch { }
+
+                    return result;
+                }
+            }
 
             // It's an array, iterate
             var arrayType = perkTrees.GetGameType().ManagedType;
@@ -467,10 +502,15 @@ public static class Perks
         try
         {
             var trees = GetPerkTrees(leader);
+            var allPerks = new List<string>();
+
             foreach (var tree in trees)
             {
                 foreach (var perk in tree.Perks)
                 {
+                    // Collect for diagnostics
+                    allPerks.Add($"{perk.Name ?? "?"}/{perk.Title ?? "?"}");
+
                     if (perk.Name?.Contains(perkName, StringComparison.OrdinalIgnoreCase) == true ||
                         perk.Title?.Contains(perkName, StringComparison.OrdinalIgnoreCase) == true)
                     {
@@ -478,10 +518,18 @@ public static class Perks
                     }
                 }
             }
+
+            // Debug: log available perks when not found
+            if (allPerks.Count > 0)
+                SdkLogger.Warning($"[Perks.FindPerkByName] '{perkName}' not found. Available: {string.Join(", ", allPerks.Take(10))}...");
+            else
+                SdkLogger.Warning($"[Perks.FindPerkByName] No perks found in leader's trees");
+
             return GameObj.Null;
         }
-        catch
+        catch (Exception ex)
         {
+            SdkLogger.Warning($"[Perks.FindPerkByName] Exception: {ex.Message}");
             return GameObj.Null;
         }
     }
@@ -690,6 +738,30 @@ public static class Perks
         {
             var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
             return ptrCtor?.Invoke(new object[] { obj.Pointer });
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    // Offset for m_DefaultTranslation in LocalizedLine/LocalizedMultiLine
+    private const int LOC_DEFAULT_TRANSLATION_OFFSET = 0x38;
+
+    /// <summary>
+    /// Read text from a LocalizedLine/LocalizedMultiLine object directly using memory offsets.
+    /// </summary>
+    private static string ReadLocalizedText(GameObj localizedObj)
+    {
+        if (localizedObj.IsNull) return null;
+
+        try
+        {
+            var ptr = localizedObj.Pointer;
+            var strPtr = System.Runtime.InteropServices.Marshal.ReadIntPtr(ptr + LOC_DEFAULT_TRANSLATION_OFFSET);
+            if (strPtr != IntPtr.Zero)
+                return Il2CppInterop.Runtime.IL2CPP.Il2CppStringToManaged(strPtr);
+            return null;
         }
         catch
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Il2CppInterop.Runtime.InteropTypes;
 
@@ -192,10 +193,10 @@ public static class Roster
                 info.TemplateName = templateObj.GetName();
             }
 
-            // Get nickname
+            // Get nickname - use ToManagedString to properly handle IL2CPP strings
             var getNicknameMethod = leaderType.GetMethod("GetNickname", BindingFlags.Public | BindingFlags.Instance);
             if (getNicknameMethod != null)
-                info.Nickname = getNicknameMethod.Invoke(proxy, null)?.ToString();
+                info.Nickname = Il2CppUtils.ToManagedString(getNicknameMethod.Invoke(proxy, null));
 
             // Get rank
             var getRankMethod = leaderType.GetMethod("GetRank", BindingFlags.Public | BindingFlags.Instance);
@@ -287,16 +288,34 @@ public static class Roster
         {
             // Use GetHiredLeaders() which properly handles the generic list
             var leaders = GetHiredLeaders();
+
+            if (leaders.Count == 0)
+            {
+                SdkLogger.Warning($"[Roster.FindByNickname] No hired leaders found");
+                return GameObj.Null;
+            }
+
             foreach (var leader in leaders)
             {
-                if (leader?.Nickname?.Contains(nickname, StringComparison.OrdinalIgnoreCase) == true)
+                var leaderNickname = leader?.Nickname;
+                if (string.IsNullOrEmpty(leaderNickname))
+                    continue;
+
+                if (leaderNickname.Contains(nickname, StringComparison.OrdinalIgnoreCase))
                     return new GameObj(leader.Pointer);
             }
 
+            // Debug: Log available nicknames when not found
+            var availableNicknames = string.Join(", ", leaders
+                .Where(l => !string.IsNullOrEmpty(l?.Nickname))
+                .Select(l => l.Nickname));
+            SdkLogger.Warning($"[Roster.FindByNickname] '{nickname}' not found. Available: {availableNicknames}");
+
             return GameObj.Null;
         }
-        catch
+        catch (Exception ex)
         {
+            SdkLogger.Warning($"[Roster.FindByNickname] Exception: {ex.Message}");
             return GameObj.Null;
         }
     }
@@ -438,7 +457,7 @@ public static class Roster
                 if (getText != null)
                 {
                     var proxy = GetManagedProxy(title, titleType);
-                    info.DisplayName = getText.Invoke(proxy, null)?.ToString() ?? info.TemplateName;
+                    info.DisplayName = Il2CppUtils.ToManagedString(getText.Invoke(proxy, null)) ?? info.TemplateName;
                 }
             }
 

@@ -136,7 +136,7 @@ public static class CombatSimulation
                             if (s != null)
                             {
                                 var nameProp = s.GetType().GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                                var name = nameProp?.GetValue(s)?.ToString();
+                                var name = Il2CppUtils.ToManagedString(nameProp?.GetValue(s));
                                 if (name == skillName)
                                 {
                                     skill = s;

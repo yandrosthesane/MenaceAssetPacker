@@ -316,7 +316,7 @@ public static class Inventory
             // Get GUID
             var getIdMethod = itemType.GetMethod("GetID", BindingFlags.Public | BindingFlags.Instance);
             if (getIdMethod != null)
-                info.GUID = getIdMethod.Invoke(proxy, null)?.ToString();
+                info.GUID = Il2CppUtils.ToManagedString(getIdMethod.Invoke(proxy, null));
 
             // Get template
             var getTemplateMethod = itemType.GetMethod("GetTemplate", BindingFlags.Public | BindingFlags.Instance);
@@ -346,7 +346,7 @@ public static class Inventory
                     var getRarityMethod = baseItemType.GetMethod("GetHighestRarity",
                         BindingFlags.Public | BindingFlags.Instance);
                     if (getRarityMethod != null)
-                        info.Rarity = getRarityMethod.Invoke(baseProxy, null)?.ToString();
+                        info.Rarity = Il2CppUtils.ToManagedString(getRarityMethod.Invoke(baseProxy, null));
 
                     var isTempMethod = baseItemType.GetMethod("IsTemporary",
                         BindingFlags.Public | BindingFlags.Instance);

@@ -159,7 +159,7 @@ public static class EntityCombat
                                     // Use GetID() method instead of Name property
                                     var getIdMethod = s.GetType().GetMethod("GetID",
                                         BindingFlags.Public | BindingFlags.Instance);
-                                    var id = getIdMethod?.Invoke(s, null)?.ToString();
+                                    var id = Il2CppUtils.ToManagedString(getIdMethod?.Invoke(s, null));
                                     if (id == skillName)
                                     {
                                         skill = s;
@@ -562,7 +562,7 @@ public static class EntityCombat
 
             // Name via GetID() method
             var getIdMethod = type.GetMethod("GetID", BindingFlags.Public | BindingFlags.Instance);
-            info.Name = getIdMethod?.Invoke(skill, null)?.ToString() ?? "Unknown";
+            info.Name = Il2CppUtils.ToManagedString(getIdMethod?.Invoke(skill, null)) ?? "Unknown";
 
             // Display name (from template if available) via GetTemplate() method
             var getTemplateMethod = type.GetMethod("GetTemplate", BindingFlags.Public | BindingFlags.Instance);
@@ -574,7 +574,7 @@ public static class EntityCombat
                     // DisplayName is actually called Title on SkillTemplate
                     var titleProp = template.GetType().GetProperty("Title",
                         BindingFlags.Public | BindingFlags.Instance);
-                    info.DisplayName = titleProp?.GetValue(template)?.ToString() ?? info.Name;
+                    info.DisplayName = Il2CppUtils.ToManagedString(titleProp?.GetValue(template)) ?? info.Name;
 
                     // Range is called MaxRange on SkillTemplate
                     var maxRangeProp = template.GetType().GetProperty("MaxRange",

@@ -759,7 +759,7 @@ public static class Conversation
                     if (nodeProxy != null)
                     {
                         var labelProp = nodeType.GetProperty("Label", BindingFlags.Public | BindingFlags.Instance);
-                        info.CurrentNodeLabel = labelProp?.GetValue(nodeProxy)?.ToString();
+                        info.CurrentNodeLabel = Il2CppUtils.ToManagedString(labelProp?.GetValue(nodeProxy));
                     }
                 }
             }
@@ -1023,14 +1023,14 @@ public static class Conversation
             // Get display name
             var displayNameProp = speakerType.GetProperty("DisplayName", BindingFlags.Public | BindingFlags.Instance);
             if (displayNameProp != null)
-                info.DisplayName = displayNameProp.GetValue(proxy)?.ToString();
+                info.DisplayName = Il2CppUtils.ToManagedString(displayNameProp.GetValue(proxy));
 
             // Fallback to GetDisplayName method
             if (string.IsNullOrEmpty(info.DisplayName))
             {
                 var getDisplayMethod = speakerType.GetMethod("GetDisplayName", BindingFlags.Public | BindingFlags.Instance);
                 if (getDisplayMethod != null)
-                    info.DisplayName = getDisplayMethod.Invoke(proxy, null)?.ToString();
+                    info.DisplayName = Il2CppUtils.ToManagedString(getDisplayMethod.Invoke(proxy, null));
             }
 
             return info;

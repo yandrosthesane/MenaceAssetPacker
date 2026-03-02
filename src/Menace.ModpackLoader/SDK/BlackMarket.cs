@@ -1080,7 +1080,7 @@ public static class BlackMarket
                         var getRarityMethod = baseItemTemplateType.GetMethod("GetHighestRarity",
                             BindingFlags.Public | BindingFlags.Instance);
                         if (getRarityMethod != null)
-                            info.Rarity = getRarityMethod.Invoke(templateProxy, null)?.ToString();
+                            info.Rarity = Il2CppUtils.ToManagedString(getRarityMethod.Invoke(templateProxy, null));
                     }
                 }
             }
@@ -1140,7 +1140,7 @@ public static class BlackMarket
             // Get GUID
             var getIdMethod = baseItemType.GetMethod("GetID", BindingFlags.Public | BindingFlags.Instance);
             if (getIdMethod != null)
-                info.GUID = getIdMethod.Invoke(item, null)?.ToString();
+                info.GUID = Il2CppUtils.ToManagedString(getIdMethod.Invoke(item, null));
 
             // Get template name
             var getTemplateMethod = baseItemType.GetMethod("GetTemplate", BindingFlags.Public | BindingFlags.Instance);
@@ -1161,7 +1161,7 @@ public static class BlackMarket
             var getRarityMethod = baseItemType.GetMethod("GetHighestRarity",
                 BindingFlags.Public | BindingFlags.Instance);
             if (getRarityMethod != null)
-                info.Rarity = getRarityMethod.Invoke(item, null)?.ToString();
+                info.Rarity = Il2CppUtils.ToManagedString(getRarityMethod.Invoke(item, null));
 
             // Get skill count
             var skillsProp = baseItemType.GetProperty("Skills", BindingFlags.Public | BindingFlags.Instance);
