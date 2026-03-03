@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Il2CppInterop.Runtime.InteropTypes;
@@ -158,76 +157,42 @@ public static class Perks
         {
             EnsureTypesLoaded();
 
-            // Get leader's template
-            var template = Roster.GetLeaderTemplate(leader);
-            if (template.IsNull)
+            // Get leader's template using managed reflection (more reliable than IL2CPP field lookup)
+            var leaderType = _unitLeaderType?.ManagedType;
+            if (leaderType == null) return result;
+
+            var leaderProxy = GetManagedProxy(leader, leaderType);
+            if (leaderProxy == null) return result;
+
+            // Get LeaderTemplate property
+            var templateProp = leaderType.GetProperty("LeaderTemplate", BindingFlags.Public | BindingFlags.Instance);
+            var templateObj = templateProp?.GetValue(leaderProxy);
+            if (templateObj == null)
             {
-                SdkLogger.Warning("[Perks.GetPerkTrees] Leader template is null");
+                SdkLogger.Warning("[Perks.GetPerkTrees] LeaderTemplate property returned null");
                 return result;
             }
 
-            // Get PerkTrees array from template
-            var perkTrees = template.ReadObj("PerkTrees");
-            if (perkTrees.IsNull)
+            // Get PerkTrees from template using managed reflection
+            var templateType = templateObj.GetType();
+            var perkTreesProp = templateType.GetProperty("PerkTrees", BindingFlags.Public | BindingFlags.Instance);
+            if (perkTreesProp == null)
             {
-                // Try alternate field names
-                perkTrees = template.ReadObj("m_PerkTrees");
-                if (perkTrees.IsNull)
+                // Try field instead
+                var perkTreesField = templateType.GetField("PerkTrees", BindingFlags.Public | BindingFlags.Instance) ??
+                                     templateType.GetField("m_PerkTrees", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (perkTreesField != null)
                 {
-                    perkTrees = template.ReadObj("perkTrees");
+                    var perkTreesVal = perkTreesField.GetValue(templateObj);
+                    return ExtractPerkTrees(perkTreesVal);
                 }
-                if (perkTrees.IsNull)
-                {
-                    // List available fields for debugging
-                    var typeName = template.GetTypeName();
-                    SdkLogger.Warning($"[Perks.GetPerkTrees] PerkTrees field not found on template {template.GetName()} (type: {typeName})");
 
-                    // Try to list fields via IL2CPP reflection
-                    try
-                    {
-                        var klass = Il2CppInterop.Runtime.IL2CPP.il2cpp_object_get_class(template.Pointer);
-                        if (klass != IntPtr.Zero)
-                        {
-                            var fieldIter = IntPtr.Zero;
-                            var fields = new List<string>();
-                            IntPtr field;
-                            while ((field = Il2CppInterop.Runtime.IL2CPP.il2cpp_class_get_fields(klass, ref fieldIter)) != IntPtr.Zero)
-                            {
-                                var namePtr = Il2CppInterop.Runtime.IL2CPP.il2cpp_field_get_name(field);
-                                if (namePtr != IntPtr.Zero)
-                                {
-                                    var name = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(namePtr);
-                                    if (!string.IsNullOrEmpty(name))
-                                        fields.Add(name);
-                                }
-                            }
-                            if (fields.Count > 0)
-                                SdkLogger.Warning($"[Perks.GetPerkTrees] Available fields: {string.Join(", ", fields)}");
-                        }
-                    }
-                    catch { }
-
-                    return result;
-                }
+                SdkLogger.Warning($"[Perks.GetPerkTrees] PerkTrees not found on {templateType.Name}");
+                return result;
             }
 
-            // It's an array, iterate
-            var arrayType = perkTrees.GetGameType().ManagedType;
-            if (arrayType == null) return result;
-
-            var proxy = GetManagedProxy(perkTrees, arrayType);
-            if (proxy is not IEnumerable enumerable) return result;
-
-            foreach (var item in enumerable)
-            {
-                if (item == null) continue;
-                var treeObj = new GameObj(((Il2CppObjectBase)item).Pointer);
-                var treeInfo = GetPerkTreeInfo(treeObj);
-                if (treeInfo != null)
-                    result.Add(treeInfo);
-            }
-
-            return result;
+            var perkTrees = perkTreesProp.GetValue(templateObj);
+            return ExtractPerkTrees(perkTrees);
         }
         catch (Exception ex)
         {
@@ -237,7 +202,50 @@ public static class Perks
     }
 
     /// <summary>
+    /// Extract perk tree info from an IL2CPP array/list of perk tree objects.
+    /// Uses Count + get_Item pattern for IL2CPP compatibility.
+    /// </summary>
+    private static List<PerkTreeInfo> ExtractPerkTrees(object perkTreesObj)
+    {
+        var result = new List<PerkTreeInfo>();
+        if (perkTreesObj == null) return result;
+
+        try
+        {
+            var collectionType = perkTreesObj.GetType();
+
+            // Try Count property (for Il2CppArrayBase or List-like types)
+            var countProp = collectionType.GetProperty("Count") ??
+                           collectionType.GetProperty("Length");
+            if (countProp == null) return result;
+
+            var indexer = collectionType.GetMethod("get_Item") ??
+                         collectionType.GetProperty("Item")?.GetGetMethod();
+            if (indexer == null) return result;
+
+            int count = Convert.ToInt32(countProp.GetValue(perkTreesObj));
+            for (int i = 0; i < count; i++)
+            {
+                var item = indexer.Invoke(perkTreesObj, new object[] { i });
+                if (item == null) continue;
+
+                var treeObj = new GameObj(((Il2CppObjectBase)item).Pointer);
+                var treeInfo = GetPerkTreeInfo(treeObj);
+                if (treeInfo != null)
+                    result.Add(treeInfo);
+            }
+        }
+        catch (Exception ex)
+        {
+            ModError.ReportInternal("Perks.ExtractPerkTrees", "Failed", ex);
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Get information about a perk tree.
+    /// Uses pure reflection for IL2CPP compatibility.
     /// </summary>
     public static PerkTreeInfo GetPerkTreeInfo(GameObj perkTree)
     {
@@ -251,42 +259,88 @@ public static class Perks
                 Name = perkTree.GetName()
             };
 
-            // PerkTreeTemplate has Perks array (of Perk, not PerkTemplate)
-            var perksArray = perkTree.ReadObj("Perks");
-            if (perksArray.IsNull) return info;
-
-            var arrayType = perksArray.GetGameType().ManagedType;
-            if (arrayType == null) return info;
-
-            var proxy = GetManagedProxy(perksArray, arrayType);
-            if (proxy is IEnumerable enumerable)
+            // Create managed proxy for the perk tree
+            var treeType = GameType.Find("Menace.Strategy.PerkTreeTemplate")?.ManagedType;
+            if (treeType == null)
             {
-                int perkCount = 0;
-                var items = new List<object>();
-                foreach (var item in enumerable)
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: treeType is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            var treeCtor = treeType.GetConstructor(new[] { typeof(IntPtr) });
+            if (treeCtor == null)
+            {
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: treeCtor is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            var treeProxy = treeCtor.Invoke(new object[] { perkTree.Pointer });
+            if (treeProxy == null)
+            {
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: treeProxy is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            // Get Perks property
+            var perksProp = treeType.GetProperty("Perks", BindingFlags.Public | BindingFlags.Instance);
+            if (perksProp == null)
+            {
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: perksProp is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            var perksArray = perksProp.GetValue(treeProxy);
+            if (perksArray == null)
+            {
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: perksArray is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            // Get array length
+            var lengthProp = perksArray.GetType().GetProperty("Length");
+            if (lengthProp == null)
+            {
+                ModError.Report("Menace.SDK", $"GetPerkTreeInfo: lengthProp is null for {perksArray.GetType().FullName}", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            int count = Convert.ToInt32(lengthProp.GetValue(perksArray) ?? 0);
+            ModError.Report("Menace.SDK", $"GetPerkTreeInfo: count={count}", null, ErrorSeverity.Info);
+            info.PerkCount = count;
+
+            // Get indexer
+            var indexer = perksArray.GetType().GetMethod("get_Item");
+            if (indexer == null)
+            {
+                ModError.Report("Menace.SDK", "GetPerkTreeInfo: indexer is null", null, ErrorSeverity.Warning);
+                return info;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                var perk = indexer.Invoke(perksArray, new object[] { i });
+                if (perk == null) continue;
+
+                var perkType = perk.GetType();
+
+                // Get Skill property
+                var skillProp = perkType.GetProperty("Skill", BindingFlags.Public | BindingFlags.Instance);
+                var skill = skillProp?.GetValue(perk);
+                if (skill == null) continue;
+
+                // Get Pointer from skill
+                var pointerProp = skill.GetType().GetProperty("Pointer", BindingFlags.Public | BindingFlags.Instance);
+                var ptr = (IntPtr)(pointerProp?.GetValue(skill) ?? IntPtr.Zero);
+                if (ptr == IntPtr.Zero) continue;
+
+                var skillObj = new GameObj(ptr);
+                var perkInfo = GetPerkInfo(skillObj);
+                if (perkInfo != null)
                 {
-                    perkCount++;
-                    items.Add(item);
-                }
-                info.PerkCount = perkCount;
-
-                foreach (var item in items)
-                {
-                    if (item == null) continue;
-
-                    // Perk has: Skill (PerkTemplate), Tier (int)
-                    var perkObj = new GameObj(((Il2CppObjectBase)item).Pointer);
-
-                    var skillObj = perkObj.ReadObj("Skill");
-                    if (!skillObj.IsNull)
-                    {
-                        var perkInfo = GetPerkInfo(skillObj);
-                        if (perkInfo != null)
-                        {
-                            perkInfo.Tier = perkObj.ReadInt("Tier");
-                            info.Perks.Add(perkInfo);
-                        }
-                    }
+                    // Get Tier property
+                    var tierProp = perkType.GetProperty("Tier", BindingFlags.Public | BindingFlags.Instance);
+                    perkInfo.Tier = Convert.ToInt32(tierProp?.GetValue(perk) ?? 0);
+                    info.Perks.Add(perkInfo);
                 }
             }
 

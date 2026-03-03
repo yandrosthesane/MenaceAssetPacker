@@ -249,6 +249,7 @@ public partial class ModpackLoaderMod : MelonMod
         TileEffects.RegisterConsoleCommands();
         BootSkip.RegisterConsoleCommands();
         SimpleAnimations.RegisterConsoleCommands();
+        UIInspector.RegisterConsoleCommands();
     }
 
     private void LoadModpacks()

@@ -512,4 +512,79 @@ public static class UIInspector
         }
         return string.Join("/", parts);
     }
+
+    // ==================== Console Commands ====================
+
+    /// <summary>
+    /// Register console commands for UI navigation.
+    /// </summary>
+    public static void RegisterConsoleCommands()
+    {
+        // click <button_text> - Click a button by text
+        DevConsole.RegisterCommand("click", "<button_text>", "Click a UI button by its text", args =>
+        {
+            if (args.Length == 0)
+                return "Usage: click <button_text>\nExamples: click Continue, click Load, click Back";
+
+            var buttonText = string.Join(" ", args);
+            var result = ClickButton(name: buttonText);
+
+            return result.Success
+                ? $"Clicked: {result.ClickedName}"
+                : $"Error: {result.Error}";
+        });
+
+        // buttons - List all visible buttons
+        DevConsole.RegisterCommand("buttons", "", "List all visible buttons", args =>
+        {
+            var elements = GetAllElements();
+            var buttons = elements.Where(e => e.Type == "Button").ToList();
+
+            if (buttons.Count == 0)
+                return "No buttons found";
+
+            var lines = new List<string> { $"Buttons ({buttons.Count}):" };
+            foreach (var btn in buttons)
+            {
+                lines.Add($"  [{btn.Text ?? btn.Name}]");
+            }
+            return string.Join("\n", lines);
+        });
+
+        // continue - Quick command to click Continue button
+        DevConsole.RegisterCommand("continue", "", "Click the Continue button (load last save)", args =>
+        {
+            var result = ClickButton(name: "Continue");
+            return result.Success
+                ? "Loading last save..."
+                : $"Error: {result.Error}";
+        });
+
+        // back - Quick command to click Back button
+        DevConsole.RegisterCommand("back", "", "Click the Back button", args =>
+        {
+            var result = ClickButton(name: "Back");
+            return result.Success
+                ? "Going back..."
+                : $"Error: {result.Error}";
+        });
+
+        // load - Quick command to go to Load screen
+        DevConsole.RegisterCommand("load", "", "Click the Load button to open load menu", args =>
+        {
+            var result = ClickButton(name: "Load");
+            return result.Success
+                ? "Opening load menu..."
+                : $"Error: {result.Error}";
+        });
+
+        // newgame - Quick command to start new game
+        DevConsole.RegisterCommand("newgame", "", "Click the New Game button", args =>
+        {
+            var result = ClickButton(name: "New Game");
+            return result.Success
+                ? "Starting new game..."
+                : $"Error: {result.Error}";
+        });
+    }
 }
