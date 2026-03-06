@@ -1,0 +1,181 @@
+{
+  "name": "Template Validation - DossierItemTemplate",
+  "description": "Validates all fields can be read from DossierItemTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify DossierItemTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"DossierItemTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DossierItemTemplate.dossier.pilot exists",
+      "code": "!Menace.SDK.Templates.Find(\"DossierItemTemplate\", \"dossier.pilot\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RedeemNotification",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"RedeemNotification\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.pilot\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DossierItemTemplate.dossier.squad_leader exists",
+      "code": "!Menace.SDK.Templates.Find(\"DossierItemTemplate\", \"dossier.squad_leader\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RedeemNotification",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"RedeemNotification\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"DossierItemTemplate\", \"dossier.squad_leader\", \"IconAssetName\") != null"
+    }
+  ]
+}

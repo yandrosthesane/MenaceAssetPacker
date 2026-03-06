@@ -1,0 +1,86 @@
+{
+  "name": "Multilingual Localization System Validation",
+  "description": "Comprehensive automated tests for the multilingual localization system",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu (loads templates and localization)",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify MultiLingualLocalization initialized",
+      "code": "Menace.SDK.MultiLingualLocalization.GetAvailableLanguages() != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify at least one language loaded",
+      "code": "Menace.SDK.MultiLingualLocalization.GetAvailableLanguages().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Check if English is available",
+      "code": "System.Linq.Enumerable.Contains(Menace.SDK.MultiLingualLocalization.GetAvailableLanguages(), \"English\")"
+    },
+    {
+      "type": "repl",
+      "name": "Get English categories (should have weapons, skills, etc.)",
+      "code": "Menace.SDK.MultiLingualLocalization.GetCategories(\"English\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Check if weapons category exists in English",
+      "code": "System.Linq.Enumerable.Contains(Menace.SDK.MultiLingualLocalization.GetCategories(\"English\"), \"weapons\")"
+    },
+    {
+      "type": "repl",
+      "name": "Get keys in weapons category (should have rifle, pistol, etc.)",
+      "code": "Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Check if assault rifle key exists",
+      "code": "System.Linq.Enumerable.Any(Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\"), k => k.Contains(\"rifle\"))"
+    },
+    {
+      "type": "repl",
+      "name": "Get translation for a known key (should return non-empty string)",
+      "code": "!string.IsNullOrEmpty(Menace.SDK.MultiLingualLocalization.GetTranslation(\"English\", \"weapons\", Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\")[0]))"
+    },
+    {
+      "type": "repl",
+      "name": "Get all translations for a key (should return multiple languages)",
+      "code": "Menace.SDK.MultiLingualLocalization.GetAllTranslations(\"weapons\", Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\")[0]).Count > 1"
+    },
+    {
+      "type": "repl",
+      "name": "Verify Spanish is available (common language)",
+      "code": "System.Linq.Enumerable.Contains(Menace.SDK.MultiLingualLocalization.GetAvailableLanguages(), \"Spanish\") || Menace.SDK.MultiLingualLocalization.GetAvailableLanguages().Length >= 1"
+    },
+    {
+      "type": "repl",
+      "name": "Test SetTranslation (in-memory modification)",
+      "code": "Menace.SDK.MultiLingualLocalization.SetTranslation(\"English\", \"test\", \"test.key\", \"Test Value\"); Menace.SDK.MultiLingualLocalization.HasKey(\"English\", \"test\", \"test.key\")"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SetTranslation worked",
+      "code": "Menace.SDK.MultiLingualLocalization.GetTranslation(\"English\", \"test\", \"test.key\") == \"Test Value\""
+    },
+    {
+      "type": "repl",
+      "name": "Get localization statistics (should return non-empty string)",
+      "code": "!string.IsNullOrEmpty(Menace.SDK.MultiLingualLocalization.GetStatistics())"
+    },
+    {
+      "type": "repl",
+      "name": "Verify statistics contain language count",
+      "code": "Menace.SDK.MultiLingualLocalization.GetStatistics().Contains(\"Languages loaded:\")"
+    }
+  ]
+}

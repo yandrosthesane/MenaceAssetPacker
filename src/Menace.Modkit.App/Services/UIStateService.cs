@@ -267,4 +267,124 @@ public sealed class UIStateService : IDisposable
         public string? Hint { get; set; }
         public int Depth { get; set; }
     }
+
+    /// <summary>
+    /// Get the hierarchical control tree for debugging and testing.
+    /// This is exposed via HTTP server for programmatic UI inspection.
+    /// </summary>
+    public ControlNode? GetControlTree()
+    {
+        try
+        {
+            return Dispatcher.UIThread.Invoke(() =>
+            {
+                if (_mainWindow == null) return null;
+                return BuildControlTree(_mainWindow);
+            });
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private ControlNode BuildControlTree(Control control, int depth = 0, int maxDepth = 20)
+    {
+        if (depth > maxDepth)
+            return new ControlNode { Type = "MaxDepthExceeded" };
+
+        var node = new ControlNode
+        {
+            Type = control.GetType().Name,
+            Name = control.Name,
+            IsVisible = control.IsVisible,
+            IsEnabled = control.IsEnabled,
+            Depth = depth
+        };
+
+        // Extract specific properties based on control type
+        switch (control)
+        {
+            case TextBlock tb:
+                node.Text = tb.Text;
+                node.FontSize = tb.FontSize;
+                node.FontWeight = tb.FontWeight.ToString();
+                break;
+
+            // CheckBox and RadioButton must come before Button (they inherit from it)
+            case CheckBox checkBox:
+                node.Content = checkBox.Content?.ToString();
+                node.IsChecked = checkBox.IsChecked;
+                break;
+
+            case RadioButton radioButton:
+                node.Content = radioButton.Content?.ToString();
+                node.IsChecked = radioButton.IsChecked;
+                break;
+
+            case Button btn:
+                node.Content = btn.Content?.ToString();
+                break;
+
+            case TextBox textBox:
+                node.Text = textBox.Text;
+                node.Watermark = textBox.Watermark;
+                break;
+
+            case ComboBox comboBox:
+                node.SelectedItem = comboBox.SelectedItem?.ToString();
+                node.ItemCount = comboBox.ItemCount;
+                break;
+
+            case Label label:
+                node.Content = label.Content?.ToString();
+                break;
+
+            case ItemsControl itemsControl:
+                node.ItemCount = itemsControl.ItemCount;
+                break;
+        }
+
+        // Recursively build children
+        node.Children = new List<ControlNode>();
+
+        if (control is Panel panel)
+        {
+            foreach (var child in panel.Children.OfType<Control>())
+            {
+                node.Children.Add(BuildControlTree(child, depth + 1, maxDepth));
+            }
+        }
+        else if (control is ContentControl contentControl && contentControl.Content is Control childControl)
+        {
+            node.Children.Add(BuildControlTree(childControl, depth + 1, maxDepth));
+        }
+        else if (control is Decorator decorator && decorator.Child is Control decoratorChild)
+        {
+            node.Children.Add(BuildControlTree(decoratorChild, depth + 1, maxDepth));
+        }
+
+        return node;
+    }
+
+    public class ControlNode
+    {
+        public string Type { get; set; } = "";
+        public string? Name { get; set; }
+        public bool IsVisible { get; set; }
+        public bool IsEnabled { get; set; }
+        public int Depth { get; set; }
+
+        // Content properties (populated based on control type)
+        public string? Text { get; set; }
+        public string? Content { get; set; }
+        public string? Watermark { get; set; }
+        public string? SelectedItem { get; set; }
+        public int? ItemCount { get; set; }
+        public bool? IsChecked { get; set; }
+        public double? FontSize { get; set; }
+        public string? FontWeight { get; set; }
+
+        public List<ControlNode> Children { get; set; } = new();
+    }
 }

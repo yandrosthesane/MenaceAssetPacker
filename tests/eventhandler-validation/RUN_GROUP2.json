@@ -1,0 +1,21 @@
+{
+  "name": "EventHandler Validation - Group 2 (19 types)",
+  "description": "Test all Group 2 EventHandler types: ChangePropertyAura through Cooldown",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Group 2 - Test all 19 EventHandler types",
+      "code": "var results = new System.Collections.Generic.Dictionary<string, bool>(); var types = new[] { \"ChangePropertyAura\", \"ChangePropertyConditional\", \"ChangePropertyConsecutive\", \"ChangePropertyTarget\", \"ChangeRangesOfSkillsWithTags\", \"ChangeSkillsWithTags\", \"ChangeSkillUseAmount\", \"ChangeStance\", \"ChangeSupplyCosts\", \"ChangeSuppression\", \"ChangeUsesPerSquaddie\", \"Charge\", \"ChargeInfantry\", \"ClearTileEffect\", \"ClearTileEffectGroup\", \"CommandMove\", \"CommandUseSkill\", \"ConsumeOnSkillUse\", \"Cooldown\" }; var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); foreach (var typeName in types) { var found = false; foreach (var skill in skills) { try { var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.ReadString(\"name\"), \"EventHandlers\"); if (handlers != null) { var array = handlers.Cast<Il2CppSystem.Object[]>(); foreach (var handler in array) { var type = handler.ReadString(\"_type\"); if (type == typeName) { found = true; break; } } if (found) break; } } catch { } } results[typeName] = found; } var passed = results.Values.Count(v => v); var total = results.Count; UnityEngine.Debug.Log($\"Group 2 Results: {passed}/{total} types found\"); foreach (var kvp in results) { UnityEngine.Debug.Log($\"  {kvp.Key}: {(kvp.Value ? \"✓\" : \"✗\")}\"); } passed == total"
+    }
+  ]
+}

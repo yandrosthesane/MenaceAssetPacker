@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - EjectEntity",
+  "description": "Verify EjectEntity EventHandler loads and can be read. Ejects entities from vehicles.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with EjectEntity EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"EjectEntity\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.ram_vehicle\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is EjectEntity",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.ram_vehicle|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"EjectEntity\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read IsSpecialAIVersion parameter",
+      "code": "var isSpecialAI = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.ram_vehicle|EventHandlers[0]\", \"IsSpecialAIVersion\"); isSpecialAI != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read ConferSkillToEjectedEntity parameter",
+      "code": "var conferSkill = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.ram_vehicle|EventHandlers[0]\", \"ConferSkillToEjectedEntity\"); conferSkill != null"
+    }
+  ]
+}

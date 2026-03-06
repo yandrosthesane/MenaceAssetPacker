@@ -34,7 +34,17 @@ public class StatsEditorView : UserControl
 
   public StatsEditorView()
   {
-    Content = BuildUI();
+    ModkitLog.Info("[StatsEditorView] Constructor called - creating UI");
+    try
+    {
+      Content = BuildUI();
+      ModkitLog.Info("[StatsEditorView] UI built successfully");
+    }
+    catch (Exception ex)
+    {
+      ModkitLog.Error($"[StatsEditorView] Failed to build UI: {ex.Message}\n{ex.StackTrace}");
+      throw;
+    }
   }
 
   protected override void OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs e)
@@ -1349,7 +1359,54 @@ public class StatsEditorView : UserControl
         // The control will display merged state but track edits incrementally relative to vanilla
         if (ArrayContainsObjects(vanillaArray))
         {
-          fieldStack.Children.Add(CreateObjectArrayControl(name, vanillaArray, isEditable, patchDict));
+          // Special handling for EventHandlers - open dedicated modal editor
+          if (name == "EventHandlers" && isEditable)
+          {
+            var button = new Button
+            {
+              Content = "Edit EventHandlers...",
+              HorizontalAlignment = HorizontalAlignment.Left,
+              Margin = new Thickness(0, 4),
+              Background = new SolidColorBrush(Color.Parse("#0078D4")),
+              Foreground = Brushes.White,
+              BorderThickness = new Thickness(0),
+              Padding = new Thickness(12, 6)
+            };
+
+            button.Click += async (_, _) =>
+            {
+              var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
+              if (topLevel is not Window window) return;
+
+              if (patchVm == null) return;
+
+              var dialog = new EventHandlerEditorDialog(name, vanillaArray, patchVm);
+              var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
+
+              if (result.HasValue)
+              {
+                patchVm.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+              }
+            };
+
+            var summaryText = new TextBlock
+            {
+              Text = $"({vanillaArray.GetArrayLength()} handlers)",
+              Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+              FontSize = 11,
+              Margin = new Thickness(0, 4)
+            };
+
+            var stack = new StackPanel { Spacing = 4 };
+            stack.Children.Add(button);
+            stack.Children.Add(summaryText);
+
+            fieldStack.Children.Add(stack);
+          }
+          else
+          {
+            fieldStack.Children.Add(CreateObjectArrayControl(name, vanillaArray, isEditable, patchDict));
+          }
         }
         else
         {
@@ -1415,7 +1472,54 @@ public class StatsEditorView : UserControl
               // Pass vanilla array + existing patches to the control
               if (ArrayContainsObjects(vanillaArray2))
               {
-                fieldStack.Children.Add(CreateObjectArrayControl(name, vanillaArray2, isEditable, patchDict2));
+                // Special handling for EventHandlers - open dedicated modal editor
+                if (name == "EventHandlers" && isEditable)
+                {
+                  var button2 = new Button
+                  {
+                    Content = "Edit EventHandlers...",
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Margin = new Thickness(0, 4),
+                    Background = new SolidColorBrush(Color.Parse("#0078D4")),
+                    Foreground = Brushes.White,
+                    BorderThickness = new Thickness(0),
+                    Padding = new Thickness(12, 6)
+                  };
+
+                  button2.Click += async (_, _) =>
+                  {
+                    var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
+                    if (topLevel is not Window window) return;
+
+                    if (patchVm2 == null) return;
+
+                    var dialog = new EventHandlerEditorDialog(name, vanillaArray2, patchVm2);
+                    var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
+
+                    if (result.HasValue)
+                    {
+                      patchVm2.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+                    }
+                  };
+
+                  var summaryText2 = new TextBlock
+                  {
+                    Text = $"({vanillaArray2.GetArrayLength()} handlers)",
+                    Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                    FontSize = 11,
+                    Margin = new Thickness(0, 4)
+                  };
+
+                  var stack2 = new StackPanel { Spacing = 4 };
+                  stack2.Children.Add(button2);
+                  stack2.Children.Add(summaryText2);
+
+                  fieldStack.Children.Add(stack2);
+                }
+                else
+                {
+                  fieldStack.Children.Add(CreateObjectArrayControl(name, vanillaArray2, isEditable, patchDict2));
+                }
               }
               else
               {
@@ -1481,6 +1585,50 @@ public class StatsEditorView : UserControl
           // even though schema says they're template references.
           if (ArrayContainsObjects(jsonElement))
           {
+            // Special handling for EventHandlers - open dedicated modal editor
+            if (name == "EventHandlers" && isEditable && DataContext is StatsEditorViewModel ehVm)
+            {
+              var button3 = new Button
+              {
+                Content = "Edit EventHandlers...",
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(0, 4),
+                Background = new SolidColorBrush(Color.Parse("#0078D4")),
+                Foreground = Brushes.White,
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(12, 6)
+              };
+
+              button3.Click += async (_, _) =>
+              {
+                var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
+                if (topLevel is not Window window) return;
+
+                var dialog = new EventHandlerEditorDialog(name, jsonElement, ehVm);
+                var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
+
+                if (result.HasValue)
+                {
+                  ehVm.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+                }
+              };
+
+              var summaryText3 = new TextBlock
+              {
+                Text = $"({jsonElement.GetArrayLength()} handlers)",
+                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                FontSize = 11,
+                Margin = new Thickness(0, 4)
+              };
+
+              var stack3 = new StackPanel { Spacing = 4 };
+              stack3.Children.Add(button3);
+              stack3.Children.Add(summaryText3);
+
+              fieldStack.Children.Add(stack3);
+              return fieldStack;
+            }
+
             fieldStack.Children.Add(CreateObjectArrayControl(name, jsonElement, isEditable));
             return fieldStack;
           }
@@ -2933,6 +3081,61 @@ public class StatsEditorView : UserControl
       switch (je.ValueKind)
       {
         case System.Text.Json.JsonValueKind.Array:
+          // Special handling for EventHandlers - open dedicated modal editor
+          ModkitLog.Info($"[StatsEditor] Array field: {propName}, isEditable={isEditable}, vm={(vm != null ? "present" : "null")}, containsObjects={ArrayContainsObjects(je)}");
+          if (propName == "EventHandlers" && ArrayContainsObjects(je) && isEditable && vm != null)
+          {
+            ModkitLog.Info("[StatsEditor] Rendering EventHandlers button!");
+            var button = new Button
+            {
+              Content = "Edit EventHandlers...",
+              HorizontalAlignment = HorizontalAlignment.Left,
+              Margin = new Thickness(0, 4),
+              Background = new SolidColorBrush(Color.Parse("#0078D4")),
+              Foreground = Brushes.White,
+              BorderThickness = new Thickness(0),
+              Padding = new Thickness(12, 6)
+            };
+
+            button.Click += async (_, _) =>
+            {
+              var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
+              if (topLevel is not Window window) return;
+
+              var dialog = new EventHandlerEditorDialog(propName, je, vm);
+              var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
+
+              if (result.HasValue)
+              {
+                element[propName] = result.Value;
+                syncToViewModel();
+              }
+            };
+
+            // Show count and summary
+            var summaryText = new TextBlock
+            {
+              Text = $"({je.GetArrayLength()} handlers)",
+              Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+              FontSize = 11,
+              Margin = new Thickness(0, 4)
+            };
+
+            var stack = new StackPanel { Spacing = 4 };
+            stack.Children.Add(button);
+            stack.Children.Add(summaryText);
+
+            fieldStack.Children.Add(stack);
+            return fieldStack;
+          }
+
+          // Special handling for Effects - object reference arrays (not inline data)
+          if (propName == "Effects" && je.ValueKind == System.Text.Json.JsonValueKind.Array)
+          {
+            fieldStack.Children.Add(CreateEffectsReferencePicker(propName, je, isEditable, vm, element, syncToViewModel));
+            return fieldStack;
+          }
+
           if (ArrayContainsObjects(je))
           {
             // Get nested element type from schema
@@ -3027,6 +3230,14 @@ public class StatsEditorView : UserControl
         };
       }
       fieldStack.Children.Add(checkBox);
+      return fieldStack;
+    }
+
+    // Enum fields — render as dropdown with human-readable names
+    if (isEditable && fieldMeta?.Category == "enum" && propValue is long)
+    {
+      fieldStack.Children.Add(CreateEnumDropdownControl(
+        propName, propValue, fieldMeta, element, syncToViewModel));
       return fieldStack;
     }
 
@@ -3140,6 +3351,279 @@ public class StatsEditorView : UserControl
     }
 
     return fieldStack;
+  }
+
+  /// <summary>
+  /// Creates an enum dropdown control with human-readable names
+  /// </summary>
+  private Control CreateEnumDropdownControl(
+    string propName,
+    object? propValue,
+    SchemaService.FieldMeta fieldMeta,
+    System.Collections.Generic.Dictionary<string, object?> element,
+    System.Action syncToViewModel)
+  {
+    var enumTypeName = fieldMeta.Type;
+    var currentValue = propValue is long l ? (int)l :
+                      propValue is int i ? i : 0;
+
+    var vm = DataContext as StatsEditorViewModel;
+    if (vm?.SchemaService == null || !vm.SchemaService.IsLoaded)
+    {
+      // Fallback to text box if schema not available
+      return new TextBox
+      {
+        Text = currentValue.ToString(),
+        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Foreground = Brushes.White,
+        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderThickness = new Thickness(1),
+        Padding = new Thickness(8, 6),
+        FontSize = 12
+      };
+    }
+
+    // Get all enum values from schema
+    var enumValues = vm.SchemaService.GetEnumValues(enumTypeName);
+    if (enumValues == null || enumValues.Count == 0)
+    {
+      // Fallback to text box if enum not found
+      return new TextBox
+      {
+        Text = currentValue.ToString(),
+        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Foreground = Brushes.White,
+        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderThickness = new Thickness(1),
+        Padding = new Thickness(8, 6),
+        FontSize = 12
+      };
+    }
+
+    // Build display items: "EnumName (0)"
+    var displayItems = enumValues
+      .OrderBy(kvp => kvp.Key)
+      .Select(kvp => new EnumDisplayItem
+      {
+        DisplayText = $"{kvp.Value} ({kvp.Key})",
+        Value = kvp.Key,
+        Name = kvp.Value
+      })
+      .ToList();
+
+    // Find the item matching the current value
+    var selectedItem = displayItems.FirstOrDefault(item => item.Value == currentValue);
+
+    var comboBox = new ComboBox
+    {
+      ItemsSource = displayItems,
+      SelectedItem = selectedItem,
+      Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+      Foreground = Brushes.White,
+      BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+      BorderThickness = new Thickness(1),
+      FontSize = 12
+    };
+
+    // Set ItemTemplate to display the DisplayText property
+    comboBox.ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<EnumDisplayItem>((item, _) =>
+      new TextBlock
+      {
+        Text = item?.DisplayText ?? "",
+        Foreground = Brushes.White
+      }
+    );
+
+    comboBox.SelectionChanged += (_, _) =>
+    {
+      if (comboBox.SelectedItem is EnumDisplayItem selected && selected.Value != currentValue)
+      {
+        element[propName] = (long)selected.Value;
+        syncToViewModel();
+        currentValue = selected.Value; // Update for next comparison
+      }
+    };
+
+    return comboBox;
+  }
+
+  /// <summary>
+  /// Supporting class for enum dropdown display
+  /// </summary>
+  private class EnumDisplayItem
+  {
+    public string DisplayText { get; set; } = "";
+    public int Value { get; set; }
+    public string Name { get; set; } = "";
+  }
+
+  /// <summary>
+  /// Creates a reference picker for Effects arrays (Unity object references, not inline data)
+  /// </summary>
+  private Control CreateEffectsReferencePicker(
+    string propName,
+    System.Text.Json.JsonElement arrayElement,
+    bool isEditable,
+    StatsEditorViewModel? vm,
+    System.Collections.Generic.Dictionary<string, object?> element,
+    System.Action syncToViewModel)
+  {
+    var panel = new StackPanel { Spacing = 8 };
+
+    // Parse current references
+    var effectRefs = new System.Collections.Generic.List<string>();
+    foreach (var el in arrayElement.EnumerateArray())
+    {
+      var s = el.GetString();
+      if (!string.IsNullOrEmpty(s))
+        effectRefs.Add(s);
+    }
+
+    // Header
+    panel.Children.Add(new TextBlock
+    {
+      Text = $"Effects ({effectRefs.Count} references)",
+      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      FontSize = 11,
+      FontWeight = FontWeight.SemiBold
+    });
+
+    // Info note
+    panel.Children.Add(new TextBlock
+    {
+      Text = "Effects are object references. Only existing base game Effects can be used.",
+      Foreground = Brushes.White,
+      Opacity = 0.6,
+      FontSize = 10,
+      FontStyle = FontStyle.Italic,
+      TextWrapping = TextWrapping.Wrap
+    });
+
+    // List current references
+    var itemsPanel = new StackPanel { Spacing = 2, Margin = new Thickness(0, 4) };
+
+    void RebuildList()
+    {
+      itemsPanel.Children.Clear();
+
+      foreach (var effectRef in effectRefs.ToList())
+      {
+        var itemBorder = new Border
+        {
+          Background = new SolidColorBrush(Color.Parse("#252525")),
+          Margin = new Thickness(0, 1),
+          Padding = new Thickness(8, 4)
+        };
+
+        var itemGrid = new Grid
+        {
+          ColumnDefinitions = new ColumnDefinitions("*,Auto")
+        };
+
+        itemGrid.Children.Add(new TextBlock
+        {
+          Text = effectRef,
+          Foreground = Brushes.White,
+          FontSize = 11,
+          VerticalAlignment = VerticalAlignment.Center
+        });
+        Grid.SetColumn(itemGrid.Children[0], 0);
+
+        if (isEditable)
+        {
+          var removeBtn = new Button
+          {
+            Content = "×",
+            Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            FontSize = 14,
+            Padding = new Thickness(4, 0),
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+          };
+          removeBtn.Click += (_, _) =>
+          {
+            effectRefs.Remove(effectRef);
+            RebuildList();
+            SyncEffects();
+          };
+          itemGrid.Children.Add(removeBtn);
+          Grid.SetColumn(removeBtn, 1);
+        }
+
+        itemBorder.Child = itemGrid;
+        itemsPanel.Children.Add(itemBorder);
+      }
+    }
+
+    void SyncEffects()
+    {
+      // Build JSON array from effectRefs
+      using var ms = new System.IO.MemoryStream();
+      using (var writer = new System.Text.Json.Utf8JsonWriter(ms))
+      {
+        writer.WriteStartArray();
+        foreach (var effectRef in effectRefs)
+          writer.WriteStringValue(effectRef);
+        writer.WriteEndArray();
+      }
+      using var doc = System.Text.Json.JsonDocument.Parse(ms.ToArray());
+      element[propName] = doc.RootElement.Clone();
+      syncToViewModel();
+    }
+
+    RebuildList();
+    panel.Children.Add(itemsPanel);
+
+    // Add button
+    if (isEditable)
+    {
+      var addButton = new Button
+      {
+        Content = "+ Add Effect Reference",
+        HorizontalAlignment = HorizontalAlignment.Left,
+        Margin = new Thickness(0, 4),
+        Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+        Foreground = Brushes.White,
+        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderThickness = new Thickness(1)
+      };
+      addButton.Click += async (_, _) =>
+      {
+        // Show text input dialog for Effect reference
+        var dialog = new TextInputDialog(
+          "Add Effect Reference",
+          "Enter Effect asset path or name:",
+          "(BaseGameEffect)");
+
+        var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
+        if (topLevel is Window window)
+        {
+          var result = await dialog.ShowDialog<string?>(window);
+          if (!string.IsNullOrWhiteSpace(result))
+          {
+            effectRefs.Add(result);
+            RebuildList();
+            SyncEffects();
+          }
+        }
+      };
+      panel.Children.Add(addButton);
+
+      // Tip note
+      panel.Children.Add(new TextBlock
+      {
+        Text = "Tip: Effect names can be found in base game asset bundles or decompiled code.",
+        Foreground = Brushes.White,
+        Opacity = 0.5,
+        FontSize = 9,
+        FontStyle = FontStyle.Italic,
+        TextWrapping = TextWrapping.Wrap,
+        Margin = new Thickness(0, 4, 0, 0)
+      });
+    }
+
+    return panel;
   }
 
   private Control CreatePrimitiveArrayControl(

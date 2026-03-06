@@ -1,0 +1,49 @@
+{
+  "name": "EventHandler - AttackOrder",
+  "description": "Verify AttackOrder EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find skill with AttackOrder EventHandler",
+      "type": "repl",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); skills.Length > 0"
+    },
+    {
+      "name": "Get skill with EventHandlers",
+      "type": "repl",
+      "code": "var skill = Menace.SDK.Templates.Find(\"SkillTemplate\", \"effect.attack_order\"); !skill.IsNull"
+    },
+    {
+      "name": "Load EventHandlers array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.attack_order\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.attack_order\", \"EventHandlers\"); handlers.GetType().IsArray"
+    },
+    {
+      "name": "Find AttackOrder handler in array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.attack_order\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { var type = h.GetType().Name; if(type == \"AttackOrder\") { found = true; break; } } found"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.attack_order\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { if(h.GetType().Name == \"AttackOrder\") { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; } break; } } catch {} } found"
+    },
+    {
+      "name": "Read Effect parameter field",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.attack_order\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { if(h.GetType().Name == \"AttackOrder\") { var field = h.GetType().GetField(\"Effect\"); if(field != null) { found = true; } break; } } catch {} } found"
+    }
+  ]
+}

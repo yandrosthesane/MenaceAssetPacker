@@ -1,0 +1,66 @@
+{
+  "name": "Template Validation - DisplayIndexPlayerSettingTemplate",
+  "description": "Validates all fields can be read from DisplayIndexPlayerSettingTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify DisplayIndexPlayerSettingTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"DisplayIndexPlayerSettingTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DisplayIndexPlayerSettingTemplate.display_index exists",
+      "code": "!Menace.SDK.Templates.Find(\"DisplayIndexPlayerSettingTemplate\", \"display_index\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Measure",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"Measure\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DisplayIndexPlayerSettingTemplate\", \"display_index\", \"Name\") != null"
+    }
+  ]
+}

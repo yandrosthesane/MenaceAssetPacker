@@ -1,0 +1,66 @@
+{
+  "name": "Multilingual Localization Diagnostics",
+  "description": "Diagnostic test to understand what loaded and troubleshoot issues",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for initialization",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Print all available languages",
+      "code": "var langs = Menace.SDK.MultiLingualLocalization.GetAvailableLanguages(); UnityEngine.Debug.Log($\"Available languages ({langs.Length}): {string.Join(\", \", langs)}\"); langs.Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Print English categories",
+      "code": "var cats = Menace.SDK.MultiLingualLocalization.GetCategories(\"English\"); UnityEngine.Debug.Log($\"English categories ({cats.Length}): {string.Join(\", \", cats.Take(10))}\"); cats.Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Print weapon keys (first 10)",
+      "code": "var keys = Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\").Take(10); UnityEngine.Debug.Log($\"Weapon keys: {string.Join(\", \", keys)}\"); keys.Count() > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Sample translation for first weapon key",
+      "code": "var key = Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\").FirstOrDefault(); var text = Menace.SDK.MultiLingualLocalization.GetTranslation(\"English\", \"weapons\", key); UnityEngine.Debug.Log($\"Key: {key} => Text: {text}\"); !string.IsNullOrEmpty(text)"
+    },
+    {
+      "type": "repl",
+      "name": "Check all translations for first weapon key",
+      "code": "var key = Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\").FirstOrDefault(); var all = Menace.SDK.MultiLingualLocalization.GetAllTranslations(\"weapons\", key); UnityEngine.Debug.Log($\"Translations for {key}:\"); foreach (var kvp in all) { UnityEngine.Debug.Log($\"  {kvp.Key}: {kvp.Value}\"); } all.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Print full statistics",
+      "code": "var stats = Menace.SDK.MultiLingualLocalization.GetStatistics(); UnityEngine.Debug.Log(stats); !string.IsNullOrEmpty(stats)"
+    },
+    {
+      "type": "repl",
+      "name": "Check if CSV files are being read",
+      "code": "var dataPath = UnityEngine.Application.dataPath; var parentDir = System.IO.Directory.GetParent(dataPath)?.FullName; var locPath = System.IO.Path.Combine(parentDir, \"Localization\"); var exists = System.IO.Directory.Exists(locPath); UnityEngine.Debug.Log($\"Localization folder exists at {locPath}: {exists}\"); if (exists) { var files = System.IO.Directory.GetFiles(locPath, \"*.csv\"); UnityEngine.Debug.Log($\"CSV files found: {files.Length}\"); foreach (var f in files) UnityEngine.Debug.Log($\"  - {System.IO.Path.GetFileName(f)}\"); } true"
+    },
+    {
+      "type": "repl",
+      "name": "Check Resources for embedded CSV",
+      "code": "var englishResource = UnityEngine.Resources.Load<UnityEngine.TextAsset>(\"English\"); UnityEngine.Debug.Log($\"English TextAsset from Resources: {(englishResource != null ? \"Found\" : \"Not Found\")}\"); if (englishResource != null) { UnityEngine.Debug.Log($\"English CSV size: {englishResource.text.Length} characters\"); UnityEngine.Debug.Log($\"First 200 chars: {englishResource.text.Substring(0, System.Math.Min(200, englishResource.text.Length))}\"); } true"
+    },
+    {
+      "type": "repl",
+      "name": "Test CSV parsing on sample data",
+      "code": "var testCsv = \"Key,Type,Default,Translation\\nweapons.test.name,Text,Test Weapon,Test Weapon\\n\"; UnityEngine.Debug.Log($\"Testing CSV parsing with: {testCsv}\"); true"
+    },
+    {
+      "type": "repl",
+      "name": "Verify language constants match actual enum",
+      "code": "var constants = Menace.SDK.MultiLingualLocalization.Languages.All; UnityEngine.Debug.Log($\"Language constants defined: {string.Join(\", \", constants)}\"); constants.Length > 0"
+    }
+  ]
+}

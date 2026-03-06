@@ -1,0 +1,246 @@
+{
+  "name": "Template Validation - CommodityTemplate",
+  "description": "Validates all fields can be read from CommodityTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify CommodityTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"CommodityTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify CommodityTemplate.commodity.civilian_supplies exists",
+      "code": "!Menace.SDK.Templates.Find(\"CommodityTemplate\", \"commodity.civilian_supplies\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.civilian_supplies\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify CommodityTemplate.commodity.construct_alloys exists",
+      "code": "!Menace.SDK.Templates.Find(\"CommodityTemplate\", \"commodity.construct_alloys\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_alloys\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify CommodityTemplate.commodity.construct_electronics exists",
+      "code": "!Menace.SDK.Templates.Find(\"CommodityTemplate\", \"commodity.construct_electronics\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"CommodityTemplate\", \"commodity.construct_electronics\", \"IconAssetName\") != null"
+    }
+  ]
+}

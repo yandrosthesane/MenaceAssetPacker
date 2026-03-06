@@ -333,6 +333,78 @@ public static class Templates
     }
 
     /// <summary>
+    /// Get a property value from a template by type name, instance name, and property path.
+    /// Returns null if template or property not found.
+    /// </summary>
+    /// <example>
+    /// var damage = Templates.GetProperty("WeaponTemplate", "weapon.sword", "Damage");
+    /// var displayName = Templates.GetProperty("ArmorTemplate", "armor.shield", "DisplayName");
+    /// </example>
+    public static object GetProperty(string templateTypeName, string instanceName, string propertyPath)
+    {
+        var template = Find(templateTypeName, instanceName);
+        if (template.IsNull)
+            return null;
+
+        return ReadField(template, propertyPath);
+    }
+
+    /// <summary>
+    /// Get a property value from a template with automatic type conversion.
+    /// Returns default(T) if template or property not found.
+    /// </summary>
+    /// <example>
+    /// var damage = Templates.GetProperty&lt;int&gt;("WeaponTemplate", "Sword", "Damage");
+    /// var displayName = Templates.GetProperty&lt;string&gt;("WeaponTemplate", "Sword", "DisplayName");
+    /// </example>
+    public static T GetProperty<T>(string templateTypeName, string instanceName, string propertyPath)
+    {
+        var value = GetProperty(templateTypeName, instanceName, propertyPath);
+        if (value == null)
+            return default;
+
+        try
+        {
+            if (value is T typed)
+                return typed;
+
+            // Try conversion
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+        catch
+        {
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Get multiple property values from a template at once.
+    /// Returns a dictionary of property name to value.
+    /// Properties that fail to read are omitted from the result.
+    /// </summary>
+    /// <example>
+    /// var props = Templates.GetProperties("WeaponTemplate", "Sword", "Damage", "Range", "DisplayName");
+    /// int damage = (int)props["Damage"];
+    /// </example>
+    public static Dictionary<string, object> GetProperties(string templateTypeName, string instanceName, params string[] propertyPaths)
+    {
+        var result = new Dictionary<string, object>();
+        var template = Find(templateTypeName, instanceName);
+
+        if (template.IsNull)
+            return result;
+
+        foreach (var propertyPath in propertyPaths)
+        {
+            var value = ReadField(template, propertyPath);
+            if (value != null)
+                result[propertyPath] = value;
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Ensures templates of the given type are loaded into memory by calling
     /// DataTemplateLoader.GetAll&lt;T&gt;(). Templates loaded this way become
     /// findable via Resources.FindObjectsOfTypeAll().
@@ -380,5 +452,153 @@ public static class Templates
             ModError.WarnInternal("Templates.EnsureTemplatesLoaded",
                 $"Failed for {templateTypeName}: {ex.Message}");
         }
+    }
+
+    // ==================== Localization Field Helpers ====================
+
+    /// <summary>
+    /// Get the localization key from a localization field (m_LocaState, LocalizedLine, etc.)
+    /// Returns the key string (e.g., "weapons.assault_rifle.name") or null if not a localization field.
+    /// </summary>
+    public static string GetLocalizationKey(string templateTypeName, string instanceName, string fieldName)
+    {
+        try
+        {
+            var fieldValue = GetProperty(templateTypeName, instanceName, fieldName);
+            if (fieldValue == null) return null;
+
+            // Try to get m_Key from the field value
+            var keyField = fieldValue.GetType().GetField("m_Key");
+            if (keyField != null)
+            {
+                var keyValue = keyField.GetValue(fieldValue);
+                return keyValue?.ToString();
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Get the localization table ID from a localization field.
+    /// Returns the table ID string (e.g., "weapons", "skills") or null if not a localization field.
+    /// </summary>
+    public static string GetLocalizationTable(string templateTypeName, string instanceName, string fieldName)
+    {
+        try
+        {
+            var fieldValue = GetProperty(templateTypeName, instanceName, fieldName);
+            if (fieldValue == null) return null;
+
+            // Try to get m_TableID from the field value
+            var tableField = fieldValue.GetType().GetField("m_TableID");
+            if (tableField != null)
+            {
+                var tableValue = tableField.GetValue(fieldValue);
+                return tableValue?.ToString();
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Get the translated text for a localization field in a specific language.
+    /// Automatically extracts the key and table from the field and looks up the translation.
+    /// </summary>
+    public static string GetLocalizedText(string templateTypeName, string instanceName, string fieldName, string language = "English")
+    {
+        var key = GetLocalizationKey(templateTypeName, instanceName, fieldName);
+        var table = GetLocalizationTable(templateTypeName, instanceName, fieldName);
+
+        if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(table))
+            return null;
+
+        // Extract category from table (usually matches table ID)
+        return MultiLingualLocalization.GetTranslation(language, table, key);
+    }
+
+    /// <summary>
+    /// Get the translated text for a localization field in ALL languages.
+    /// Returns a dictionary of language -> translated text.
+    /// </summary>
+    public static Dictionary<string, string> GetAllLocalizedTexts(string templateTypeName, string instanceName, string fieldName)
+    {
+        var key = GetLocalizationKey(templateTypeName, instanceName, fieldName);
+        var table = GetLocalizationTable(templateTypeName, instanceName, fieldName);
+
+        if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(table))
+            return new Dictionary<string, string>();
+
+        return MultiLingualLocalization.GetAllTranslations(table, key);
+    }
+
+    /// <summary>
+    /// Helper to get localization info for a template field in a structured format.
+    /// Returns an object with: key, tableID, and translations for all languages.
+    /// </summary>
+    public static object GetLocalizationInfo(string templateTypeName, string instanceName, string fieldName)
+    {
+        var key = GetLocalizationKey(templateTypeName, instanceName, fieldName);
+        var table = GetLocalizationTable(templateTypeName, instanceName, fieldName);
+
+        if (string.IsNullOrEmpty(key))
+            return null;
+
+        var translations = string.IsNullOrEmpty(table)
+            ? new Dictionary<string, string>()
+            : MultiLingualLocalization.GetAllTranslations(table, key);
+
+        return new
+        {
+            key,
+            tableID = table,
+            languages = translations.Keys.ToArray(),
+            languageCount = translations.Count,
+            translations
+        };
+    }
+
+    /// <summary>
+    /// Set a template's localization field to use a different key.
+    /// This changes which translation the template will display.
+    /// </summary>
+    public static void SetLocalizationKey(string templateTypeName, string instanceName, string fieldName, string newKey, string tableID)
+    {
+        var template = Find(templateTypeName, instanceName);
+        if (template.IsNull)
+        {
+            ModError.WarnInternal("Templates.SetLocalizationKey", $"Template not found: {templateTypeName}/{instanceName}");
+            return;
+        }
+
+        // Create new LocaState object
+        var locaState = new
+        {
+            m_Key = newKey,
+            m_TableID = tableID
+        };
+
+        WriteField(template, fieldName, locaState);
+    }
+
+    /// <summary>
+    /// Helper to check if a field is a localization field (has m_Key and m_TableID).
+    /// </summary>
+    public static bool IsLocalizationField(string templateTypeName, string instanceName, string fieldName)
+    {
+        var fieldValue = GetProperty(templateTypeName, instanceName, fieldName);
+        if (fieldValue == null) return false;
+
+        var type = fieldValue.GetType();
+        return type.GetField("m_Key") != null && type.GetField("m_TableID") != null;
     }
 }

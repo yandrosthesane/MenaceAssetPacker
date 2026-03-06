@@ -1,0 +1,201 @@
+{
+  "name": "Template Validation - HalfCoverTemplate",
+  "description": "Validates all fields can be read from HalfCoverTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify HalfCoverTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"HalfCoverTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify HalfCoverTemplate.half_cover_default exists",
+      "code": "!Menace.SDK.Templates.Find(\"HalfCoverTemplate\", \"half_cover_default\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingMovement",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"IsBlockingMovement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingSight",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"IsBlockingSight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVaultedOver",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"IsVaultedOver\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestroyedOnContactWithVehicles",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"IsDestroyedOnContactWithVehicles\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsProvidingCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"IsProvidingCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CoverClass",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"CoverClass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathAnimationSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"OnDeathAnimationSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathYOffset",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"OnDeathYOffset\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"EffectOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeathOverrides",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_default\", \"EffectOnDeathOverrides\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify HalfCoverTemplate.half_cover_fence exists",
+      "code": "!Menace.SDK.Templates.Find(\"HalfCoverTemplate\", \"half_cover_fence\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingMovement",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"IsBlockingMovement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingSight",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"IsBlockingSight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVaultedOver",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"IsVaultedOver\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestroyedOnContactWithVehicles",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"IsDestroyedOnContactWithVehicles\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsProvidingCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"IsProvidingCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CoverClass",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"CoverClass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathAnimationSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"OnDeathAnimationSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathYOffset",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"OnDeathYOffset\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"EffectOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeathOverrides",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_fence\", \"EffectOnDeathOverrides\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify HalfCoverTemplate.half_cover_heavy_walls exists",
+      "code": "!Menace.SDK.Templates.Find(\"HalfCoverTemplate\", \"half_cover_heavy_walls\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingMovement",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"IsBlockingMovement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBlockingSight",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"IsBlockingSight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVaultedOver",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"IsVaultedOver\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestroyedOnContactWithVehicles",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"IsDestroyedOnContactWithVehicles\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsProvidingCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"IsProvidingCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CoverClass",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"CoverClass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathAnimationSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"OnDeathAnimationSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnDeathYOffset",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"OnDeathYOffset\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"EffectOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EffectOnDeathOverrides",
+      "code": "Menace.SDK.Templates.GetProperty(\"HalfCoverTemplate\", \"half_cover_heavy_walls\", \"EffectOnDeathOverrides\") != null"
+    }
+  ]
+}

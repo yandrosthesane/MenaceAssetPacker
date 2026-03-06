@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - DamageArmorDurability",
+  "description": "Verify DamageArmorDurability EventHandler loads and can be read. This handler damages armor durability instead of hitpoints.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with DamageArmorDurability EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"DamageArmorDurability\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.acid\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is DamageArmorDurability",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.acid|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"DamageArmorDurability\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamageFlatAmount parameter",
+      "code": "var dmgFlat = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.acid|EventHandlers[0]\", \"DamageFlatAmount\"); dmgFlat != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamagePercentageOfMaxDurability parameter",
+      "code": "var dmgPctMax = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.acid|EventHandlers[0]\", \"DamagePercentageOfMaxDurability\"); dmgPctMax != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamagePercentageOfCurrentDurability parameter",
+      "code": "var dmgPctCur = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.acid|EventHandlers[0]\", \"DamagePercentageOfCurrentDurability\"); dmgPctCur != null"
+    }
+  ]
+}

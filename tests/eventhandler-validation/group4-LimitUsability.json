@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - LimitUsability",
+  "description": "Verify LimitUsability EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with LimitUsability",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); skill != null ? skill.ToString() : null"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"LimitUsability\") ? true : false"
+    },
+    {
+      "type": "repl",
+      "name": "Read NotUsableIfActorHasSkill parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"NotUsableIfActorHasSkill\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read OnlyUsableIfActorHasSkill parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"OnlyUsableIfActorHasSkill\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read HiddenIfActorHasSkill parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"LimitUsability\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"HiddenIfActorHasSkill\")"
+    }
+  ]
+}

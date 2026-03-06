@@ -1,0 +1,34 @@
+{
+  "name": "EventHandler - PlayAnimationSequence",
+  "description": "Verify PlayAnimationSequence EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with PlayAnimationSequence",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlayAnimationSequence\"); }); skill != null ? skill.ToString() : null"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlayAnimationSequence\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlayAnimationSequence\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"PlayAnimationSequence\") ? true : false"
+    },
+    {
+      "type": "repl",
+      "name": "Read Animation parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlayAnimationSequence\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"Animation\")"
+    }
+  ]
+}

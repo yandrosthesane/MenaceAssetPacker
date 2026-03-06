@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - Deathrattle",
+  "description": "Verify Deathrattle EventHandler loads and can be read. Deathrattles trigger skills when entity dies.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find perk/skill with Deathrattle EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"Deathrattle\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_carrier\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is Deathrattle",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_carrier|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"Deathrattle\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read Skill parameter",
+      "code": "var skill = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_carrier|EventHandlers[0]\", \"Skill\"); skill != null && skill.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read Chance parameter",
+      "code": "var chance = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_carrier|EventHandlers[0]\", \"Chance\"); chance != null"
+    }
+  ]
+}

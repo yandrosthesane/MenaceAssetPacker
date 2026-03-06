@@ -225,12 +225,41 @@ src/Menace.Modkit.Mcp/bin/Debug/net10.0/Menace.Modkit.Mcp.dll
 
 ### Claude Code Configuration
 
-Add the Menace Modkit MCP server to your Claude Code settings. The configuration file location depends on your setup:
+Add the Menace Modkit MCP server to your Claude Code settings. The Modkit GUI app automatically configures the project-level `.mcp.json` file when you enable AI assistant support in the setup.
 
-- **Project-level**: `.claude/mcp.json` in your project root
-- **User-level**: `~/.claude/mcp.json`
+**Manual Configuration:**
 
-**Configuration:**
+If configuring manually, edit:
+- **Project-level**: `.mcp.json` in your modkit directory (automatically created)
+- **User-level**: `~/.claude/mcp.json` (for global access)
+
+**Linux/macOS:**
+
+```json
+{
+  "mcpServers": {
+    "menace-modkit": {
+      "command": "/path/to/modkit/mcp/Menace.Modkit.Mcp"
+    }
+  }
+}
+```
+
+**Windows:**
+
+```json
+{
+  "mcpServers": {
+    "menace-modkit": {
+      "command": "C:\\path\\to\\modkit\\mcp\\Menace.Modkit.Mcp.exe"
+    }
+  }
+}
+```
+
+**Development (from source):**
+
+If you're building from source and have the .NET SDK installed:
 
 ```json
 {
@@ -241,21 +270,6 @@ Add the Menace Modkit MCP server to your Claude Code settings. The configuration
         "run",
         "--project",
         "/path/to/MenaceAssetPacker/src/Menace.Modkit.Mcp"
-      ]
-    }
-  }
-}
-```
-
-Or if using the built DLL directly:
-
-```json
-{
-  "mcpServers": {
-    "menace-modkit": {
-      "command": "dotnet",
-      "args": [
-        "/path/to/MenaceAssetPacker/src/Menace.Modkit.Mcp/bin/Debug/net10.0/Menace.Modkit.Mcp.dll"
       ]
     }
   }

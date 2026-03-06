@@ -1,0 +1,96 @@
+{
+  "name": "Template Validation - OffmapAbilityTemplate",
+  "description": "Validates all fields can be read from OffmapAbilityTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify OffmapAbilityTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"OffmapAbilityTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OffmapAbilityTemplate.offmap_ability.air_strike exists",
+      "code": "!Menace.SDK.Templates.Find(\"OffmapAbilityTemplate\", \"offmap_ability.air_strike\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.air_strike\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DelayInRounds",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.air_strike\", \"DelayInRounds\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.air_strike\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkillTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.air_strike\", \"SkillTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OffmapAbilityTemplate.offmap_ability.airdropped_minefield exists",
+      "code": "!Menace.SDK.Templates.Find(\"OffmapAbilityTemplate\", \"offmap_ability.airdropped_minefield\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.airdropped_minefield\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DelayInRounds",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.airdropped_minefield\", \"DelayInRounds\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.airdropped_minefield\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkillTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.airdropped_minefield\", \"SkillTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OffmapAbilityTemplate.offmap_ability.area_scan exists",
+      "code": "!Menace.SDK.Templates.Find(\"OffmapAbilityTemplate\", \"offmap_ability.area_scan\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.area_scan\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DelayInRounds",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.area_scan\", \"DelayInRounds\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.area_scan\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkillTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"OffmapAbilityTemplate\", \"offmap_ability.area_scan\", \"SkillTemplate\") != null"
+    }
+  ]
+}

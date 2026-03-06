@@ -1,0 +1,103 @@
+{
+  "name": "Multilingual Localization MCP Endpoints",
+  "description": "Test HTTP MCP endpoints for localization system",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for initialization",
+      "durationMs": 3000
+    },
+    {
+      "type": "http",
+      "name": "GET /localization/languages - List available languages",
+      "method": "GET",
+      "url": "http://127.0.0.1:7655/localization/languages",
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "http",
+      "name": "POST /localization/categories - Get English categories",
+      "method": "POST",
+      "url": "http://127.0.0.1:7655/localization/categories",
+      "body": {
+        "language": "English"
+      },
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "http",
+      "name": "POST /localization/keys - Get weapons keys",
+      "method": "POST",
+      "url": "http://127.0.0.1:7655/localization/keys",
+      "body": {
+        "language": "English",
+        "category": "weapons",
+        "limit": 10
+      },
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "repl",
+      "name": "Store first weapon key for next test",
+      "code": "var firstKey = Menace.SDK.MultiLingualLocalization.GetKeys(\"English\", \"weapons\")[0]; UnityEngine.PlayerPrefs.SetString(\"test_weapon_key\", firstKey); firstKey != null"
+    },
+    {
+      "type": "http",
+      "name": "POST /localization/all - Get all translations for a key",
+      "method": "POST",
+      "url": "http://127.0.0.1:7655/localization/all",
+      "body": {
+        "category": "weapons",
+        "key": "${UnityEngine.PlayerPrefs.GetString(\"test_weapon_key\")}"
+      },
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "http",
+      "name": "POST /localization/get - Get English translation",
+      "method": "POST",
+      "url": "http://127.0.0.1:7655/localization/get",
+      "body": {
+        "language": "English",
+        "category": "weapons",
+        "key": "${UnityEngine.PlayerPrefs.GetString(\"test_weapon_key\")}"
+      },
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "http",
+      "name": "GET /localization/statistics - Get system statistics",
+      "method": "GET",
+      "url": "http://127.0.0.1:7655/localization/statistics",
+      "expectedStatus": 200,
+      "validateJson": {
+        "success": true
+      }
+    },
+    {
+      "type": "repl",
+      "name": "Cleanup test data",
+      "code": "UnityEngine.PlayerPrefs.DeleteKey(\"test_weapon_key\"); true"
+    }
+  ]
+}

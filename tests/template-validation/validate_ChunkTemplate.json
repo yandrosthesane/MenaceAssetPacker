@@ -1,0 +1,151 @@
+{
+  "name": "Template Validation - ChunkTemplate",
+  "description": "Validates all fields can be read from ChunkTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ChunkTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ChunkTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ChunkTemplate.chunk_alien_queen_spawn_3x3 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Width",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"Width\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Height",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"Height\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpawnMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"SpawnMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxSpawns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"MaxSpawns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RandomlyRotateChildren",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_alien_queen_spawn_3x3\", \"RandomlyRotateChildren\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ChunkTemplate.chunk_break_off_raid_evac_zone_7x6 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Width",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"Width\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Height",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"Height\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpawnMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"SpawnMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxSpawns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"MaxSpawns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RandomlyRotateChildren",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"RandomlyRotateChildren\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CoverConfig",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_break_off_raid_evac_zone_7x6\", \"CoverConfig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ChunkTemplate.chunk_cargo_crate_2x3 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Width",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"Width\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Height",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"Height\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpawnMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"SpawnMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxSpawns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"MaxSpawns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RandomlyRotateChildren",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"RandomlyRotateChildren\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CoverConfig",
+      "code": "Menace.SDK.Templates.GetProperty(\"ChunkTemplate\", \"chunk_cargo_crate_2x3\", \"CoverConfig\") != null"
+    }
+  ]
+}

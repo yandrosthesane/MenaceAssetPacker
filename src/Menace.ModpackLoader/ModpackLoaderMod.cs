@@ -10,6 +10,8 @@ using Menace.SDK;
 using Menace.SDK.Internal;
 using Menace.SDK.Repl;
 using Menace.ModpackLoader.Mcp;
+using Menace.ModpackLoader.Diagnostics;
+using Menace.ModpackLoader.TemplateLoading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -53,6 +55,9 @@ public partial class ModpackLoaderMod : MelonMod
         RegisterModpackLoaderSettings();
 
         InitializeRepl();
+
+        // Initialize diagnostics (Harmony patches for template/scene loading)
+        InitializeDiagnostics();
 
         // Register SDK console commands
         RegisterSdkCommands();
@@ -102,6 +107,20 @@ public partial class ModpackLoaderMod : MelonMod
             SdkLogger.Error($"[LuaEngine] Stack: {ex.StackTrace}");
         }
 
+        // Initialize multi-lingual localization system (loads all language CSVs)
+        // This enables modders to view/edit translations for all languages
+        try
+        {
+            SdkLogger.Msg("[Localization] Initializing multi-lingual system...");
+            MultiLingualLocalization.Initialize();
+            SdkLogger.Msg($"[Localization] Loaded {MultiLingualLocalization.GetAvailableLanguages().Length} languages");
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Localization] Failed to initialize multi-lingual system: {ex.Message}");
+            // Non-critical failure - game's localization system will still work
+        }
+
         // Emit startup banner to Player.log for game dev triage
         PlayerLog("========================================");
         PlayerLog("THIS GAME SESSION IS RUNNING MODDED");
@@ -149,6 +168,7 @@ public partial class ModpackLoaderMod : MelonMod
 
     public override void OnUpdate()
     {
+        MainThreadExecutor.ProcessQueue();
         GameState.ProcessUpdate();
         DevConsole.Update();
         MenuInjector.Update();
@@ -250,6 +270,36 @@ public partial class ModpackLoaderMod : MelonMod
         BootSkip.RegisterConsoleCommands();
         SimpleAnimations.RegisterConsoleCommands();
         UIInspector.RegisterConsoleCommands();
+        Modpacks.RegisterConsoleCommands();
+
+        // Register test harness commands for automated testing
+        TestHarnessCommands.Register();
+
+        // Register diagnostic commands
+        DataTemplateLoaderDiagnostics.RegisterConsoleCommands();
+        SceneLoadingDiagnostics.RegisterConsoleCommands();
+        SdkSafetyTesting.RegisterConsoleCommands();
+        TemplatePipelineValidator.RegisterConsoleCommands();
+    }
+
+    private void InitializeDiagnostics()
+    {
+        try
+        {
+            // Initialize diagnostic patches (for discovering issues)
+            DataTemplateLoaderDiagnostics.Initialize(HarmonyInstance);
+            SceneLoadingDiagnostics.Initialize(HarmonyInstance);
+
+            // Initialize fixes (for known issues)
+            TemplateLoadingFixes.Initialize(HarmonyInstance);
+            SceneLoadingFixes.Initialize(HarmonyInstance);
+
+            SdkLogger.Msg("Diagnostics and fixes initialized");
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Error($"Failed to initialize diagnostics: {ex.Message}");
+        }
     }
 
     private void LoadModpacks()

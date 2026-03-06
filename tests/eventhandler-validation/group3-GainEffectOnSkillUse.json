@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - GainEffectOnSkillUse",
+  "description": "Verify GainEffectOnSkillUse EventHandler loads and can be read. Applies effect when skill is used.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with GainEffectOnSkillUse EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"GainEffectOnSkillUse\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.firing_line\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is GainEffectOnSkillUse",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.firing_line|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"GainEffectOnSkillUse\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read Effect parameter",
+      "code": "var effect = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.firing_line|EventHandlers[0]\", \"Effect\"); effect != null && effect.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read SkillFilter parameter",
+      "code": "var skillFilter = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.firing_line|EventHandlers[0]\", \"SkillFilter\"); skillFilter != null"
+    }
+  ]
+}

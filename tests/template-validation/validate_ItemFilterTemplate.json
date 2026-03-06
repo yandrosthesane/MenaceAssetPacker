@@ -1,0 +1,171 @@
+{
+  "name": "Template Validation - ItemFilterTemplate",
+  "description": "Validates all fields can be read from ItemFilterTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ItemFilterTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ItemFilterTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ItemFilterTemplate.accessory exists",
+      "code": "!Menace.SDK.Templates.Find(\"ItemFilterTemplate\", \"accessory\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyNewItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"OnlyNewItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyAvailableItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"OnlyAvailableItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"accessory\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ItemFilterTemplate.anti_armor exists",
+      "code": "!Menace.SDK.Templates.Find(\"ItemFilterTemplate\", \"anti_armor\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyNewItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"OnlyNewItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyAvailableItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"OnlyAvailableItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_armor\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ItemFilterTemplate.anti_vehicle exists",
+      "code": "!Menace.SDK.Templates.Find(\"ItemFilterTemplate\", \"anti_vehicle\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyNewItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"OnlyNewItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OnlyAvailableItems",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"OnlyAvailableItems\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"ItemFilterTemplate\", \"anti_vehicle\", \"IconAssetName\") != null"
+    }
+  ]
+}

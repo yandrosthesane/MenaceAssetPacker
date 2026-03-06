@@ -109,6 +109,23 @@ $DOTNET publish src/Menace.Modkit.App -c Release -r win-x64 --self-contained \
   -o dist/gui-win-x64
 
 # =============================================================================
+# Build MCP Server (must be before bundling step)
+# =============================================================================
+
+echo ""
+echo "📦 Building MCP Server..."
+
+echo "  → Linux x64..."
+$DOTNET publish src/Menace.Modkit.Mcp -c Release -r linux-x64 --self-contained \
+  -p:PublishSingleFile=true -p:DebugType=none -p:DebugSymbols=false \
+  -o dist/mcp-linux-x64
+
+echo "  → Windows x64..."
+$DOTNET publish src/Menace.Modkit.Mcp -c Release -r win-x64 --self-contained \
+  -p:PublishSingleFile=true -p:DebugType=none -p:DebugSymbols=false \
+  -o dist/mcp-win-x64
+
+# =============================================================================
 # Bundle core files with GUI (versions.json for component downloads)
 # =============================================================================
 
@@ -126,6 +143,17 @@ cp third_party/versions.json dist/gui-win-x64/third_party/
 echo "  → Copying bundled components (fallback)..."
 cp -r third_party/bundled dist/gui-linux-x64/third_party/
 cp -r third_party/bundled dist/gui-win-x64/third_party/
+
+# Copy MCP server binaries (optional component for AI assistant integration)
+echo "  → Bundling MCP server..."
+mkdir -p dist/gui-linux-x64/mcp
+mkdir -p dist/gui-win-x64/mcp
+cp dist/mcp-linux-x64/Menace.Modkit.Mcp dist/gui-linux-x64/mcp/
+cp dist/mcp-win-x64/Menace.Modkit.Mcp.exe dist/gui-win-x64/mcp/
+cp mcp/claude_config_example.json dist/gui-linux-x64/mcp/
+cp mcp/claude_config_example.json dist/gui-win-x64/mcp/
+cp mcp/README.md dist/gui-linux-x64/mcp/
+cp mcp/README.md dist/gui-win-x64/mcp/
 
 # =============================================================================
 # Create Component Archives for GitHub Release

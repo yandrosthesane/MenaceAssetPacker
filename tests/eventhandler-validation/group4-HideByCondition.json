@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - HideByCondition",
+  "description": "Verify HideByCondition EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with HideByCondition",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"HideByCondition\"); }); skill != null ? skill.ToString() : null"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"HideByCondition\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null"
+    },
+    {
+      "type": "repl",
+      "name": "Find HideByCondition handler",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"HideByCondition\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); var handler = handlers.ToString().Contains(\"HideByCondition\") ? handlers : null; handler != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"HideByCondition\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); var handlerStr = handlers.ToString(); handlerStr.Contains(\"HideByCondition\") ? true : false"
+    },
+    {
+      "type": "repl",
+      "name": "Read Condition parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"HideByCondition\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null && handlers.ToString().Contains(\"Condition\")"
+    }
+  ]
+}

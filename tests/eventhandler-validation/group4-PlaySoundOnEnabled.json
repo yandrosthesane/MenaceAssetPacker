@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - PlaySoundOnEnabled",
+  "description": "Verify PlaySoundOnEnabled EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with PlaySoundOnEnabled",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlaySoundOnEnabled\"); }); skill != null ? skill.ToString() : null"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlaySoundOnEnabled\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlaySoundOnEnabled\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"PlaySoundOnEnabled\") ? true : false"
+    },
+    {
+      "type": "repl",
+      "name": "Read SoundToPlay parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlaySoundOnEnabled\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"SoundToPlay\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read Volume parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"PlaySoundOnEnabled\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"Volume\")"
+    }
+  ]
+}

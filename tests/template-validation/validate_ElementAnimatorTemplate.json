@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - ElementAnimatorTemplate",
+  "description": "Validates all fields can be read from ElementAnimatorTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ElementAnimatorTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ElementAnimatorTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ElementAnimatorTemplate.animator.alien_01 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ElementAnimatorTemplate\", \"animator.alien_01\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeedBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"SpeedBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"StanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"DisableDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MovementStanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"MovementStanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnderAttackResetDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"UnderAttackResetDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DeathBehaviour",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"DeathBehaviour\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalRagdollKillImpulseArea",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"AdditionalRagdollKillImpulseArea\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitAnimations",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"HitAnimations\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RecoilOnHit",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"RecoilOnHit\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAttachmentAnimatorsOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"DisableAttachmentAnimatorsOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExhaustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"ExhaustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HumanIK",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"HumanIK\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field LeftHandIKBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"LeftHandIKBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NegativeSpeedTurns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"NegativeSpeedTurns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SteeringDirection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"SteeringDirection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxClampSteeringAngle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"MaxClampSteeringAngle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Aiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"Aiming\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"AimSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnDelay180Degree",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"TurnDelay180Degree\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseRootMotionAiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01\", \"UseRootMotionAiming\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ElementAnimatorTemplate.animator.alien_01_big exists",
+      "code": "!Menace.SDK.Templates.Find(\"ElementAnimatorTemplate\", \"animator.alien_01_big\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeedBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"SpeedBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"StanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"DisableDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MovementStanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"MovementStanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnderAttackResetDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"UnderAttackResetDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DeathBehaviour",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"DeathBehaviour\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalRagdollKillImpulseArea",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"AdditionalRagdollKillImpulseArea\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitAnimations",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"HitAnimations\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RecoilOnHit",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"RecoilOnHit\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAttachmentAnimatorsOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"DisableAttachmentAnimatorsOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExhaustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"ExhaustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HumanIK",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"HumanIK\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field LeftHandIKBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"LeftHandIKBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NegativeSpeedTurns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"NegativeSpeedTurns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SteeringDirection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"SteeringDirection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxClampSteeringAngle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"MaxClampSteeringAngle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Aiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"Aiming\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"AimSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnDelay180Degree",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"TurnDelay180Degree\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseRootMotionAiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_big\", \"UseRootMotionAiming\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ElementAnimatorTemplate.animator.alien_01_blaster_bug exists",
+      "code": "!Menace.SDK.Templates.Find(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeedBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"SpeedBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"StanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"DisableDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MovementStanceDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"MovementStanceDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnderAttackResetDelay",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"UnderAttackResetDelay\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DeathBehaviour",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"DeathBehaviour\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalRagdollKillImpulseArea",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"AdditionalRagdollKillImpulseArea\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitAnimations",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"HitAnimations\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RecoilOnHit",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"RecoilOnHit\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAttachmentAnimatorsOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"DisableAttachmentAnimatorsOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExhaustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"ExhaustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HumanIK",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"HumanIK\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field LeftHandIKBlendTime",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"LeftHandIKBlendTime\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NegativeSpeedTurns",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"NegativeSpeedTurns\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SteeringDirection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"SteeringDirection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxClampSteeringAngle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"MaxClampSteeringAngle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Aiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"Aiming\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimSpeed",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"AimSpeed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnDelay180Degree",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"TurnDelay180Degree\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseRootMotionAiming",
+      "code": "Menace.SDK.Templates.GetProperty(\"ElementAnimatorTemplate\", \"animator.alien_01_blaster_bug\", \"UseRootMotionAiming\") != null"
+    }
+  ]
+}

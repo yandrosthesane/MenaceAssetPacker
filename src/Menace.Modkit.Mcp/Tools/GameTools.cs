@@ -301,6 +301,155 @@ public static class GameTools
         return await PostToGame("/repl", new { code });
     }
 
+    [McpServerTool(Name = "game_cmd", Destructive = false)]
+    [Description("Execute a console command in the game. Returns command result. Use this to trigger test commands (test.*), navigate scenes, or any other console command.")]
+    public static async Task<string> GameCmd(
+        [Description("Console command to execute (e.g., 'test.start_mission 12345 1', 'test.assert mission.Seed 12345')")] string command)
+    {
+        return await PostToGame("/cmd", new { cmd = command });
+    }
+
+    [McpServerTool(Name = "game_launch", Destructive = false)]
+    [Description("Launch the game and wait for it to be ready. Returns when game MCP server is accessible. Useful for automated testing workflows.")]
+    public static async Task<string> GameLaunch(
+        [Description("Maximum seconds to wait for game startup (default 60)")] int? timeout = null)
+    {
+        var maxWait = timeout ?? 60;
+
+        try
+        {
+            var gameExe = FindGameExecutable();
+
+            if (gameExe == null)
+                return JsonSerializer.Serialize(new {
+                    success = false,
+                    error = "Game executable not found",
+                    message = "Could not locate Menace.exe. Ensure MODKIT_GAME_PATH is set or game is in default location."
+                }, JsonOptions);
+
+            // Check if game is already running
+            try
+            {
+                var response = await HttpClient.GetAsync($"{GameServerUrl}/status");
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        success = true,
+                        alreadyRunning = true,
+                        message = "Game is already running"
+                    }, JsonOptions);
+                }
+            }
+            catch
+            {
+                // Game not running, proceed with launch
+            }
+
+            // Launch game
+            var process = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = gameExe,
+                WorkingDirectory = System.IO.Path.GetDirectoryName(gameExe),
+                UseShellExecute = false
+            });
+
+            if (process == null)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    success = false,
+                    error = "Failed to start process",
+                    message = "Process.Start returned null"
+                }, JsonOptions);
+            }
+
+            // Wait for game MCP server to respond
+            var start = DateTime.Now;
+            while ((DateTime.Now - start).TotalSeconds < maxWait)
+            {
+                try
+                {
+                    var response = await HttpClient.GetAsync($"{GameServerUrl}/status");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var elapsed = (DateTime.Now - start).TotalSeconds;
+                        return JsonSerializer.Serialize(new
+                        {
+                            success = true,
+                            alreadyRunning = false,
+                            processId = process.Id,
+                            elapsedSeconds = elapsed,
+                            message = $"Game started successfully in {elapsed:F1}s"
+                        }, JsonOptions);
+                    }
+                }
+                catch
+                {
+                    // Game not ready yet
+                }
+
+                if (process.HasExited)
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        success = false,
+                        error = "Game exited during startup",
+                        exitCode = process.ExitCode,
+                        message = $"Game process exited with code {process.ExitCode} before MCP server became available"
+                    }, JsonOptions);
+                }
+
+                await Task.Delay(1000);
+            }
+
+            return JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = "Game startup timeout",
+                message = $"Game did not respond after {maxWait} seconds. Process is running but MCP server may not be enabled."
+            }, JsonOptions);
+        }
+        catch (Exception ex)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = "Launch failed",
+                message = ex.Message,
+                stackTrace = ex.StackTrace
+            }, JsonOptions);
+        }
+    }
+
+    private static string FindGameExecutable()
+    {
+        // Check environment variable first
+        var envPath = Environment.GetEnvironmentVariable("MODKIT_GAME_PATH");
+        if (!string.IsNullOrEmpty(envPath) && System.IO.File.Exists(envPath))
+            return envPath;
+
+        // Check common locations
+        var commonPaths = new[]
+        {
+            @"C:\Program Files (x86)\Steam\steamapps\common\Menace\Menace.exe",
+            @"C:\Program Files\Steam\steamapps\common\Menace\Menace.exe",
+            @"D:\SteamLibrary\steamapps\common\Menace\Menace.exe",
+            @"E:\SteamLibrary\steamapps\common\Menace\Menace.exe"
+        };
+
+        foreach (var path in commonPaths)
+        {
+            if (System.IO.File.Exists(path))
+                return path;
+        }
+
+        // Try to find via registry (Steam library locations)
+        // TODO: Could add Steam library folder discovery here
+
+        return null;
+    }
+
     /// <summary>
     /// Fetch data from the game's MCP HTTP server.
     /// Returns the JSON response or an error object if the game is not running.

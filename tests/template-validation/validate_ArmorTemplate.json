@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - ArmorTemplate",
+  "description": "Validates all fields can be read from ArmorTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ArmorTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ArmorTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ArmorTemplate.armor.civilian_rogue_army_generic_medium_tier1_SIPV exists",
+      "code": "!Menace.SDK.Templates.Find(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasSpecialFemaleModels",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"HasSpecialFemaleModels\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquadLeaderMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"SquadLeaderMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"OverrideScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Armor",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Armor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DurabilityPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"DurabilityPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageResistance",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"DamageResistance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"HitpointsPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElementMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"HitpointsPerElementMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Accuracy",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Accuracy\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefenseMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"DefenseMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Discipline",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Discipline\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisciplineMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"DisciplineMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Vision",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Vision\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"VisionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Detection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Detection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DetectionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"DetectionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ConcealmentMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_rogue_army_generic_medium_tier1_SIPV\", \"ConcealmentMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ArmorTemplate.armor.civilian_worker_outfit exists",
+      "code": "!Menace.SDK.Templates.Find(\"ArmorTemplate\", \"armor.civilian_worker_outfit\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasSpecialFemaleModels",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"HasSpecialFemaleModels\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquadLeaderMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"SquadLeaderMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"OverrideScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Armor",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Armor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DurabilityPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"DurabilityPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageResistance",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"DamageResistance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"HitpointsPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElementMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"HitpointsPerElementMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Accuracy",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Accuracy\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefenseMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"DefenseMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Discipline",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Discipline\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisciplineMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"DisciplineMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Vision",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Vision\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"VisionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Detection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Detection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DetectionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"DetectionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ConcealmentMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.civilian_worker_outfit\", \"ConcealmentMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ArmorTemplate.armor.model_test exists",
+      "code": "!Menace.SDK.Templates.Find(\"ArmorTemplate\", \"armor.model_test\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasSpecialFemaleModels",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"HasSpecialFemaleModels\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquadLeaderMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"SquadLeaderMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"OverrideScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Armor",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Armor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DurabilityPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"DurabilityPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageResistance",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"DamageResistance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"HitpointsPerElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HitpointsPerElementMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"HitpointsPerElementMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Accuracy",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Accuracy\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefenseMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"DefenseMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Discipline",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Discipline\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisciplineMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"DisciplineMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Vision",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Vision\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"VisionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Detection",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Detection\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DetectionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"DetectionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ConcealmentMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ArmorTemplate\", \"armor.model_test\", \"ConcealmentMult\") != null"
+    }
+  ]
+}

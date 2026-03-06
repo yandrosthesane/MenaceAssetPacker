@@ -39,8 +39,10 @@ packages.lock.json
 
 PLAN.md
 
+# Working documents (temporary/in-progress documentation)
+working-docs/
+
 # Developer notes (internal debugging/exploration docs)
-docs/dev-notes/
 docs/dev-notes/
 
 # Generated at build time from versions.json

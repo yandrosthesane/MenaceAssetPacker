@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - VehicleItemTemplate",
+  "description": "Validates all fields can be read from VehicleItemTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify VehicleItemTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"VehicleItemTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify VehicleItemTemplate.vehicle.captured_rogue_heavy_tank exists",
+      "code": "!Menace.SDK.Templates.Find(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccessorySlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"AccessorySlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EntityTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"EntityTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.captured_rogue_heavy_tank\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify VehicleItemTemplate.vehicle.chassis_atv exists",
+      "code": "!Menace.SDK.Templates.Find(\"VehicleItemTemplate\", \"vehicle.chassis_atv\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccessorySlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"AccessorySlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EntityTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"EntityTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBar",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"IconSkillBar\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_atv\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify VehicleItemTemplate.vehicle.chassis_carrier exists",
+      "code": "!Menace.SDK.Templates.Find(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccessorySlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"AccessorySlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EntityTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"EntityTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBar",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"IconSkillBar\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"VehicleItemTemplate\", \"vehicle.chassis_carrier\", \"DisplayShortName\") != null"
+    }
+  ]
+}

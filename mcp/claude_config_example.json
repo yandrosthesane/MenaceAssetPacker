@@ -1,0 +1,18 @@
+{
+  "$comment": "Example configuration for Claude Code and Claude Desktop",
+  "$comment2": "For Claude Code: Copy this to ~/.claude/mcp.json or your project directory as .mcp.json",
+  "$comment3": "For Claude Desktop on macOS: ~/Library/Application Support/Claude/claude_desktop_config.json",
+  "$comment4": "For Claude Desktop on Windows: %APPDATA%\\Claude\\claude_desktop_config.json",
+  "$comment5": "For Claude Desktop on Linux: ~/.config/Claude/claude_desktop_config.json",
+  "$comment6": "Replace MODKIT_INSTALL_PATH with your actual installation path",
+
+  "mcpServers": {
+    "menace-modkit": {
+      "comment": "For Linux/macOS, use the path below:",
+      "command": "MODKIT_INSTALL_PATH/mcp/Menace.Modkit.Mcp",
+
+      "comment_windows": "For Windows, use this format instead:",
+      "command_windows_example": "C:\\Program Files\\MenaceModkit\\mcp\\Menace.Modkit.Mcp.exe"
+    }
+  }
+}

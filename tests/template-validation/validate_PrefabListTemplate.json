@@ -1,0 +1,51 @@
+{
+  "name": "Template Validation - PrefabListTemplate",
+  "description": "Validates all fields can be read from PrefabListTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify PrefabListTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"PrefabListTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PrefabListTemplate.decorations.bricks exists",
+      "code": "!Menace.SDK.Templates.Find(\"PrefabListTemplate\", \"decorations.bricks\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PrefabListTemplate\", \"decorations.bricks\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PrefabListTemplate.decorations.civilian exists",
+      "code": "!Menace.SDK.Templates.Find(\"PrefabListTemplate\", \"decorations.civilian\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PrefabListTemplate\", \"decorations.civilian\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PrefabListTemplate.decorations.garbage exists",
+      "code": "!Menace.SDK.Templates.Find(\"PrefabListTemplate\", \"decorations.garbage\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PrefabListTemplate\", \"decorations.garbage\", \"name\") != null"
+    }
+  ]
+}

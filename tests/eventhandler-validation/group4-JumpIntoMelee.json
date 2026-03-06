@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - JumpIntoMelee",
+  "description": "Verify JumpIntoMelee EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with JumpIntoMelee",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); skill != null ? skill.ToString() : null"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"JumpIntoMelee\") ? true : false"
+    },
+    {
+      "type": "repl",
+      "name": "Read Animation parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"Animation\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read DelayBeforeJump parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"DelayBeforeJump\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read MaxHeight parameter",
+      "code": "var skill = Menace.SDK.Templates.FindAll(\"SkillTemplate\").FirstOrDefault(s => { var eh = Menace.SDK.Templates.GetProperty(s, \"EventHandlers\"); return eh != null && eh.ToString().Contains(\"JumpIntoMelee\"); }); var handlers = Menace.SDK.Templates.GetProperty(skill, \"EventHandlers\"); handlers.ToString().Contains(\"MaxHeight\")"
+    }
+  ]
+}

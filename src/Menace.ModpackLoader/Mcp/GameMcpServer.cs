@@ -273,6 +273,14 @@ public static class GameMcpServer
                 "/repl" => HandleRepl(request),
                 // Console command execution
                 "/cmd" => HandleCmd(request),
+                // Localization endpoints
+                "/localization/all" => HandleLocalizationAll(request),
+                "/localization/get" => HandleLocalizationGet(request),
+                "/localization/languages" => HandleLocalizationLanguages(),
+                "/localization/categories" => HandleLocalizationCategories(request),
+                "/localization/keys" => HandleLocalizationKeys(request),
+                "/localization/statistics" => HandleLocalizationStatistics(),
+                "/template/localization" => HandleTemplateLocalization(request),
                 _ => new { error = "Unknown endpoint", path }
             };
 
@@ -280,7 +288,15 @@ public static class GameMcpServer
         }
         catch (Exception ex)
         {
-            SendJson(response, new { error = ex.Message }, 500);
+            SdkLogger.Error($"[GameMcp] Error handling request {request.Url}: {ex.Message}");
+            SdkLogger.Error(ex.StackTrace);
+
+            SendJson(response, new
+            {
+                error = ex.Message,
+                type = ex.GetType().Name,
+                path = request.Url?.AbsolutePath
+            }, 500);
         }
     }
 
@@ -1564,16 +1580,306 @@ public static class GameMcpServer
         return GameObj.Null;
     }
 
+    #region Localization Endpoints
+
+    private static Dictionary<string, object> ReadJsonRequestBody(HttpListenerRequest request)
+    {
+        if (request.HttpMethod != "POST" || !request.HasEntityBody)
+        {
+            return new Dictionary<string, object>();
+        }
+
+        using var reader = new System.IO.StreamReader(request.InputStream, request.ContentEncoding);
+        var body = reader.ReadToEnd();
+
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(body);
+            var result = new Dictionary<string, object>();
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                result[property.Name] = property.Value.ValueKind switch
+                {
+                    System.Text.Json.JsonValueKind.String => property.Value.GetString(),
+                    System.Text.Json.JsonValueKind.Number => property.Value.GetInt32(),
+                    System.Text.Json.JsonValueKind.True => true,
+                    System.Text.Json.JsonValueKind.False => false,
+                    _ => property.Value.ToString()
+                };
+            }
+
+            return result;
+        }
+        catch
+        {
+            return new Dictionary<string, object>();
+        }
+    }
+
+    private static object HandleLocalizationAll(HttpListenerRequest request)
+    {
+        try
+        {
+            var body = ReadJsonRequestBody(request);
+            var category = body["category"]?.ToString();
+            var key = body["key"]?.ToString();
+
+            if (string.IsNullOrEmpty(category) || string.IsNullOrEmpty(key))
+            {
+                return new { success = false, error = "Missing required parameters: category, key" };
+            }
+
+            var translations = MultiLingualLocalization.GetAllTranslations(category, key);
+
+            if (translations == null || translations.Count == 0)
+            {
+                return new { success = false, error = $"No translations found for key: {category}.{key}" };
+            }
+
+            return new
+            {
+                success = true,
+                category,
+                key,
+                translations,
+                languageCount = translations.Count
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message, stackTrace = ex.StackTrace };
+        }
+    }
+
+    private static object HandleLocalizationGet(HttpListenerRequest request)
+    {
+        try
+        {
+            var body = ReadJsonRequestBody(request);
+            var language = body["language"]?.ToString();
+            var category = body["category"]?.ToString();
+            var key = body["key"]?.ToString();
+
+            if (string.IsNullOrEmpty(language) || string.IsNullOrEmpty(category) || string.IsNullOrEmpty(key))
+            {
+                return new { success = false, error = "Missing required parameters: language, category, key" };
+            }
+
+            var translation = MultiLingualLocalization.GetTranslation(language, category, key);
+
+            if (translation == null)
+            {
+                return new { success = false, error = $"Translation not found for {language}/{category}/{key}" };
+            }
+
+            return new
+            {
+                success = true,
+                language,
+                category,
+                key,
+                translation
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    private static object HandleLocalizationLanguages()
+    {
+        try
+        {
+            var languages = MultiLingualLocalization.GetAvailableLanguages();
+
+            return new
+            {
+                success = true,
+                languageCount = languages.Length,
+                languages
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    private static object HandleLocalizationCategories(HttpListenerRequest request)
+    {
+        try
+        {
+            var body = ReadJsonRequestBody(request);
+            var language = body["language"]?.ToString();
+
+            if (string.IsNullOrEmpty(language))
+            {
+                return new { success = false, error = "Missing required parameter: language" };
+            }
+
+            var categories = MultiLingualLocalization.GetCategories(language);
+
+            return new
+            {
+                success = true,
+                language,
+                categoryCount = categories.Length,
+                categories
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    private static object HandleLocalizationKeys(HttpListenerRequest request)
+    {
+        try
+        {
+            var body = ReadJsonRequestBody(request);
+            var language = body["language"]?.ToString();
+            var category = body["category"]?.ToString();
+            var filter = body.ContainsKey("filter") ? body["filter"]?.ToString() : null;
+            var limit = 100;
+
+            if (body.ContainsKey("limit") && body["limit"] != null)
+            {
+                if (int.TryParse(body["limit"].ToString(), out var parsedLimit))
+                {
+                    limit = parsedLimit;
+                }
+            }
+
+            if (string.IsNullOrEmpty(language) || string.IsNullOrEmpty(category))
+            {
+                return new { success = false, error = "Missing required parameters: language, category" };
+            }
+
+            var keys = MultiLingualLocalization.GetKeys(language, category);
+
+            // Apply filter if provided
+            if (!string.IsNullOrEmpty(filter))
+            {
+                keys = keys.Where(k => k.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToArray();
+            }
+
+            // Apply limit
+            var limitedKeys = keys.Take(limit).ToArray();
+
+            return new
+            {
+                success = true,
+                language,
+                category,
+                totalKeys = keys.Length,
+                returnedKeys = limitedKeys.Length,
+                keys = limitedKeys
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    private static object HandleLocalizationStatistics()
+    {
+        try
+        {
+            var stats = MultiLingualLocalization.GetStatistics();
+
+            return new
+            {
+                success = true,
+                statistics = stats
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    private static object HandleTemplateLocalization(HttpListenerRequest request)
+    {
+        try
+        {
+            var type = request.QueryString["type"];
+            var name = request.QueryString["name"];
+            var field = request.QueryString["field"];
+
+            if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(field))
+            {
+                return new { success = false, error = "Missing required parameters: type, name, field" };
+            }
+
+            // Get full localization info for the field
+            var info = Templates.GetLocalizationInfo(type, name, field);
+
+            if (info == null)
+            {
+                return new
+                {
+                    success = false,
+                    error = "Field not found or not a localization field",
+                    isLocalizationField = false
+                };
+            }
+
+            return new
+            {
+                success = true,
+                type,
+                name,
+                field,
+                localization = info
+            };
+        }
+        catch (Exception ex)
+        {
+            return new { success = false, error = ex.Message };
+        }
+    }
+
+    #endregion
+
     private static void SendJson(HttpListenerResponse response, object data, int statusCode = 200)
     {
-        response.StatusCode = statusCode;
-        response.ContentType = "application/json";
-        response.Headers.Add("Access-Control-Allow-Origin", "*");
+        try
+        {
+            response.StatusCode = statusCode;
+            response.ContentType = "application/json";
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
 
-        var json = JsonSerializer.Serialize(data, JsonOptions);
-        var buffer = Encoding.UTF8.GetBytes(json);
-        response.ContentLength64 = buffer.Length;
-        response.OutputStream.Write(buffer, 0, buffer.Length);
-        response.Close();
+            var json = JsonSerializer.Serialize(data, JsonOptions);
+            var buffer = Encoding.UTF8.GetBytes(json);
+            response.ContentLength64 = buffer.Length;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
+            response.Close();
+        }
+        catch (Exception ex)
+        {
+            // If serialization or sending fails, try to send a simple error response
+            try
+            {
+                response.StatusCode = 500;
+                response.ContentType = "application/json";
+                var errorJson = $"{{\"error\":\"Failed to serialize response: {ex.Message.Replace("\"", "\\\"")}\",\"type\":\"{ex.GetType().Name}\"}}";
+                var errorBuffer = Encoding.UTF8.GetBytes(errorJson);
+                response.ContentLength64 = errorBuffer.Length;
+                response.OutputStream.Write(errorBuffer, 0, errorBuffer.Length);
+                response.Close();
+            }
+            catch
+            {
+                // Last resort: just close the connection
+                try { response.Close(); } catch { }
+            }
+
+            SdkLogger.Error($"[GameMcp] Failed to send JSON response: {ex.Message}");
+        }
     }
 }

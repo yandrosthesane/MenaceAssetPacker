@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - WeaponTemplate",
+  "description": "Validates all fields can be read from WeaponTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeaponTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"WeaponTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeaponTemplate.turret.construct_gunslinger_twin_heavy_auto_repeater exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamageToArmorDurabilityMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamageToArmorDurabilityDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoffMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_gunslinger_twin_heavy_auto_repeater\", \"DamageToArmorDurabilityDropoffMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeaponTemplate.turret.construct_heavy_auto_repeater exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamageToArmorDurabilityMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamageToArmorDurabilityDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoffMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_heavy_auto_repeater\", \"DamageToArmorDurabilityDropoffMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeaponTemplate.turret.construct_rocket_launcher exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeaponTemplate\", \"turret.construct_rocket_launcher\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamageToArmorDurabilityMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamageToArmorDurabilityDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityDropoffMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeaponTemplate\", \"turret.construct_rocket_launcher\", \"DamageToArmorDurabilityDropoffMult\") != null"
+    }
+  ]
+}

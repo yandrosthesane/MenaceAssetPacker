@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - SuppressionConstruct",
+  "description": "Verify SuppressionConstruct EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find construct with SuppressionConstruct EventHandler",
+      "type": "repl",
+      "code": "var constructs = Menace.SDK.Templates.FindAll(\"ConstructTemplate\"); constructs.Length > 0"
+    },
+    {
+      "name": "Search for construct with SuppressionConstruct handler",
+      "type": "repl",
+      "code": "var found = false; var constructs = Menace.SDK.Templates.FindAll(\"ConstructTemplate\"); foreach(var constructName in constructs) { var handlers = Menace.SDK.Templates.GetProperty(\"ConstructTemplate\", constructName, \"EventHandlers\"); if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"SuppressionConstruct\") { found = true; break; } } if(found) break; } } found"
+    },
+    {
+      "name": "Load EventHandlers from a specific construct",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"ConstructTemplate\", \"construct.security_camera\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"ConstructTemplate\", \"construct.security_camera\", \"EventHandlers\"); handlers != null && handlers.GetType().IsArray"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"ConstructTemplate\", \"construct.security_camera\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; break; } } } found"
+    },
+    {
+      "name": "Read PinnedDownText parameter field from SuppressionConstruct",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"ConstructTemplate\", \"construct.security_camera\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"SuppressionConstruct\") { var field = h.GetType().GetField(\"PinnedDownText\"); if(field != null) { found = true; break; } } } } found"
+    }
+  ]
+}

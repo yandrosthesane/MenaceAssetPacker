@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - EntityTemplate",
+  "description": "Validates all fields can be read from EntityTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify EntityTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"EntityTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EntityTemplate.bunker exists",
+      "code": "!Menace.SDK.Templates.Find(\"EntityTemplate\", \"bunker\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StructureType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"StructureType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ElementsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMax",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ElementsMax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChanceForFemaleElements",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ChanceForFemaleElements\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmyPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ArmyPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ProvidesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCoverWhenDestroyed",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ProvidesCoverWhenDestroyed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UsesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"UsesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsContainableInEntities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsContainableInEntities\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ContainerType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ContainerType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DespawnIfEmpty",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"DespawnIfEmpty\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsIgnoredInActorCount",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsIgnoredInActorCount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestructible",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsDestructible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSurfaceChangedOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsSurfaceChangedOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChangeSurfaceOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"ChangeSurfaceOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTraversableByInfantry",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsTraversableByInfantry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAffectedByFatalities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"bunker\", \"IsAffectedByFatalities\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EntityTemplate.building_civilian_greenhouse_01 exists",
+      "code": "!Menace.SDK.Templates.Find(\"EntityTemplate\", \"building_civilian_greenhouse_01\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StructureType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"StructureType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ElementsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMax",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ElementsMax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChanceForFemaleElements",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ChanceForFemaleElements\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmyPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ArmyPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ProvidesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCoverWhenDestroyed",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ProvidesCoverWhenDestroyed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UsesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"UsesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsContainableInEntities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsContainableInEntities\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ContainerType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ContainerType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DespawnIfEmpty",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"DespawnIfEmpty\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsIgnoredInActorCount",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsIgnoredInActorCount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestructible",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsDestructible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSurfaceChangedOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsSurfaceChangedOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChangeSurfaceOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"ChangeSurfaceOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTraversableByInfantry",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsTraversableByInfantry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAffectedByFatalities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_greenhouse_01\", \"IsAffectedByFatalities\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EntityTemplate.building_civilian_habitat_large_01 exists",
+      "code": "!Menace.SDK.Templates.Find(\"EntityTemplate\", \"building_civilian_habitat_large_01\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StructureType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"StructureType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ElementsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElementsMax",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ElementsMax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChanceForFemaleElements",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ChanceForFemaleElements\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmyPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ArmyPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ProvidesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProvidesCoverWhenDestroyed",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ProvidesCoverWhenDestroyed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UsesCover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"UsesCover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsContainableInEntities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsContainableInEntities\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ContainerType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ContainerType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DespawnIfEmpty",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"DespawnIfEmpty\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsIgnoredInActorCount",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsIgnoredInActorCount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestructible",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsDestructible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSurfaceChangedOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsSurfaceChangedOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ChangeSurfaceOnDeath",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"ChangeSurfaceOnDeath\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTraversableByInfantry",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsTraversableByInfantry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAffectedByFatalities",
+      "code": "Menace.SDK.Templates.GetProperty(\"EntityTemplate\", \"building_civilian_habitat_large_01\", \"IsAffectedByFatalities\") != null"
+    }
+  ]
+}

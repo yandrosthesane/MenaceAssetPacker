@@ -1,0 +1,141 @@
+{
+  "name": "Template Validation - UnitRankTemplate",
+  "description": "Validates all fields can be read from UnitRankTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitRankTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"UnitRankTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitRankTemplate.1_lance_corporal exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitRankTemplate\", \"1_lance_corporal\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RankType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"RankType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"PromotionCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"1_lance_corporal\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitRankTemplate.2_corporal exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitRankTemplate\", \"2_corporal\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RankType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"RankType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"PromotionCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"2_corporal\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitRankTemplate.3_sergeant exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitRankTemplate\", \"3_sergeant\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RankType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"RankType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"PromotionCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitRankTemplate\", \"3_sergeant\", \"IconAssetName\") != null"
+    }
+  ]
+}

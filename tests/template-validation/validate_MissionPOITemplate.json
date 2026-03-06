@@ -1,0 +1,156 @@
+{
+  "name": "Template Validation - MissionPOITemplate",
+  "description": "Validates all fields can be read from MissionPOITemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPOITemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"MissionPOITemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPOITemplate.mission_poi.admin_center exists",
+      "code": "!Menace.SDK.Templates.Find(\"MissionPOITemplate\", \"mission_poi.admin_center\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.admin_center\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPOITemplate.mission_poi.capture_primary exists",
+      "code": "!Menace.SDK.Templates.Find(\"MissionPOITemplate\", \"mission_poi.capture_primary\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.capture_primary\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPOITemplate.mission_poi.destroy_primary exists",
+      "code": "!Menace.SDK.Templates.Find(\"MissionPOITemplate\", \"mission_poi.destroy_primary\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPOITemplate\", \"mission_poi.destroy_primary\", \"IconAssetName\") != null"
+    }
+  ]
+}

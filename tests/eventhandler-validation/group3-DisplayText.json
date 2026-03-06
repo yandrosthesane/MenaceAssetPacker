@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - DisplayText",
+  "description": "Verify DisplayText EventHandler loads and can be read. Displays text messages to player.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with DisplayText EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"DisplayText\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.overwatch\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is DisplayText",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.overwatch|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"DisplayText\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read DefaultText parameter",
+      "code": "var defaultText = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.overwatch|EventHandlers[0]\", \"DefaultText\"); defaultText != null && defaultText.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read LocaKey parameter",
+      "code": "var locaKey = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.overwatch|EventHandlers[0]\", \"LocaKey\"); locaKey != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read Event parameter",
+      "code": "var evt = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.overwatch|EventHandlers[0]\", \"Event\"); evt != null"
+    }
+  ]
+}

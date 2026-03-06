@@ -1,0 +1,66 @@
+{
+  "name": "Template Validation - OperationIntrosTemplate",
+  "description": "Validates all fields can be read from OperationIntrosTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationIntrosTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"OperationIntrosTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationIntrosTemplate.operation_intros.backbone exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationIntrosTemplate\", \"operation_intros.backbone\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.backbone\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.backbone\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationIntrosTemplate.operation_intros.dice exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationIntrosTemplate\", \"operation_intros.dice\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.dice\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.dice\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationIntrosTemplate.operation_intros.zaynbeecher exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationIntrosTemplate\", \"operation_intros.zaynbeecher\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.zaynbeecher\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationIntrosTemplate\", \"operation_intros.zaynbeecher\", \"m_ID\") != null"
+    }
+  ]
+}

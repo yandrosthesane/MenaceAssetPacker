@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - UnitLeaderTemplate",
+  "description": "Validates all fields can be read from UnitLeaderTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitLeaderTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"UnitLeaderTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitLeaderTemplate.pilot.achilleas exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitLeaderTemplate\", \"pilot.achilleas\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HiringCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"HiringCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Gender",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"Gender\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkinColor",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"SkinColor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"UnitActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field QualityLevel",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"QualityLevel\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GrowthPotential",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"GrowthPotential\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FixedSupplyCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"FixedSupplyCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"PromotionTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquaddieTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"SquaddieTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeakerTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"SpeakerTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"UnitTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"UnitDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InfantryUnitTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"InfantryUnitTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PilotInventoryTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"PilotInventoryTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Slot",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"Slot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInactive",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"SlotInactive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInjured",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.achilleas\", \"SlotInjured\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitLeaderTemplate.pilot.bog exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitLeaderTemplate\", \"pilot.bog\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HiringCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"HiringCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Gender",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"Gender\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkinColor",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"SkinColor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"UnitActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field QualityLevel",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"QualityLevel\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GrowthPotential",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"GrowthPotential\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FixedSupplyCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"FixedSupplyCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"PromotionTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquaddieTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"SquaddieTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeakerTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"SpeakerTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"UnitTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"UnitDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InfantryUnitTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"InfantryUnitTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PilotInventoryTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"PilotInventoryTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Slot",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"Slot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInactive",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"SlotInactive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInjured",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.bog\", \"SlotInjured\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify UnitLeaderTemplate.pilot.exconde exists",
+      "code": "!Menace.SDK.Templates.Find(\"UnitLeaderTemplate\", \"pilot.exconde\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HiringCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"HiringCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Gender",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"Gender\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkinColor",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"SkinColor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitActorType",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"UnitActorType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field QualityLevel",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"QualityLevel\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GrowthPotential",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"GrowthPotential\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FixedSupplyCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"FixedSupplyCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PromotionTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"PromotionTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SquaddieTax",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"SquaddieTax\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SpeakerTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"SpeakerTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"UnitTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnitDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"UnitDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InfantryUnitTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"InfantryUnitTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PilotInventoryTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"PilotInventoryTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Slot",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"Slot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInactive",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"SlotInactive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotInjured",
+      "code": "Menace.SDK.Templates.GetProperty(\"UnitLeaderTemplate\", \"pilot.exconde\", \"SlotInjured\") != null"
+    }
+  ]
+}

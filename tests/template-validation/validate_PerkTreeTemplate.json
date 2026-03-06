@@ -1,0 +1,51 @@
+{
+  "name": "Template Validation - PerkTreeTemplate",
+  "description": "Validates all fields can be read from PerkTreeTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTreeTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"PerkTreeTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTreeTemplate.perk_tree.achilleas_vehicle exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTreeTemplate\", \"perk_tree.achilleas_vehicle\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTreeTemplate\", \"perk_tree.achilleas_vehicle\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTreeTemplate.perk_tree.bog_vehicle exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTreeTemplate\", \"perk_tree.bog_vehicle\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTreeTemplate\", \"perk_tree.bog_vehicle\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTreeTemplate.perk_tree.carda exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTreeTemplate\", \"perk_tree.carda\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTreeTemplate\", \"perk_tree.carda\", \"name\") != null"
+    }
+  ]
+}

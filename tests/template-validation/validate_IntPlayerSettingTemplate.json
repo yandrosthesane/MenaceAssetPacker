@@ -1,0 +1,156 @@
+{
+  "name": "Template Validation - IntPlayerSettingTemplate",
+  "description": "Validates all fields can be read from IntPlayerSettingTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify IntPlayerSettingTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"IntPlayerSettingTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify IntPlayerSettingTemplate.audio_ambience_volume exists",
+      "code": "!Menace.SDK.Templates.Find(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Measure",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"Measure\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_ambience_volume\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify IntPlayerSettingTemplate.audio_effects_volume exists",
+      "code": "!Menace.SDK.Templates.Find(\"IntPlayerSettingTemplate\", \"audio_effects_volume\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Measure",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"Measure\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_effects_volume\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify IntPlayerSettingTemplate.audio_master_volume exists",
+      "code": "!Menace.SDK.Templates.Find(\"IntPlayerSettingTemplate\", \"audio_master_volume\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Measure",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"Measure\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"IntPlayerSettingTemplate\", \"audio_master_volume\", \"Name\") != null"
+    }
+  ]
+}

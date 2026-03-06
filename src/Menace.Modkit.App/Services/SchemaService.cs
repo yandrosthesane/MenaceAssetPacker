@@ -346,6 +346,17 @@ public class SchemaService
         return null;
     }
 
+    /// <summary>
+    /// Get enum type name to value mappings for a specific enum.
+    /// Returns a copy of the enum values dictionary, or null if not found.
+    /// </summary>
+    public Dictionary<int, string>? GetEnumValues(string enumTypeName)
+    {
+        return _enumsByType.TryGetValue(enumTypeName, out var values)
+            ? new Dictionary<int, string>(values)  // Return copy
+            : null;
+    }
+
     public bool IsLoaded => _isLoaded;
 
     /// <summary>

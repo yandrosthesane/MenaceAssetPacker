@@ -1,0 +1,10 @@
+{
+  "name": "Simple Parse Test",
+  "steps": [
+    {
+      "type": "wait",
+      "name": "Wait 1 second",
+      "durationMs": 1000
+    }
+  ]
+}

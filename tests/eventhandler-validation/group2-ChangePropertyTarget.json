@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - ChangePropertyTarget",
+  "description": "Verify ChangePropertyTarget EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find skill with ChangePropertyTarget EventHandler",
+      "type": "repl",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); skills.Length > 0"
+    },
+    {
+      "name": "Find skill using this handler",
+      "type": "repl",
+      "code": "\nvar skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\");\nvar found = false;\nforeach(var skillName in skills) {\n    try {\n        var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skillName.ToString(), \"EventHandlers\");\n        if(handlers != null) {\n            foreach(var h in (System.Collections.IEnumerable)handlers) {\n                if(h.GetType().Name == \"ChangePropertyTarget\") {\n                    found = true;\n                    break;\n                }\n            }\n        }\n        if(found) break;\n    } catch { }\n}\nfound\n"
+    },
+    {
+      "name": "Load EventHandlers array",
+      "type": "repl",
+      "code": "\nvar skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\");\nvar handlers = null;\nforeach(var skillName in skills) {\n    try {\n        var h = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skillName.ToString(), \"EventHandlers\");\n        if(h != null) {\n            foreach(var handler in (System.Collections.IEnumerable)h) {\n                if(handler.GetType().Name == \"ChangePropertyTarget\") {\n                    handlers = h;\n                    break;\n                }\n            }\n        }\n        if(handlers != null) break;\n    } catch { }\n}\nhandlers != null\n"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "\nvar skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\");\nvar found = false;\nforeach(var skillName in skills) {\n    try {\n        var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skillName.ToString(), \"EventHandlers\");\n        if(handlers != null) {\n            foreach(var h in (System.Collections.IEnumerable)handlers) {\n                if(h.GetType().Name == \"ChangePropertyTarget\") {\n                    var typeField = h.GetType().GetField(\"_type\");\n                    if(typeField != null) {\n                        found = true;\n                    }\n                    break;\n                }\n            }\n        }\n        if(found) break;\n    } catch { }\n}\nfound\n"
+    },
+    {
+      "name": "Read Properties parameter field",
+      "type": "repl",
+      "code": "\nvar skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\");\nvar found = false;\nforeach(var skillName in skills) {\n    try {\n        var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skillName.ToString(), \"EventHandlers\");\n        if(handlers != null) {\n            foreach(var h in (System.Collections.IEnumerable)handlers) {\n                if(h.GetType().Name == \"ChangePropertyTarget\") {\n                    var field = h.GetType().GetField(\"Properties\");\n                    if(field != null) {\n                        found = true;\n                    }\n                    break;\n                }\n            }\n        }\n        if(found) break;\n    } catch { }\n}\nfound\n"
+    }
+  ]
+}

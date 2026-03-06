@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - EnemiesDropPickupOnDeath",
+  "description": "Verify EnemiesDropPickupOnDeath EventHandler loads and can be read. Enemies drop pickups when killed.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with EnemiesDropPickupOnDeath EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"EnemiesDropPickupOnDeath\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.scavenger\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is EnemiesDropPickupOnDeath",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.scavenger|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"EnemiesDropPickupOnDeath\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read Pickup parameter",
+      "code": "var pickup = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.scavenger|EventHandlers[0]\", \"Pickup\"); pickup != null && pickup.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read SpawnDelay parameter",
+      "code": "var spawnDelay = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.scavenger|EventHandlers[0]\", \"SpawnDelay\"); spawnDelay != null"
+    }
+  ]
+}

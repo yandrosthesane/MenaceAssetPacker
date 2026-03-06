@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - DamageOverTime",
+  "description": "Verify DamageOverTime EventHandler loads and can be read. DoT effects deal damage across multiple turns.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with DamageOverTime EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"DamageOverTime\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"damage_effect.medium_fire\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is DamageOverTime",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"damage_effect.medium_fire|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"DamageOverTime\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamagePctMaxHitpoints parameter",
+      "code": "var dmgPct = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"damage_effect.medium_fire|EventHandlers[0]\", \"DamagePctMaxHitpoints\"); dmgPct != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamageVisualizationType parameter",
+      "code": "var vizType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"damage_effect.medium_fire|EventHandlers[0]\", \"DamageVisualizationType\"); vizType != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read ArmorPenetration parameter",
+      "code": "var armorPen = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"damage_effect.medium_fire|EventHandlers[0]\", \"ArmorPenetration\"); armorPen != null"
+    }
+  ]
+}

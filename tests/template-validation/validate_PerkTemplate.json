@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - PerkTemplate",
+  "description": "Validates all fields can be read from PerkTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"PerkTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTemplate.perk.ambush exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTemplate\", \"perk.ambush\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.ambush\", \"IsAlwaysHitting\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTemplate.perk.armor_specialist exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTemplate\", \"perk.armor_specialist\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.armor_specialist\", \"IsAlwaysHitting\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PerkTemplate.perk.assassin exists",
+      "code": "!Menace.SDK.Templates.Find(\"PerkTemplate\", \"perk.assassin\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.assassin\", \"IsAlwaysHitting\") != null"
+    }
+  ]
+}

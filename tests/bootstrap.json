@@ -1,0 +1,162 @@
+{
+  "name": "Bootstrap Test - Validate Test Infrastructure",
+  "continueOnFailure": true,
+  "steps": [
+    {
+      "type": "command",
+      "name": "Test 1: Check test harness is loaded",
+      "command": "test.status"
+    },
+    {
+      "type": "command",
+      "name": "Test 2: Verify current scene",
+      "command": "test.scene"
+    },
+    {
+      "type": "repl",
+      "name": "Test 3: Check REPL basic execution",
+      "code": "1 + 1"
+    },
+    {
+      "type": "repl",
+      "name": "Test 4: Check REPL can access SDK",
+      "code": "typeof(Menace.SDK.GameState).FullName"
+    },
+    {
+      "type": "repl",
+      "name": "Test 5: Check current scene via SDK",
+      "code": "Menace.SDK.GameState.CurrentScene"
+    },
+    {
+      "type": "assert",
+      "name": "Test 6: Simple boolean assertion (true == true)",
+      "expression": "true",
+      "expected": "True"
+    },
+    {
+      "type": "assert",
+      "name": "Test 7: Simple number assertion (42 == 42)",
+      "expression": "42",
+      "expected": "42"
+    },
+    {
+      "type": "assert",
+      "name": "Test 8: String assertion",
+      "expression": "\"hello\"",
+      "expected": "hello"
+    },
+    {
+      "type": "assert",
+      "name": "Test 9: Check REPL availability",
+      "expression": "Menace.SDK.Repl.ReplPanel.IsAvailable",
+      "expected": "True"
+    },
+    {
+      "type": "assert",
+      "name": "Test 10: Check MCP server running",
+      "expression": "Menace.ModpackLoader.Mcp.GameMcpServer.IsRunning",
+      "expected": "True"
+    },
+    {
+      "type": "wait",
+      "name": "Test 11: Wait 1 second",
+      "durationMs": 1000
+    },
+    {
+      "type": "command",
+      "name": "Test 12: Navigate to main menu",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Test 13: Wait for scene transition",
+      "durationMs": 5000
+    },
+    {
+      "type": "repl",
+      "name": "Test 14: Verify scene changed",
+      "code": "Menace.SDK.GameState.CurrentScene"
+    },
+    {
+      "type": "repl",
+      "name": "Test 15: Discover Templates API - Does Templates exist?",
+      "code": "typeof(Menace.SDK.Templates).FullName"
+    },
+    {
+      "type": "repl",
+      "name": "Test 16: Discover Templates API - Try Find method",
+      "code": "typeof(Menace.SDK.Templates).GetMethod(\"Find\")"
+    },
+    {
+      "type": "repl",
+      "name": "Test 17: Try finding a template",
+      "code": "Menace.SDK.Templates.Find(\"EntityTemplate\", \"enemy.pirate_grunt\")"
+    },
+    {
+      "type": "repl",
+      "name": "Test 18: If template found, get its type",
+      "code": "var t = Menace.SDK.Templates.Find(\"EntityTemplate\", \"enemy.pirate_grunt\"); t?.GetType().FullName"
+    },
+    {
+      "type": "repl",
+      "name": "Test 19: List all EntityTemplates",
+      "code": "Menace.SDK.Templates.FindAll(\"EntityTemplate\").Length"
+    },
+    {
+      "type": "repl",
+      "name": "Test 20: Get first EntityTemplate name",
+      "code": "var templates = Menace.SDK.Templates.FindAll(\"EntityTemplate\"); templates.Length > 0 ? templates[0].GetName() : \"none\""
+    },
+    {
+      "type": "repl",
+      "name": "Test 21: Discover AssetManager API - Does it exist?",
+      "code": "AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).FirstOrDefault(t => t.Name.Contains(\"AssetManager\"))?.FullName ?? \"NOT_FOUND\""
+    },
+    {
+      "type": "repl",
+      "name": "Test 22: Discover TileMap API",
+      "code": "typeof(Menace.SDK.TileMap).GetMethods().Select(m => m.Name).Take(10).ToArray()"
+    },
+    {
+      "type": "repl",
+      "name": "Test 23: Discover TacticalController API",
+      "code": "typeof(Menace.SDK.TacticalController).GetMethods().Select(m => m.Name).Take(10).ToArray()"
+    },
+    {
+      "type": "repl",
+      "name": "Test 24: Check if in tactical scene",
+      "code": "Menace.SDK.GameState.IsTactical"
+    },
+    {
+      "type": "command",
+      "name": "Test 25: Test inspect command",
+      "command": "test.inspect GameState.CurrentScene"
+    },
+    {
+      "type": "command",
+      "name": "Test 26: Test eval command",
+      "command": "test.eval 2 + 2"
+    },
+    {
+      "type": "screenshot",
+      "name": "Test 27: Capture bootstrap screenshot",
+      "filename": "bootstrap_test.png"
+    },
+    {
+      "type": "assert_contains",
+      "name": "Test 28: Test assert_contains with substring",
+      "expression": "\"hello world\"",
+      "expected": "world"
+    },
+    {
+      "type": "repl",
+      "name": "Test 29: Get all loaded modpacks",
+      "code": "var loader = typeof(Menace.ModpackLoader.ModpackLoaderMod).Assembly.GetTypes().FirstOrDefault(t => t.Name == \"ModpackLoaderMod\"); loader?.GetField(\"_loadedModpacks\", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.FieldType.FullName ?? \"UNKNOWN\""
+    },
+    {
+      "type": "repl",
+      "name": "Test 30: Count loaded templates",
+      "code": "Menace.SDK.Templates.FindAll(\"EntityTemplate\").Length + Menace.SDK.Templates.FindAll(\"WeaponTemplate\").Length + Menace.SDK.Templates.FindAll(\"SkillTemplate\").Length"
+    }
+  ]
+}

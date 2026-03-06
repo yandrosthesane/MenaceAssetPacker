@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - HeatCapacity",
+  "description": "Verify HeatCapacity EventHandler loads and can be read. Manages heat buildup and dissipation for weapons.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with HeatCapacity EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"HeatCapacity\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_laser_rifle\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is HeatCapacity",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_laser_rifle|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"HeatCapacity\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read MaxHeat parameter",
+      "code": "var maxHeat = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_laser_rifle|EventHandlers[0]\", \"MaxHeat\"); maxHeat != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read HeatPerUse parameter",
+      "code": "var heatPerUse = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_laser_rifle|EventHandlers[0]\", \"HeatPerUse\"); heatPerUse != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read HeatDissipationPerTurn parameter",
+      "code": "var heatDissipation = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_laser_rifle|EventHandlers[0]\", \"HeatDissipationPerTurn\"); heatDissipation != null"
+    }
+  ]
+}

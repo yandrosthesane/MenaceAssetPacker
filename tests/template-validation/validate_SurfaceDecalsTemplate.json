@@ -1,0 +1,66 @@
+{
+  "name": "Template Validation - SurfaceDecalsTemplate",
+  "description": "Validates all fields can be read from SurfaceDecalsTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceDecalsTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"SurfaceDecalsTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceDecalsTemplate.blood.green exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceDecalsTemplate\", \"blood.green\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"blood.green\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"blood.green\", \"SnowEffect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceDecalsTemplate.blood.red exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceDecalsTemplate\", \"blood.red\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"blood.red\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"blood.red\", \"SnowEffect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceDecalsTemplate.bloodpool.green exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceDecalsTemplate\", \"bloodpool.green\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"bloodpool.green\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceDecalsTemplate\", \"bloodpool.green\", \"SnowEffect\") != null"
+    }
+  ]
+}

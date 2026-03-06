@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - ThrivingUnderPressure",
+  "description": "Verify ThrivingUnderPressure EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find perk with ThrivingUnderPressure EventHandler",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); perks.Length > 0"
+    },
+    {
+      "name": "Search for perk with ThrivingUnderPressure handler",
+      "type": "repl",
+      "code": "var found = false; var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); foreach(var perkName in perks) { var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", perkName, \"EventHandlers\"); if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"ThrivingUnderPressure\") { found = true; break; } } if(found) break; } } found"
+    },
+    {
+      "name": "Load EventHandlers from a specific perk",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.steady_aim\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.steady_aim\", \"EventHandlers\"); handlers != null && handlers.GetType().IsArray"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.steady_aim\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; break; } } } found"
+    },
+    {
+      "name": "Read RequiredStacksForUse parameter field from ThrivingUnderPressure",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", \"perk.steady_aim\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"ThrivingUnderPressure\") { var field = h.GetType().GetField(\"RequiredStacksForUse\"); if(field != null) { found = true; break; } } } } found"
+    }
+  ]
+}

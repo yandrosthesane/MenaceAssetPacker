@@ -92,9 +92,9 @@ For lists of UnityEngine.Object references, pass object names as strings:
 ```json
 {
   "patches": {
-    "SquadTemplate": {
-      "squad.raiders": {
-        "Members": ["enemy.raider_rifleman", "enemy.raider_shotgunner", "enemy.raider_medic"]
+    "ArmyTemplate": {
+      "army.raiders": {
+        "Units": ["enemy.raider_rifleman", "enemy.raider_shotgunner", "enemy.raider_medic"]
       }
     }
   }

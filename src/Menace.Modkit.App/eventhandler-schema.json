@@ -1,0 +1,3184 @@
+{
+  "eventHandlerTypes": {
+    "AddItemSlot": {
+      "fields": {
+        "Amount": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "SlotType": {
+          "type": "enum",
+          "values": [
+            3,
+            5
+          ],
+          "sample": 3
+        }
+      },
+      "instanceCount": 4
+    },
+    "AddSkill": {
+      "fields": {
+        "Condition": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "sample": 6
+        },
+        "OnlyApplyOnHit": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "OnlyApplyOnHitpointDamage": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "OnlyApplyWhenNoElementWasDestroyed": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "OnlyUsableOnTargetsWithoutSkill": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "OnlyWhenSkillNotPresent": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "ShowHUDText": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SkillToAdd": {
+          "type": "string",
+          "sample": "effect.berserk"
+        },
+        "TagsCanPreventSkillUse": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "TargetCannotHaveOneOfTheseTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "[]..."
+        },
+        "TargetRequiresOneOfTheseTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "[]..."
+        }
+      },
+      "instanceCount": 118
+    },
+    "AddSkillAfterMovement": {
+      "fields": {
+        "Effect": {
+          "type": "string",
+          "commonValues": [
+            "effect.drive_by",
+            "effect.run_and_gun"
+          ],
+          "sample": "effect.drive_by"
+        }
+      },
+      "instanceCount": 4
+    },
+    "AddSkillOnUse": {
+      "fields": {
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        },
+        "SkillToAdd": {
+          "type": "string",
+          "commonValues": [
+            "effect.anabolic_perfection"
+          ],
+          "sample": "effect.anabolic_perfection"
+        }
+      },
+      "instanceCount": 2
+    },
+    "AmmoPouch": {
+      "fields": {
+        "ApplyToType": {
+          "type": "enum",
+          "values": [
+            1,
+            3
+          ],
+          "sample": 3
+        },
+        "BonusPercentage": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.5
+          ],
+          "sample": 0.0
+        },
+        "MinimumBonus": {
+          "type": "enum",
+          "values": [
+            1,
+            2
+          ],
+          "sample": 1
+        },
+        "SkillFilter": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 5
+    },
+    "ApplyAuthorityDisciplineMod": {
+      "fields": {
+        "DisciplineModMult": {
+          "type": "float",
+          "sample": 1.0
+        }
+      },
+      "instanceCount": 1
+    },
+    "ApplySkillToSelf": {
+      "fields": {
+        "ChanceToApply": {
+          "type": "enum",
+          "values": [
+            60,
+            100
+          ],
+          "sample": 60
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            -1,
+            4
+          ],
+          "sample": 4
+        },
+        "RequiredLogic": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "RequiredTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['emp']..."
+        },
+        "SkillToApply": {
+          "type": "string",
+          "commonValues": [
+            "active.emp_discharge_large",
+            "active.emp_discharge_small",
+            "damage_effect.powerlines_damaged.active"
+          ],
+          "sample": "active.emp_discharge_small"
+        }
+      },
+      "instanceCount": 3
+    },
+    "AttachObject": {
+      "fields": {
+        "AttachAt": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "AttachAtInfantry": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            3
+          ],
+          "sample": 1
+        },
+        "ObjectToAttach": {
+          "type": "string",
+          "commonValues": [
+            "effect_bleeding_red_status",
+            "emp_lightnings_01",
+            "fire_building_one_tile_01",
+            "impact_alien_acid_status_01",
+            "smoke_column_black_defect_small_01",
+            "smoke_column_vehicle_black_with_sparks_01",
+            "stun_status_effect_01"
+          ],
+          "sample": "smoke_column_vehicle_black_with_sparks_01"
+        }
+      },
+      "instanceCount": 12
+    },
+    "AttachTemporaryPrefab": {
+      "fields": {
+        "AttachmentSlot": {
+          "type": "enum",
+          "values": [
+            11
+          ],
+          "sample": 11
+        },
+        "CancelDelay": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.4
+          ],
+          "sample": 0.4
+        },
+        "LocalOffset": {
+          "type": "object",
+          "sample": "{'x': -0.117, 'y': 0.118, 'z': 0.022}..."
+        },
+        "LocalRotation": {
+          "type": "object",
+          "sample": "{'x': 135.0, 'y': -96.0, 'z': -100.0}..."
+        },
+        "LocalScale": {
+          "type": "object",
+          "sample": "{'x': 2.25, 'y': 2.25, 'z': 2.25}..."
+        },
+        "Prefab": {
+          "type": "string",
+          "commonValues": [
+            "grenade",
+            "lf_mortar_projectile_simple"
+          ],
+          "sample": "grenade"
+        }
+      },
+      "instanceCount": 12
+    },
+    "Attack": {
+      "fields": {
+        "AccuracyBonus": {
+          "type": "float",
+          "sample": 500.0
+        },
+        "AccuracyDropoff": {
+          "type": "enum",
+          "values": [
+            -12.0,
+            -9.0,
+            -8.0,
+            -6.0,
+            -5.0,
+            -4.0,
+            -3.0,
+            0.0,
+            1.0
+          ],
+          "sample": 0.0
+        },
+        "AccuracyDropoffMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "AccuracyMult": {
+          "type": "enum",
+          "values": [
+            0.8,
+            0.85,
+            0.9,
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "ApplyMode": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "ArmorPenetration": {
+          "type": "float",
+          "sample": 250.0
+        },
+        "ArmorPenetrationDropoff": {
+          "type": "enum",
+          "values": [
+            -5.0,
+            -2.5,
+            -2.0,
+            -1.6,
+            -1.5,
+            0.0,
+            1.8
+          ],
+          "sample": 0.0
+        },
+        "ArmorPenetrationDropoffAOE": {
+          "type": "float",
+          "sample": -50.0
+        },
+        "ArmorPenetrationDropoffMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "ArmorPenetrationMult": {
+          "type": "enum",
+          "values": [
+            0.0,
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "Damage": {
+          "type": "float",
+          "sample": 650.0
+        },
+        "DamageDropoff": {
+          "type": "enum",
+          "values": [
+            -1.5,
+            -1.3,
+            -1.0,
+            -0.8,
+            0.0,
+            0.8
+          ],
+          "sample": 0.0
+        },
+        "DamageDropoffAOE": {
+          "type": "float",
+          "sample": -100.0
+        },
+        "DamageDropoffMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "DamageFilterCondition": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        },
+        "DamageMult": {
+          "type": "enum",
+          "values": [
+            0.7,
+            1.0,
+            1.2
+          ],
+          "sample": 1.0
+        },
+        "DamagePctCurrentHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.2,
+            0.5
+          ],
+          "sample": 0.0
+        },
+        "DamagePctCurrentHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0,
+            3.0,
+            35.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctMaxHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.05,
+            0.15
+          ],
+          "sample": 0.0
+        },
+        "DamagePctMaxHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageToArmorDurability": {
+          "type": "float",
+          "sample": 0.0
+        },
+        "DamageToArmorDurabilityDropoff": {
+          "type": "enum",
+          "values": [
+            -80.0,
+            -5.0,
+            -2.0,
+            -1.2,
+            -0.8,
+            -0.6,
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageToArmorDurabilityDropoffAOE": {
+          "type": "enum",
+          "values": [
+            -200.0,
+            -80.0,
+            -60.0,
+            -25.0,
+            -20.0,
+            -10.0,
+            -5.0,
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageToArmorDurabilityDropoffMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "DamageToArmorDurabilityMult": {
+          "type": "enum",
+          "values": [
+            0.0,
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "DamageVisualizationType": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "DestroyHalfCover": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "sample": 3
+        },
+        "DismemberArea": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            8
+          ],
+          "sample": 0
+        },
+        "DismemberChance": {
+          "type": "int",
+          "sample": 90
+        },
+        "ElementsHit": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            9
+          ],
+          "sample": 9
+        },
+        "ElementsHitPercentage": {
+          "type": "float",
+          "sample": 0.0
+        },
+        "EntityFlagsRequired": {
+          "type": "enum",
+          "values": [
+            0,
+            2048
+          ],
+          "sample": 0
+        },
+        "FatalityType": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "sample": 0
+        },
+        "IsHalfCoverDestroyedOnAOECenterTileOnly": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "Suppression": {
+          "type": "float",
+          "sample": 100.0
+        },
+        "SuppressionDealtMult": {
+          "type": "enum",
+          "values": [
+            1.0,
+            1.5
+          ],
+          "sample": 1.0
+        },
+        "SuppressionDropoffAOE": {
+          "type": "enum",
+          "values": [
+            -150.0,
+            -40.0,
+            -20.0,
+            -15.0,
+            -5.0,
+            0.0,
+            20.0
+          ],
+          "sample": 0.0
+        },
+        "TargetCannotHaveOneOfTheseTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "[]..."
+        },
+        "TargetRequiresOneOfTheseTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "[]..."
+        }
+      },
+      "instanceCount": 206
+    },
+    "AttackMorale": {
+      "fields": {
+        "MoraleDamage": {
+          "type": "enum",
+          "values": [
+            0,
+            2,
+            3,
+            5,
+            10,
+            15,
+            40
+          ],
+          "sample": 15
+        },
+        "MoraleStateReduction": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 11
+    },
+    "AttackOrder": {
+      "fields": {
+        "ActionPoints": {
+          "type": "enum",
+          "values": [
+            40
+          ],
+          "sample": 40
+        },
+        "Effect": {
+          "type": "string",
+          "commonValues": [
+            "effect.attack_order"
+          ],
+          "sample": "effect.attack_order"
+        }
+      },
+      "instanceCount": 2
+    },
+    "AttackProc": {
+      "fields": {
+        "CanBeTriggeredByAnySkill": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "Condition": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        },
+        "OnlyApplyOnHitpointDamage": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "OnlyApplyWhenNoElementWasDestroyed": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "ShowHUDText": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "SkillToAdd": {
+          "type": "string",
+          "commonValues": [
+            "active.acid_damage_short",
+            "damage_effect.building_burning_fire_01",
+            "damage_effect.medium_fire",
+            "damage_effect.small_fire",
+            "effect.acid",
+            "effect.bleeding"
+          ],
+          "sample": "effect.bleeding"
+        }
+      },
+      "instanceCount": 26
+    },
+    "Berserk": {
+      "fields": {
+        "ActionPoints": {
+          "type": "int",
+          "sample": 30
+        },
+        "ConsumedOnTrigger": {
+          "type": "int",
+          "sample": 1
+        }
+      },
+      "instanceCount": 1
+    },
+    "CameraShake": {
+      "fields": {
+        "CameraEffect": {
+          "type": "int",
+          "sample": 4
+        },
+        "Duration": {
+          "type": "float",
+          "sample": 6.0
+        },
+        "Intensity": {
+          "type": "float",
+          "sample": 0.55
+        },
+        "RecoverTime": {
+          "type": "float",
+          "sample": 1.4
+        }
+      },
+      "instanceCount": 1
+    },
+    "CauseDefect": {
+      "fields": {
+        "Severity": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeAPBasedOnHP": {
+      "fields": {
+        "Thresholds": {
+          "type": "array",
+          "elementType": "object",
+          "sample": "[{'HpPct': 0.800000011920929, 'ApBonus': 15}, {'HpPct': 0.0, 'ApBonus': 0}, {'HpPct': 6.040945521590..."
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeActionPointCost": {
+      "fields": {
+        "CostDelta": {
+          "type": "enum",
+          "values": [
+            -10,
+            40
+          ],
+          "sample": -10
+        },
+        "CostMin": {
+          "type": "enum",
+          "values": [
+            0,
+            10
+          ],
+          "sample": 0
+        },
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 11
+    },
+    "ChangeActionPoints": {
+      "fields": {
+        "ActionPoints": {
+          "type": "enum",
+          "values": [
+            -1000,
+            -70,
+            -50,
+            -20
+          ],
+          "sample": -20
+        },
+        "ForceTurnToEnd": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 9
+    },
+    "ChangeAttackCost": {
+      "fields": {
+        "CostPerAttack": {
+          "type": "int",
+          "sample": 0
+        },
+        "CostPerAttackMult": {
+          "type": "float",
+          "sample": 1.5
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChangeDropChance": {
+      "fields": {
+        "AdditionalDropChance": {
+          "type": "enum",
+          "values": [
+            30
+          ],
+          "sample": 30
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeGrowthPotential": {
+      "fields": {
+        "Delta": {
+          "type": "enum",
+          "values": [
+            3
+          ],
+          "sample": 3
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeHeatCapacity": {
+      "fields": {
+        "HeatDissipationPerTurn": {
+          "type": "int",
+          "sample": -1
+        },
+        "HeatPerUse": {
+          "type": "int",
+          "sample": 0
+        },
+        "MaxHeat": {
+          "type": "int",
+          "sample": 0
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChangeMalfunctionChance": {
+      "fields": {
+        "ApplyOnlyToSkill": {
+          "type": "null",
+          "nullable": true
+        },
+        "ApplyTo": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "BaseMalfunctionChance": {
+          "type": "enum",
+          "values": [
+            10,
+            20
+          ],
+          "sample": 10
+        },
+        "MalfunctionChancePerUse": {
+          "type": "enum",
+          "values": [
+            10,
+            20
+          ],
+          "sample": 10
+        },
+        "ResetMalfunctionChance": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeMorale": {
+      "fields": {
+        "ChangeIf": {
+          "type": "enum",
+          "values": [
+            1,
+            2
+          ],
+          "sample": 1
+        },
+        "ChangeMoraleTo": {
+          "type": "enum",
+          "values": [
+            2,
+            3
+          ],
+          "sample": 3
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 6
+    },
+    "ChangeMovementCost": {
+      "fields": {
+        "CostForTurning": {
+          "type": "enum",
+          "values": [
+            0,
+            2,
+            10
+          ],
+          "sample": 0
+        },
+        "CostPerSurface": {
+          "type": "array",
+          "elementType": "int",
+          "sample": "[0, 0, 0, 0, 0, 0, 0, 0, -5, 0, 0, 0, 0, 0]..."
+        },
+        "CostPerTile": {
+          "type": "enum",
+          "values": [
+            -6,
+            -4,
+            -3,
+            -2,
+            0,
+            2,
+            3,
+            4,
+            5,
+            10
+          ],
+          "sample": 0
+        },
+        "IsRooted": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 22
+    },
+    "ChangeProperty": {
+      "fields": {
+        "Amount": {
+          "type": "int",
+          "sample": -2
+        },
+        "AmountMult": {
+          "type": "float",
+          "sample": 1.0
+        },
+        "IncludePlusSign": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "PropertyType": {
+          "type": "int",
+          "sample": 37
+        },
+        "TooltipPlaceholderIndex": {
+          "type": "enum",
+          "values": [
+            -1,
+            0
+          ],
+          "sample": -1
+        },
+        "Trigger": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2
+          ],
+          "sample": 0
+        },
+        "ValueProvider": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(IValueProvider)"
+          ],
+          "sample": "(IValueProvider)"
+        }
+      },
+      "instanceCount": 192
+    },
+    "ChangePropertyAura": {
+      "fields": {
+        "Properties": {
+          "type": "array",
+          "elementType": "object",
+          "sample": "[{'PropertyType': 0, 'Amount': 1066611507, 'AmountMult': 0.0}, {'PropertyType': 0, 'Amount': 8078001..."
+        },
+        "Radius": {
+          "type": "int",
+          "sample": 1
+        },
+        "ReducesWithDistance": {
+          "type": "int",
+          "sample": 0
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChangePropertyConditional": {
+      "fields": {
+        "Condition": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "HideIfNotActive": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "Properties": {
+          "type": "array",
+          "elementType": "object",
+          "sample": "[{'PropertyType': 1, 'Amount': 1067450368, 'AmountMult': 0.0}, {'PropertyType': 0, 'Amount': 8078001..."
+        }
+      },
+      "instanceCount": 66
+    },
+    "ChangePropertyConsecutive": {
+      "fields": {
+        "Amount": {
+          "type": "int",
+          "sample": 10
+        },
+        "AmountMult": {
+          "type": "float",
+          "sample": 1.0
+        },
+        "MaxStacks": {
+          "type": "int",
+          "sample": 4
+        },
+        "PropertyType": {
+          "type": "int",
+          "sample": 3
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChangePropertyTarget": {
+      "fields": {
+        "Properties": {
+          "type": "array",
+          "elementType": "object",
+          "sample": "[{'PropertyType': 898518648, 'Amount': 0, 'AmountMult': 0.0}]..."
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeRangesOfSkillsWithTags": {
+      "fields": {
+        "IdealRangeChange": {
+          "type": "enum",
+          "values": [
+            -2,
+            0
+          ],
+          "sample": 0
+        },
+        "IdealRangeMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "MaxRangeChange": {
+          "type": "enum",
+          "values": [
+            -2,
+            0,
+            1,
+            2
+          ],
+          "sample": 1
+        },
+        "MaxRangeMult": {
+          "type": "enum",
+          "values": [
+            1.0,
+            1.2
+          ],
+          "sample": 1.0
+        },
+        "MinRangeChange": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "MinRangeMult": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 9
+    },
+    "ChangeSkillUseAmount": {
+      "fields": {
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        },
+        "UsesAmount": {
+          "type": "int",
+          "sample": 1
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChangeSkillsWithTags": {
+      "fields": {
+        "Amount": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "AmountMult": {
+          "type": "enum",
+          "values": [
+            1.2
+          ],
+          "sample": 1.2
+        },
+        "PropertyType": {
+          "type": "enum",
+          "values": [
+            15,
+            16
+          ],
+          "sample": 16
+        },
+        "RequiredTags": {
+          "type": "array",
+          "elementType": "int",
+          "sample": "[30]..."
+        }
+      },
+      "instanceCount": 2
+    },
+    "ChangeStance": {
+      "fields": {
+        "ChangeStanceTo": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "IsStanceRequiredToUse": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "RequiredStance": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 4
+    },
+    "ChangeSupplyCosts": {
+      "fields": {
+        "CostMult": {
+          "type": "enum",
+          "values": [
+            0.5,
+            0.7
+          ],
+          "sample": 0.7
+        },
+        "Filter": {
+          "type": "string",
+          "commonValues": [
+            "(IItemFilter)"
+          ],
+          "sample": "(IItemFilter)"
+        }
+      },
+      "instanceCount": 8
+    },
+    "ChangeSuppression": {
+      "fields": {
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SuppressionChange": {
+          "type": "enum",
+          "values": [
+            -100.0,
+            -80.0,
+            -50.0,
+            -34.0
+          ],
+          "sample": -100.0
+        }
+      },
+      "instanceCount": 8
+    },
+    "ChangeUsesPerSquaddie": {
+      "fields": {
+        "AmountPerElement": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "MaxIncreasePct": {
+          "type": "enum",
+          "values": [
+            100
+          ],
+          "sample": 100
+        },
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 2
+    },
+    "Charge": {
+      "fields": {
+        "HideIfNotUsable": {
+          "type": "int",
+          "sample": 1
+        }
+      },
+      "instanceCount": 1
+    },
+    "ChargeInfantry": {
+      "fields": {
+        "EffectToApply": {
+          "type": "string",
+          "commonValues": [
+            "effect.stunned"
+          ],
+          "sample": "effect.stunned"
+        },
+        "HideIfNotUsable": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 2
+    },
+    "ClearTileEffect": {
+      "fields": {
+        "ChanceAtCenter": {
+          "type": "int",
+          "sample": 100
+        },
+        "ChanceDropoffWithDistance": {
+          "type": "int",
+          "sample": 0
+        },
+        "EffectToClear": {
+          "type": "string",
+          "commonValues": [
+            "tile_effect.explosive_charge"
+          ],
+          "sample": "tile_effect.explosive_charge"
+        }
+      },
+      "instanceCount": 1
+    },
+    "ClearTileEffectGroup": {
+      "fields": {
+        "EffectsToClear": {
+          "type": "string",
+          "commonValues": [
+            "tile_effects_mines"
+          ],
+          "sample": "tile_effects_mines"
+        },
+        "TriggerEffect": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 49
+    },
+    "CommandMove": {
+      "fields": {
+        "Minion": {
+          "type": "enum",
+          "values": [
+            1,
+            2
+          ],
+          "sample": 2
+        }
+      },
+      "instanceCount": 2
+    },
+    "CommandUseSkill": {
+      "fields": {
+        "Minion": {
+          "type": "int",
+          "sample": 2
+        },
+        "SkillToUse": {
+          "type": "string",
+          "commonValues": [
+            "active.at_wardog_detonate"
+          ],
+          "sample": "active.at_wardog_detonate"
+        }
+      },
+      "instanceCount": 1
+    },
+    "ConsumeOnSkillUse": {
+      "fields": {
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 3
+    },
+    "Cooldown": {
+      "fields": {
+        "AIOnly": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "RoundsToCoolDown": {
+          "type": "enum",
+          "values": [
+            1,
+            2
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 23
+    },
+    "Damage": {
+      "fields": {
+        "ArmorPenetration": {
+          "type": "enum",
+          "values": [
+            10.0,
+            20.0,
+            60.0,
+            1000.0
+          ],
+          "sample": 1000.0
+        },
+        "DamageFlatAmount": {
+          "type": "enum",
+          "values": [
+            0.0,
+            8.0,
+            100.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctCurrentHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "DamagePctCurrentHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0,
+            1000.0
+          ],
+          "sample": 1000.0
+        },
+        "DamagePctMaxHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctMaxHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageToArmorDurability": {
+          "type": "enum",
+          "values": [
+            0.0,
+            15.0,
+            30.0,
+            120.0,
+            1000.0
+          ],
+          "sample": 1000.0
+        },
+        "DamageVisualizationType": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "DismemberArea": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "DismemberChance": {
+          "type": "enum",
+          "values": [
+            0,
+            40
+          ],
+          "sample": 0
+        },
+        "ElementsHit": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "ElementsHitPercentage": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.15,
+            0.5,
+            0.8
+          ],
+          "sample": 0.0
+        },
+        "FatalityType": {
+          "type": "enum",
+          "values": [
+            0,
+            2
+          ],
+          "sample": 0
+        },
+        "InflictDefects": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "IsAppliedOnlyToPassengers": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 5
+    },
+    "DamageArmorDurability": {
+      "fields": {
+        "DamageFlatAmount": {
+          "type": "float",
+          "sample": 0.0
+        },
+        "DamagePercentageOfCurrentDurability": {
+          "type": "float",
+          "sample": 0.0
+        },
+        "DamagePercentageOfMaxDurability": {
+          "type": "float",
+          "sample": 0.3
+        }
+      },
+      "instanceCount": 1
+    },
+    "DamageOverTime": {
+      "fields": {
+        "ArmorPenetration": {
+          "type": "enum",
+          "values": [
+            1000.0
+          ],
+          "sample": 1000.0
+        },
+        "DamageArmorFlatAmount": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageArmorPctOfCurrent": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.1,
+            0.2
+          ],
+          "sample": 0.0
+        },
+        "DamageArmorPctOfMax": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctCurrentHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctCurrentHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePctMaxHitpoints": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.05,
+            0.1,
+            0.15,
+            0.34
+          ],
+          "sample": 0.15
+        },
+        "DamagePctMaxHitpointsMin": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamagePerTurn": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageToArmorDurability": {
+          "type": "enum",
+          "values": [
+            0.0
+          ],
+          "sample": 0.0
+        },
+        "DamageVisualizationType": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "DamagesArmorFirst": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "ElementsHit": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "ElementsHitPercentage": {
+          "type": "enum",
+          "values": [
+            0.0,
+            1.0
+          ],
+          "sample": 0.0
+        },
+        "FatalityType": {
+          "type": "enum",
+          "values": [
+            0,
+            2,
+            3
+          ],
+          "sample": 2
+        },
+        "InflictDefects": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 7
+    },
+    "Deathrattle": {
+      "fields": {
+        "Chance": {
+          "type": "enum",
+          "values": [
+            40,
+            100
+          ],
+          "sample": 100
+        },
+        "Skill": {
+          "type": "string",
+          "commonValues": [
+            "active.detonate_carrier",
+            "active.detonate_hoverbomb",
+            "active.explosion_large_bomb",
+            "active.pirate_heavy_flamethrower",
+            "active.rocket_truck_explosion",
+            "active.special.gas_tank_explosion",
+            "active.special_critical_hit_explosion"
+          ],
+          "sample": "active.detonate_carrier"
+        }
+      },
+      "instanceCount": 7
+    },
+    "DestroyProps": {
+      "fields": {
+        "Radius": {
+          "type": "enum",
+          "values": [
+            4.0,
+            10.0,
+            12.0,
+            15.0,
+            20.0,
+            24.0
+          ],
+          "sample": 24.0
+        }
+      },
+      "instanceCount": 11
+    },
+    "DisableByFlag": {
+      "fields": {
+        "Flag": {
+          "type": "int",
+          "sample": 32768
+        }
+      },
+      "instanceCount": 1
+    },
+    "DisableItem": {
+      "fields": {
+        "ForbiddenLogic": {
+          "type": "int",
+          "sample": 0
+        },
+        "ForbiddenTags": {
+          "type": "array",
+          "elementType": "mixed",
+          "sample": "[]..."
+        },
+        "RequiredLogic": {
+          "type": "int",
+          "sample": 1
+        },
+        "RequiredTags": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['accessory', 'destructible']..."
+        }
+      },
+      "instanceCount": 1
+    },
+    "DisableSkills": {
+      "fields": {
+        "HideDisabledSkills": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 7
+    },
+    "DisplayText": {
+      "fields": {
+        "DefaultText": {
+          "type": "string",
+          "sample": "Blaze of Glory!"
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "sample": 2
+        },
+        "Icon": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "scanned_01"
+          ],
+          "sample": "scanned_01"
+        },
+        "LocaKey": {
+          "type": "string",
+          "sample": "Blaze of Glory!"
+        }
+      },
+      "instanceCount": 75
+    },
+    "DropRecoverableObject": {
+      "fields": {
+        "ObjectTileEffect": {
+          "type": "string",
+          "commonValues": [
+            "tile_effect.recoverable_object",
+            "tile_effect.recoverable_object2"
+          ],
+          "sample": "tile_effect.recoverable_object"
+        },
+        "ObjectUnitHUDIcon": {
+          "type": "string",
+          "commonValues": [
+            "explosives_33x33"
+          ],
+          "sample": "explosives_33x33"
+        }
+      },
+      "instanceCount": 2
+    },
+    "EjectEntity": {
+      "fields": {
+        "ConferSkillToEjectedEntity": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "effect.reduced_ap_after_transport"
+          ],
+          "sample": "effect.reduced_ap_after_transport"
+        },
+        "IsSpecialAIVersion": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 2
+    },
+    "EmitAura": {
+      "fields": {
+        "ExcludeSelf": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "SkillToAdd": {
+          "type": "string",
+          "commonValues": [
+            "effect.aura.high_spirits",
+            "effect.aura.inspiring_presence"
+          ],
+          "sample": "effect.aura.inspiring_presence"
+        }
+      },
+      "instanceCount": 4
+    },
+    "EnemiesDropPickupOnDeath": {
+      "fields": {
+        "Pickup": {
+          "type": "string",
+          "commonValues": [
+            "tile_effect.scavenger_drop"
+          ],
+          "sample": "tile_effect.scavenger_drop"
+        },
+        "SpawnDelay": {
+          "type": "enum",
+          "values": [
+            0.5
+          ],
+          "sample": 0.5
+        }
+      },
+      "instanceCount": 2
+    },
+    "FilterByCondition": {
+      "fields": {
+        "Condition": {
+          "type": "string",
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        }
+      },
+      "instanceCount": 5
+    },
+    "FilterByMorale": {
+      "fields": {
+        "AppliesOnlyToState": {
+          "type": "enum",
+          "values": [
+            1,
+            2
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 2
+    },
+    "FilterByStance": {
+      "fields": {
+        "AppliesOnlyToStance": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 3
+    },
+    "GainActionPoints": {
+      "fields": {
+        "ActionPoints": {
+          "type": "enum",
+          "values": [
+            10,
+            40,
+            50,
+            60
+          ],
+          "sample": 40
+        },
+        "AlwaysIncreaseMaxActionPoints": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 5
+    },
+    "GainEffectOnSkillUse": {
+      "fields": {
+        "Effect": {
+          "type": "string",
+          "commonValues": [
+            "effect.firing_line",
+            "effect.full_send",
+            "effect.shoot_and_scoot"
+          ],
+          "sample": "effect.firing_line"
+        },
+        "RemoveOnUse": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "SkillFilter": {
+          "type": "string",
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 6
+    },
+    "GrantBonusTurn": {
+      "fields": {
+        "ActionPointsAvailable": {
+          "type": "float",
+          "sample": 0.6
+        }
+      },
+      "instanceCount": 1
+    },
+    "HeatCapacity": {
+      "fields": {
+        "HeatDissipationPerTurn": {
+          "type": "enum",
+          "values": [
+            -2,
+            -1
+          ],
+          "sample": -1
+        },
+        "HeatPerUse": {
+          "type": "enum",
+          "values": [
+            2,
+            3,
+            4
+          ],
+          "sample": 3
+        },
+        "IsSynchronizedWithOtherSkillsOfTheSameItem": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "MaxHeat": {
+          "type": "enum",
+          "values": [
+            4,
+            6
+          ],
+          "sample": 4
+        },
+        "OverheatingSound": {
+          "type": "object",
+          "sample": "{'bankId': 7, 'itemId': 1617499795}..."
+        }
+      },
+      "instanceCount": 10
+    },
+    "HideByCondition": {
+      "fields": {
+        "Condition": {
+          "type": "string",
+          "commonValues": [
+            "(ITacticalCondition)"
+          ],
+          "sample": "(ITacticalCondition)"
+        }
+      },
+      "instanceCount": 1
+    },
+    "Hitchance": {
+      "fields": {
+        "AccuracyBonus": {
+          "type": "float",
+          "sample": 20.0
+        },
+        "AccuracyDropoff": {
+          "type": "float",
+          "sample": -4.0
+        },
+        "AccuracyDropoffMult": {
+          "type": "float",
+          "sample": 1.0
+        },
+        "AccuracyMult": {
+          "type": "float",
+          "sample": 1.0
+        }
+      },
+      "instanceCount": 1
+    },
+    "IgnoreDamage": {
+      "fields": {
+        "AbsorbDamagePct": {
+          "type": "enum",
+          "values": [
+            33,
+            50,
+            100
+          ],
+          "sample": 50
+        },
+        "ChanceToApply": {
+          "type": "enum",
+          "values": [
+            80,
+            100
+          ],
+          "sample": 100
+        },
+        "RequiredTags": {
+          "type": "array",
+          "elementType": "int",
+          "sample": "[30]..."
+        }
+      },
+      "instanceCount": 3
+    },
+    "InterceptAPChange": {
+      "fields": {
+        "ActionPointPercentage": {
+          "type": "enum",
+          "values": [
+            50
+          ],
+          "sample": 50
+        },
+        "AppliesTo": {
+          "type": "string",
+          "commonValues": [
+            "effect.disabled"
+          ],
+          "sample": "effect.disabled"
+        },
+        "TriggerOnlyOncePerRound": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 2
+    },
+    "Jamming": {
+      "fields": {
+        "BaseChance": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "ChancePerUse": {
+          "type": "enum",
+          "values": [
+            10
+          ],
+          "sample": 10
+        },
+        "JammingSound": {
+          "type": "object",
+          "sample": "{'bankId': 7, 'itemId': 1668096867}..."
+        }
+      },
+      "instanceCount": 4
+    },
+    "JetPack": {
+      "fields": {
+        "DelayBeforeJump": {
+          "type": "enum",
+          "values": [
+            0.45,
+            0.75
+          ],
+          "sample": 0.45
+        },
+        "Duration": {
+          "type": "enum",
+          "values": [
+            2.0,
+            2.5
+          ],
+          "sample": 2.0
+        },
+        "ForwardCurve": {
+          "type": "object",
+          "sample": "{'m_RequiresNativeCleanup': 1}..."
+        },
+        "HeightCurve": {
+          "type": "object",
+          "sample": "{'m_RequiresNativeCleanup': 1}..."
+        },
+        "HeightPerUnitOfDistance": {
+          "type": "enum",
+          "values": [
+            0.5
+          ],
+          "sample": 0.5
+        },
+        "MaxHeight": {
+          "type": "enum",
+          "values": [
+            30.0,
+            40.0
+          ],
+          "sample": 40.0
+        },
+        "StartTrigger": {
+          "type": "string",
+          "commonValues": [
+            "TriggerUsingJetpack"
+          ],
+          "sample": "TriggerUsingJetpack"
+        }
+      },
+      "instanceCount": 2
+    },
+    "JumpIntoMelee": {
+      "fields": {
+        "Animation": {
+          "type": "int",
+          "sample": 6
+        },
+        "CameraEffectOnTakeoff": {
+          "type": "int",
+          "sample": 0
+        },
+        "DelayBeforeJump": {
+          "type": "float",
+          "sample": 0.25
+        },
+        "DistanceFromTarget": {
+          "type": "float",
+          "sample": 1.0
+        },
+        "DurationPerUnitOfDistance": {
+          "type": "float",
+          "sample": 0.038
+        },
+        "ForwardCurve": {
+          "type": "object",
+          "sample": "{'m_RequiresNativeCleanup': 1}..."
+        },
+        "HeightCurve": {
+          "type": "object",
+          "sample": "{'m_RequiresNativeCleanup': 1}..."
+        },
+        "HeightPerUnitOfDistance": {
+          "type": "float",
+          "sample": 0.5
+        },
+        "MaxDuration": {
+          "type": "float",
+          "sample": 0.4
+        },
+        "MaxHeight": {
+          "type": "float",
+          "sample": 5.0
+        }
+      },
+      "instanceCount": 1
+    },
+    "LifetimeLimit": {
+      "fields": {
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "sample": 4
+        },
+        "Lifetime": {
+          "type": "enum",
+          "values": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "sample": 1
+        },
+        "ResetLifetimeOnRefresh": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 54
+    },
+    "LimitMaxHpLoss": {
+      "fields": {
+        "MaxHpPct": {
+          "type": "enum",
+          "values": [
+            0.33
+          ],
+          "sample": 0.33
+        }
+      },
+      "instanceCount": 2
+    },
+    "LimitUsability": {
+      "fields": {
+        "HiddenIfActorHasSkill": {
+          "type": "array",
+          "elementType": "mixed",
+          "sample": "[]..."
+        },
+        "NotHiddenIfActorHasSkill": {
+          "type": "array",
+          "elementType": "mixed",
+          "sample": "[]..."
+        },
+        "NotUsableIfActorHasSkill": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['effect.dash_walker', 'effect.off_balance']..."
+        },
+        "OnlyUsableIfActorHasSkill": {
+          "type": "array",
+          "elementType": "mixed",
+          "sample": "[]..."
+        }
+      },
+      "instanceCount": 7
+    },
+    "LimitedPassiveUses": {
+      "fields": {
+        "MaxUses": {
+          "type": "int",
+          "sample": 3
+        }
+      },
+      "instanceCount": 1
+    },
+    "ModularVehicleSkill": {
+      "fields": {
+        "RequiredWeaponCount": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 51
+    },
+    "MoraleOverMaxEffect": {
+      "fields": {
+        "Effect": {
+          "type": "string",
+          "commonValues": [
+            "special.morale.high_spirits"
+          ],
+          "sample": "special.morale.high_spirits"
+        }
+      },
+      "instanceCount": 1
+    },
+    "MoveAndSelfDestroy": {
+      "fields": {
+        "AdditionalDelay": {
+          "type": "float",
+          "sample": 1.0
+        },
+        "AfterMoveTrigger": {
+          "type": "string",
+          "commonValues": [
+            "TriggerShootSingle"
+          ],
+          "sample": "TriggerShootSingle"
+        },
+        "StartMoveTrigger": {
+          "type": "string",
+          "commonValues": [
+            "TriggerExplosionOrderReceived"
+          ],
+          "sample": "TriggerExplosionOrderReceived"
+        }
+      },
+      "instanceCount": 1
+    },
+    "OnElementKilled": {
+      "fields": {
+        "Amount": {
+          "type": "enum",
+          "values": [
+            20
+          ],
+          "sample": 20
+        },
+        "ApplyEffect": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "DisplayText": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 2
+    },
+    "OverrideVolumeProfile": {
+      "fields": {
+        "DesertProfile": {
+          "type": "null",
+          "nullable": true
+        },
+        "FallbackProfile": {
+          "type": "string",
+          "commonValues": [
+            "volumeprofile.allbiomesnightvision"
+          ],
+          "sample": "volumeprofile.allbiomesnightvision"
+        },
+        "SnowProfile": {
+          "type": "string",
+          "commonValues": [
+            "volumeprofile.dicenightvision"
+          ],
+          "sample": "volumeprofile.dicenightvision"
+        },
+        "TemperateProfile": {
+          "type": "null",
+          "nullable": true
+        }
+      },
+      "instanceCount": 1
+    },
+    "PlayAnimationSequence": {
+      "fields": {
+        "Animation": {
+          "type": "string",
+          "commonValues": [
+            "dropship.start_in_air"
+          ],
+          "sample": "dropship.start_in_air"
+        }
+      },
+      "instanceCount": 3
+    },
+    "PlaySound": {
+      "fields": {
+        "Event": {
+          "type": "enum",
+          "values": [
+            3,
+            4
+          ],
+          "sample": 4
+        },
+        "SoundToPlay": {
+          "type": "object",
+          "sample": "{'bankId': 7, 'itemId': 1668096867}..."
+        },
+        "Volume": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        }
+      },
+      "instanceCount": 4
+    },
+    "PlaySoundOnEnabled": {
+      "fields": {
+        "SoundToPlay": {
+          "type": "object",
+          "sample": "{'bankId': 631059796, 'itemId': 1112449926}..."
+        },
+        "Volume": {
+          "type": "float",
+          "sample": 1.0
+        }
+      },
+      "instanceCount": 1
+    },
+    "Rally": {
+      "fields": {
+        "DropoffPerTile": {
+          "type": "int",
+          "sample": 0
+        },
+        "MaxReduction": {
+          "type": "int",
+          "sample": 40
+        }
+      },
+      "instanceCount": 1
+    },
+    "RecallTarget": {
+      "fields": {
+        "UseLastTargetOfSkill": {
+          "type": "string",
+          "commonValues": [
+            "active.deploy_explosive_charge"
+          ],
+          "sample": "active.deploy_explosive_charge"
+        }
+      },
+      "instanceCount": 1
+    },
+    "ReduceArmor": {
+      "fields": {
+        "MaxReduction": {
+          "type": "float",
+          "sample": 0.5
+        },
+        "ReductionPerStack": {
+          "type": "float",
+          "sample": 0.1
+        }
+      },
+      "instanceCount": 1
+    },
+    "RefillAmmo": {
+      "fields": {
+        "RestoreMinimum": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "RestorePct": {
+          "type": "enum",
+          "values": [
+            0.25,
+            1.0
+          ],
+          "sample": 0.25
+        },
+        "SkillFilter": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "(ISkillFilter)"
+          ],
+          "sample": "(ISkillFilter)"
+        }
+      },
+      "instanceCount": 3
+    },
+    "RefillSquaddies": {
+      "fields": {
+        "Animation": {
+          "type": "string",
+          "commonValues": [
+            "dropship.start_in_air"
+          ],
+          "sample": "dropship.start_in_air"
+        }
+      },
+      "instanceCount": 2
+    },
+    "Regeneration": {
+      "fields": {
+        "Effect": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "healing_crosses"
+          ],
+          "sample": "healing_crosses"
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            2
+          ],
+          "sample": 2
+        },
+        "HitpointsHealedPctMax": {
+          "type": "enum",
+          "values": [
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "Sound": {
+          "type": "object",
+          "sample": "{'bankId': 0, 'itemId': 0}..."
+        }
+      },
+      "instanceCount": 6
+    },
+    "RemoveDefect": {
+      "fields": {
+        "RequiredType": {
+          "type": "enum",
+          "values": [
+            8192
+          ],
+          "sample": 8192
+        }
+      },
+      "instanceCount": 2
+    },
+    "RemoveSkill": {
+      "fields": {
+        "Event": {
+          "type": "enum",
+          "values": [
+            0
+          ],
+          "sample": 0
+        },
+        "SkillsToRemove": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['racial.hoverbomb_explosion_death']..."
+        }
+      },
+      "instanceCount": 5
+    },
+    "ReportAmmoToAnimator": {
+      "fields": {
+        "Parameter": {
+          "type": "string",
+          "commonValues": [
+            "IntAmmoCount"
+          ],
+          "sample": "IntAmmoCount"
+        }
+      },
+      "instanceCount": 6
+    },
+    "RestoreArmorDurability": {
+      "fields": {
+        "RestorePercent": {
+          "type": "int",
+          "sample": 100
+        }
+      },
+      "instanceCount": 1
+    },
+    "ReturnOfServe": {
+      "fields": {
+        "ConsumedOnTrigger": {
+          "type": "int",
+          "sample": 1
+        }
+      },
+      "instanceCount": 1
+    },
+    "Scanner": {
+      "fields": {
+        "Blip": {
+          "type": "string",
+          "commonValues": [
+            "Motion Scanner Blip"
+          ],
+          "sample": "Motion Scanner Blip"
+        },
+        "DetectsInfantry": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "DetectsVehicles": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        },
+        "Range": {
+          "type": "enum",
+          "values": [
+            12,
+            20,
+            50,
+            200
+          ],
+          "sample": 12
+        },
+        "ScanSpeed": {
+          "type": "enum",
+          "values": [
+            0.5,
+            1.0
+          ],
+          "sample": 1.0
+        },
+        "Scanline": {
+          "type": "string",
+          "commonValues": [
+            "MotionScannerVFX",
+            "area_scan_lines"
+          ],
+          "sample": "MotionScannerVFX"
+        }
+      },
+      "instanceCount": 4
+    },
+    "SetAnimatorBool": {
+      "fields": {
+        "Parameter": {
+          "type": "string",
+          "commonValues": [
+            "BoolDisabled"
+          ],
+          "sample": "BoolDisabled"
+        }
+      },
+      "instanceCount": 2
+    },
+    "SetAnimatorTrigger": {
+      "fields": {
+        "Delay": {
+          "type": "enum",
+          "values": [
+            0.0,
+            1.0
+          ],
+          "sample": 0.0
+        },
+        "Parameter": {
+          "type": "string",
+          "commonValues": [
+            "TriggerCustomSkillEffect"
+          ],
+          "sample": "TriggerCustomSkillEffect"
+        }
+      },
+      "instanceCount": 4
+    },
+    "SetEntityFlag": {
+      "fields": {
+        "Flag": {
+          "type": "enum",
+          "values": [
+            4,
+            128,
+            240,
+            512,
+            1024,
+            2048,
+            4096,
+            8192,
+            16392,
+            32768
+          ],
+          "sample": 32768
+        }
+      },
+      "instanceCount": 20
+    },
+    "SetUsesPerElement": {
+      "fields": {
+        "UsesPerElement": {
+          "type": "enum",
+          "values": [
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 2
+    },
+    "ShowHUDIcon": {
+      "fields": {
+        "IconToShow": {
+          "type": "int",
+          "sample": 1
+        }
+      },
+      "instanceCount": 1
+    },
+    "ShowUnitHUDIcon": {
+      "fields": {
+        "Conditions": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['(ITacticalCondition)']..."
+        },
+        "Icon": {
+          "type": "string",
+          "commonValues": [
+            "big_game_hunter",
+            "isolated"
+          ],
+          "sample": "isolated"
+        },
+        "Target": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        }
+      },
+      "instanceCount": 9
+    },
+    "SpawnEntity": {
+      "fields": {
+        "AlignSpawnDirection": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "EntityToSpawn": {
+          "type": "string",
+          "commonValues": [
+            "enemy.construct_hoverbomb",
+            "enemy.construct_soldier_tier1_phantom",
+            "player.decoys",
+            "player.sentry_auto_laser_turret",
+            "player_at_wardog_skybot",
+            "player_recon_falcon_skybot"
+          ],
+          "sample": "player.decoys"
+        },
+        "HideIfSpawnLimitReached": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SetParameterOnSpawn": {
+          "type": "string",
+          "nullable": true,
+          "commonValues": [
+            "BoolIsEjected"
+          ],
+          "sample": "BoolIsEjected"
+        },
+        "SkipFirstTurnForSpawnedEntity": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SpawnAsMinion": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2
+          ],
+          "sample": 0
+        },
+        "SpawnLimit": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            3,
+            6,
+            10
+          ],
+          "sample": 10
+        },
+        "Trigger": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 7
+    },
+    "SpawnGore": {
+      "fields": {
+        "Amount": {
+          "type": "int",
+          "sample": 30
+        },
+        "Distance": {
+          "type": "float",
+          "sample": 15.0
+        },
+        "MinMaxScale": {
+          "type": "object",
+          "sample": "{'x': 0.86778307, 'y': 1.09327}..."
+        },
+        "Prefabs": {
+          "type": "string",
+          "commonValues": [
+            "meat_pieces"
+          ],
+          "sample": "meat_pieces"
+        }
+      },
+      "instanceCount": 1
+    },
+    "SpawnPrefab": {
+      "fields": {
+        "Prefab": {
+          "type": "string",
+          "commonValues": [
+            "dropship_shadow_decal"
+          ],
+          "sample": "dropship_shadow_decal"
+        }
+      },
+      "instanceCount": 1
+    },
+    "SpawnTileEffect": {
+      "fields": {
+        "ChanceAtCenter": {
+          "type": "enum",
+          "values": [
+            70,
+            100
+          ],
+          "sample": 100
+        },
+        "ChancePerTileFromCenter": {
+          "type": "enum",
+          "values": [
+            -25,
+            0,
+            35,
+            100
+          ],
+          "sample": 0
+        },
+        "DelayWithDistance": {
+          "type": "enum",
+          "values": [
+            0.0,
+            0.2,
+            0.5,
+            1.0
+          ],
+          "sample": 0.0
+        },
+        "EffectToSpawn": {
+          "type": "string",
+          "sample": "tile_effect.wire_slings"
+        },
+        "Event": {
+          "type": "enum",
+          "values": [
+            0,
+            1,
+            2
+          ],
+          "sample": 0
+        }
+      },
+      "instanceCount": 32
+    },
+    "StanceDeployed": {
+      "fields": {
+        "Properties": {
+          "type": "array",
+          "elementType": "object",
+          "sample": "[{'PropertyType': 0, 'Amount': 1066611507, 'AmountMult': 1.5414283107572988e-44}, {'PropertyType': 0..."
+        }
+      },
+      "instanceCount": 2
+    },
+    "Suppression": {
+      "fields": {
+        "PinnedDownEffect": {
+          "type": "string",
+          "commonValues": [
+            "special.stance.pinned_down"
+          ],
+          "sample": "special.stance.pinned_down"
+        },
+        "SoundWhenPinnedDown": {
+          "type": "object",
+          "sample": "{'bankId': 631059796, 'itemId': 1411947049}..."
+        },
+        "SoundWhenSuppressed": {
+          "type": "object",
+          "sample": "{'bankId': 631059796, 'itemId': 349476218}..."
+        }
+      },
+      "instanceCount": 1
+    },
+    "SuppressionConstruct": {
+      "fields": {
+        "PinnedDownEffect": {
+          "type": "null",
+          "nullable": true
+        },
+        "PinnedDownText": {
+          "type": "string",
+          "commonValues": [
+            "Overloaded!"
+          ],
+          "sample": "Overloaded!"
+        },
+        "SoundWhenPinnedDown": {
+          "type": "object",
+          "sample": "{'bankId': 631059796, 'itemId': 1411947049}..."
+        }
+      },
+      "instanceCount": 1
+    },
+    "SwitchBetweenSkills": {
+      "fields": {
+        "DisplayAOEAreaOfAlternateSkill": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "IsVisibleAtStart": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "Mode": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 0
+        },
+        "SwitchToAlternativeItemIcon": {
+          "type": "enum",
+          "values": [
+            0,
+            1
+          ],
+          "sample": 1
+        },
+        "SwitchWithSkill": {
+          "type": "string",
+          "sample": "active.detonate_explosive_charge"
+        }
+      },
+      "instanceCount": 12
+    },
+    "ThrivingUnderPressure": {
+      "fields": {
+        "RequiredStacksForUse": {
+          "type": "enum",
+          "values": [
+            4
+          ],
+          "sample": 4
+        }
+      },
+      "instanceCount": 2
+    },
+    "ToggleSkills": {
+      "fields": {
+        "ActiveSkills": {
+          "type": "array",
+          "elementType": "string",
+          "sample": "['active.shoot_HE_15cm_assault_howitzer', 'active.shoot_HEAT_15cm_assault_howitzer']..."
+        }
+      },
+      "instanceCount": 1
+    },
+    "TriggerSkillOnHpLost": {
+      "fields": {
+        "CanOnlyTriggerOncePerRound": {
+          "type": "int",
+          "sample": 1
+        },
+        "HpThreshold": {
+          "type": "int",
+          "sample": 15
+        },
+        "SkillToTrigger": {
+          "type": "string",
+          "commonValues": [
+            "active.smoke_screen_carrier"
+          ],
+          "sample": "active.smoke_screen_carrier"
+        }
+      },
+      "instanceCount": 1
+    },
+    "UseSkill": {
+      "fields": {
+        "Event": {
+          "type": "int",
+          "sample": 0
+        },
+        "SkillToUse": {
+          "type": "string",
+          "commonValues": [
+            "active.mod.rocket_organ_barrage.fire"
+          ],
+          "sample": "active.mod.rocket_organ_barrage.fire"
+        }
+      },
+      "instanceCount": 1
+    },
+    "VehicleMovement": {
+      "fields": {
+        "Concealment": {
+          "type": "int",
+          "sample": -3
+        }
+      },
+      "instanceCount": 1
+    },
+    "VentHeat": {
+      "fields": {
+        "VentForSkill": {
+          "type": "string",
+          "commonValues": [
+            "active.fire_auto_laser_sentry_turret",
+            "active.fire_laser_lance",
+            "active.mod.fire_auto_laser",
+            "active.mod.fire_laser_lance",
+            "active.mod.twinfire.fire_auto_laser",
+            "active.mod.twinfire.fire_laser_lance",
+            "active.shoot_laser_rifle",
+            "active.shoot_mining_laser",
+            "active.shoot_plasma",
+            "active.tripod.fire_laser_lance"
+          ],
+          "sample": "active.shoot_mining_laser"
+        }
+      },
+      "instanceCount": 10
+    }
+  }
+}

@@ -177,4 +177,38 @@ public static class UITools
             return new { error = ex.Message };
         }
     }
+
+    /// <summary>
+    /// Get the hierarchical control tree of the current UI.
+    /// Returns a tree structure showing all visible controls with their properties, types, and children.
+    /// Useful for debugging UI issues and verifying that controls are rendered correctly.
+    /// </summary>
+    [McpServerTool(Name = "modkit_inspect_controls", ReadOnly = true), Description("Get the hierarchical control tree of the current UI. Shows all visible controls with their types, properties (Text, Content, IsEnabled, IsVisible), and parent-child relationships. Use this to programmatically inspect what's actually rendered in the UI.")]
+    public static async Task<object> InspectControls()
+    {
+        try
+        {
+            var response = await Http.GetAsync($"{BaseUrl}/ui/controls");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new { modkitRunning = false, error = $"HTTP {(int)response.StatusCode}" };
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<JsonElement>(json, JsonOptions);
+            return new { modkitRunning = true, result };
+        }
+        catch (HttpRequestException)
+        {
+            return new { modkitRunning = false, error = "Modkit app is not running. Please start the Menace Modkit application." };
+        }
+        catch (TaskCanceledException)
+        {
+            return new { modkitRunning = false, error = "Connection timed out. The app may be frozen or not responding." };
+        }
+        catch (Exception ex)
+        {
+            return new { modkitRunning = false, error = ex.Message };
+        }
+    }
 }

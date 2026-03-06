@@ -24,7 +24,9 @@ public class RuntimeCompiler
         "System",
         "System.Linq",
         "System.Collections.Generic",
-        "Menace.SDK"
+        "Menace.SDK",
+        "Il2CppSystem",
+        "Il2CppInterop.Runtime"
     };
 
     /// <summary>

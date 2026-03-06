@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - ModularVehicleWeaponTemplate",
+  "description": "Validates all fields can be read from ModularVehicleWeaponTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleWeaponTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ModularVehicleWeaponTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleWeaponTemplate.mod_weapon.heavy.cannon_long exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SupportsIntegrationOfLightWeapons",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"SupportsIntegrationOfLightWeapons\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableOtherWeaponSlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DisableOtherWeaponSlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_long\", \"DamageToArmorDurabilityMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleWeaponTemplate.mod_weapon.heavy.cannon_short exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SupportsIntegrationOfLightWeapons",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"SupportsIntegrationOfLightWeapons\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableOtherWeaponSlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DisableOtherWeaponSlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.cannon_short\", \"DamageToArmorDurabilityMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleWeaponTemplate.mod_weapon.heavy.mortar exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SupportsIntegrationOfLightWeapons",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"SupportsIntegrationOfLightWeapons\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableOtherWeaponSlots",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DisableOtherWeaponSlots\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimType",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"AnimType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimSize",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"AnimSize\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimGrip",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"AnimGrip\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"MinRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IdealRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"IdealRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxRange",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"MaxRange\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyBonus",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"AccuracyBonus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"AccuracyDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Damage",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"Damage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamageDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamagePctCurrentHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctCurrentHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamagePctCurrentHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpoints",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamagePctMaxHitpoints\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamagePctMaxHitpointsMin",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamagePctMaxHitpointsMin\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetration",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"ArmorPenetration\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ArmorPenetrationDropoff",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"ArmorPenetrationDropoff\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurability",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamageToArmorDurability\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageToArmorDurabilityMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleWeaponTemplate\", \"mod_weapon.heavy.mortar\", \"DamageToArmorDurabilityMult\") != null"
+    }
+  ]
+}

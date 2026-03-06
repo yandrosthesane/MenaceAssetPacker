@@ -1,0 +1,251 @@
+{
+  "name": "Template Validation - SpeakerTemplate",
+  "description": "Validates all fields can be read from SpeakerTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify SpeakerTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"SpeakerTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SpeakerTemplate.achilleas_speaker exists",
+      "code": "!Menace.SDK.Templates.Find(\"SpeakerTemplate\", \"achilleas_speaker\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Tags",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Tags\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TacticalBarkSoundDelayInMs",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"TacticalBarkSoundDelayInMs\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Nickname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Nickname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Forename",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Forename\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Surname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Surname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BarkImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"BarkImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookLeftImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"StandLookLeftImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookRightImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"StandLookRightImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookRightInactiveImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"achilleas_speaker\", \"StandLookRightInactiveImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SpeakerTemplate.android exists",
+      "code": "!Menace.SDK.Templates.Find(\"SpeakerTemplate\", \"android\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Tags",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Tags\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TacticalBarkSoundDelayInMs",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"TacticalBarkSoundDelayInMs\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Nickname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Nickname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Forename",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Forename\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Surname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Surname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BarkImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"BarkImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookLeftImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"StandLookLeftImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookRightImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"android\", \"StandLookRightImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SpeakerTemplate.bog exists",
+      "code": "!Menace.SDK.Templates.Find(\"SpeakerTemplate\", \"bog\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Tags",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Tags\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TacticalBarkSoundDelayInMs",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"TacticalBarkSoundDelayInMs\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Nickname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Nickname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Forename",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Forename\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Surname",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Surname\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BarkImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"BarkImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookLeftImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"StandLookLeftImage\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StandLookRightImage",
+      "code": "Menace.SDK.Templates.GetProperty(\"SpeakerTemplate\", \"bog\", \"StandLookRightImage\") != null"
+    }
+  ]
+}

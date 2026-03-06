@@ -1,0 +1,286 @@
+{
+  "name": "Template Validation - StoryFactionTemplate",
+  "description": "Validates all fields can be read from StoryFactionTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify StoryFactionTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"StoryFactionTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify StoryFactionTemplate.story_faction.dice exists",
+      "code": "!Menace.SDK.Templates.Find(\"StoryFactionTemplate\", \"story_faction.dice\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"FactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialStatus",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"InitialStatus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialTotalTrust",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"InitialTotalTrust\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Representative",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"Representative\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionWindow",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"FactionWindow\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SystemMapHUDIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"SystemMapHUDIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OperationIntros",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"OperationIntros\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.dice\", \"TurnOrderInactiveIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify StoryFactionTemplate.story_faction.firan exists",
+      "code": "!Menace.SDK.Templates.Find(\"StoryFactionTemplate\", \"story_faction.firan\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"FactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialStatus",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"InitialStatus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialTotalTrust",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"InitialTotalTrust\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Representative",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"Representative\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionWindow",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"FactionWindow\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.firan\", \"TurnOrderInactiveIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify StoryFactionTemplate.story_faction.jingwei exists",
+      "code": "!Menace.SDK.Templates.Find(\"StoryFactionTemplate\", \"story_faction.jingwei\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"FactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialStatus",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"InitialStatus\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InitialTotalTrust",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"InitialTotalTrust\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Representative",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"Representative\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FactionWindow",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"FactionWindow\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"StoryFactionTemplate\", \"story_faction.jingwei\", \"TurnOrderInactiveIcon\") != null"
+    }
+  ]
+}

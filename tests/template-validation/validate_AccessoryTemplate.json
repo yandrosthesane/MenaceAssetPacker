@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - AccessoryTemplate",
+  "description": "Validates all fields can be read from AccessoryTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify AccessoryTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"AccessoryTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AccessoryTemplate.accessory.ammo_armor_piercing exists",
+      "code": "!Menace.SDK.Templates.Find(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_armor_piercing\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AccessoryTemplate.accessory.ammo_backpack exists",
+      "code": "!Menace.SDK.Templates.Find(\"AccessoryTemplate\", \"accessory.ammo_backpack\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBar",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"IconSkillBar\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBarDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"IconSkillBarDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Model",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"Model\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_backpack\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AccessoryTemplate.accessory.ammo_bag exists",
+      "code": "!Menace.SDK.Templates.Find(\"AccessoryTemplate\", \"accessory.ammo_bag\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SlotType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"SlotType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ItemType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"ItemType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExclusiveCategory",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"ExclusiveCategory\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"VisualAlterationSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VisualAlterationSlotSecondary",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"VisualAlterationSlotSecondary\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AttachLightAtNight",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"AttachLightAtNight\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Rarity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"Rarity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TradeValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"TradeValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BlackMarketMaxQuantity",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"BlackMarketMaxQuantity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipment",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"IconEquipment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconEquipmentDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"IconEquipmentDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBar",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"IconSkillBar\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconSkillBarDisabled",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"IconSkillBarDisabled\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"ShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"DisplayShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"AccessoryTemplate\", \"accessory.ammo_bag\", \"Description\") != null"
+    }
+  ]
+}

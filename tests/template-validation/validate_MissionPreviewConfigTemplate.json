@@ -1,0 +1,96 @@
+{
+  "name": "Template Validation - MissionPreviewConfigTemplate",
+  "description": "Validates all fields can be read from MissionPreviewConfigTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPreviewConfigTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"MissionPreviewConfigTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify MissionPreviewConfigTemplate.mission_preview_config exists",
+      "code": "!Menace.SDK.Templates.Find(\"MissionPreviewConfigTemplate\", \"mission_preview_config\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BorderWidth",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"BorderWidth\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EntityEdgeAlpha",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"EntityEdgeAlpha\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinHeightValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"MinHeightValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxHeightValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"MaxHeightValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HeightShades",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"HeightShades\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InaccessibleMinHeightValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"InaccessibleMinHeightValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InaccessibleMaxHeightValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"InaccessibleMaxHeightValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field InaccessibleHeightShades",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"InaccessibleHeightShades\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnknownFactionName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"UnknownFactionName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnknownFactionShortName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"UnknownFactionShortName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UnknownUnitTypeName",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"UnknownUnitTypeName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconUnitUnknown",
+      "code": "Menace.SDK.Templates.GetProperty(\"MissionPreviewConfigTemplate\", \"mission_preview_config\", \"IconUnitUnknown\") != null"
+    }
+  ]
+}

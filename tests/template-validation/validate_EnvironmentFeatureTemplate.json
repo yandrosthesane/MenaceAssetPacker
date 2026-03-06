@@ -1,0 +1,96 @@
+{
+  "name": "Template Validation - EnvironmentFeatureTemplate",
+  "description": "Validates all fields can be read from EnvironmentFeatureTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnvironmentFeatureTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"EnvironmentFeatureTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnvironmentFeatureTemplate.feature.temperate_tall_grass exists",
+      "code": "!Menace.SDK.Templates.Find(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Mode",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"Mode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Cover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"Cover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestroyedByVehicle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"IsDestroyedByVehicle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HalfCoverClass",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"feature.temperate_tall_grass\", \"HalfCoverClass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnvironmentFeatureTemplate.light_forest_1x1_temperate exists",
+      "code": "!Menace.SDK.Templates.Find(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Mode",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"Mode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Cover",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"Cover\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsDestroyedByVehicle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"IsDestroyedByVehicle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HalfCoverClass",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"HalfCoverClass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DestroyEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnvironmentFeatureTemplate\", \"light_forest_1x1_temperate\", \"DestroyEffect\") != null"
+    }
+  ]
+}

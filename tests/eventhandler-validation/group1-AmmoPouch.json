@@ -1,0 +1,49 @@
+{
+  "name": "EventHandler - AmmoPouch",
+  "description": "Verify AmmoPouch EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find perk with AmmoPouch EventHandler",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); perks.Length > 0"
+    },
+    {
+      "name": "Get perk with EventHandlers",
+      "type": "repl",
+      "code": "var perk = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); var found = null; foreach(var p in perks) { var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", p.GetPropertyValue(\"name\"), \"EventHandlers\"); if(handlers != null && handlers.GetType().IsArray && ((System.Collections.IEnumerable)handlers).Cast<object>().Count() > 0) { found = p; break; } } found != null"
+    },
+    {
+      "name": "Find first PerkTemplate for testing",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); perks.Length > 0 && perks[0] != null"
+    },
+    {
+      "name": "Load EventHandlers array from perk",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); if(perks.Length > 0) { var name = perks[0].GetPropertyValue(\"name\"); var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", name.ToString(), \"EventHandlers\"); handlers != null } else { false }"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); if(perks.Length > 0) { var name = perks[0].GetPropertyValue(\"name\"); var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", name.ToString(), \"EventHandlers\"); handlers != null && handlers.GetType().IsArray } else { false }"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); if(perks.Length > 0) { var name = perks[0].GetPropertyValue(\"name\"); var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", name.ToString(), \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; break; } } catch {} } found } else { false }"
+    },
+    {
+      "name": "Read parameter field from EventHandler",
+      "type": "repl",
+      "code": "var perks = Menace.SDK.Templates.FindAll(\"PerkTemplate\"); if(perks.Length > 0) { var name = perks[0].GetPropertyValue(\"name\"); var handlers = Menace.SDK.Templates.GetProperty(\"PerkTemplate\", name.ToString(), \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { var field = h.GetType().GetField(\"ApplyToType\") ?? h.GetType().GetField(\"BonusPercentage\") ?? h.GetType().GetField(\"MinimumBonus\"); if(field != null) { found = true; break; } } catch {} } found } else { false }"
+    }
+  ]
+}

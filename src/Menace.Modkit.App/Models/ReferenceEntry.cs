@@ -9,7 +9,7 @@ namespace Menace.Modkit.App.Models;
 public class ReferenceEntry
 {
     /// <summary>
-    /// The template type of the source (e.g., "SquadTemplate", "EntityTemplate")
+    /// The template type of the source (e.g., "ArmyTemplate", "EntityTemplate", "UnitLeaderTemplate")
     /// </summary>
     [JsonPropertyName("sourceType")]
     public string SourceTemplateType { get; set; } = string.Empty;

@@ -97,6 +97,7 @@ public sealed class UIHttpServer : IDisposable
             {
                 "/" => GetHealthStatus(),
                 "/ui" or "/ui/state" => GetUIState(),
+                "/ui/controls" => GetControlTree(),
                 "/ui/navigate" when request.HttpMethod == "POST" => await HandleNavigate(request),
                 "/ui/select" when request.HttpMethod == "POST" => await HandleSelect(request),
                 "/ui/set-field" when request.HttpMethod == "POST" => await HandleSetField(request),
@@ -164,6 +165,19 @@ public sealed class UIHttpServer : IDisposable
 
             return state;
         });
+    }
+
+    private object GetControlTree()
+    {
+        var tree = UIStateService.Instance.GetControlTree();
+        if (tree == null)
+            return new { error = "Could not build control tree" };
+
+        return new
+        {
+            timestamp = DateTime.UtcNow.ToString("o"),
+            tree
+        };
     }
 
     private Dictionary<string, object?> GetViewSpecificData(ViewModelBase? viewModel)

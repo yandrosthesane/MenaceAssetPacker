@@ -1,0 +1,201 @@
+{
+  "name": "Template Validation - FactionTemplate",
+  "description": "Validates all fields can be read from FactionTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify FactionTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"FactionTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify FactionTemplate.faction.alien_wildlife exists",
+      "code": "!Menace.SDK.Templates.Find(\"FactionTemplate\", \"faction.alien_wildlife\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.alien_wildlife\", \"TurnOrderInactiveIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify FactionTemplate.faction.civilians exists",
+      "code": "!Menace.SDK.Templates.Find(\"FactionTemplate\", \"faction.civilians\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.civilians\", \"TurnOrderInactiveIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify FactionTemplate.faction.constructs exists",
+      "code": "!Menace.SDK.Templates.Find(\"FactionTemplate\", \"faction.constructs\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AlliedFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"AlliedFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyFactionType",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"EnemyFactionType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"TurnOrderIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TurnOrderInactiveIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"FactionTemplate\", \"faction.constructs\", \"TurnOrderInactiveIcon\") != null"
+    }
+  ]
+}

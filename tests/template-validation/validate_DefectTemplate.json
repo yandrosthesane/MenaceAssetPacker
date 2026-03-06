@@ -1,0 +1,96 @@
+{
+  "name": "Template Validation - DefectTemplate",
+  "description": "Validates all fields can be read from DefectTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify DefectTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"DefectTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DefectTemplate.defect.accidental_discharge exists",
+      "code": "!Menace.SDK.Templates.Find(\"DefectTemplate\", \"defect.accidental_discharge\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.accidental_discharge\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Severity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.accidental_discharge\", \"Severity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Chance",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.accidental_discharge\", \"Chance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.accidental_discharge\", \"DamageEffect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DefectTemplate.defect.armor_damaged exists",
+      "code": "!Menace.SDK.Templates.Find(\"DefectTemplate\", \"defect.armor_damaged\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.armor_damaged\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Severity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.armor_damaged\", \"Severity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Chance",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.armor_damaged\", \"Chance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.armor_damaged\", \"DamageEffect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify DefectTemplate.defect.autoloader_damaged exists",
+      "code": "!Menace.SDK.Templates.Find(\"DefectTemplate\", \"defect.autoloader_damaged\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.autoloader_damaged\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Severity",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.autoloader_damaged\", \"Severity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Chance",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.autoloader_damaged\", \"Chance\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"DefectTemplate\", \"defect.autoloader_damaged\", \"DamageEffect\") != null"
+    }
+  ]
+}

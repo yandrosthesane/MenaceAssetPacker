@@ -1,0 +1,33 @@
+{
+  "name": "Simple Sanity Test",
+  "continueOnFailure": true,
+  "steps": [
+    {
+      "type": "repl",
+      "name": "Check SDK is loaded",
+      "code": "typeof(Menace.SDK.GameState).FullName"
+    },
+    {
+      "type": "command",
+      "name": "Get test harness status",
+      "command": "test.status"
+    },
+    {
+      "type": "assert",
+      "name": "Verify REPL is available",
+      "expression": "Menace.SDK.Repl.ReplPanel.IsAvailable",
+      "expected": "True"
+    },
+    {
+      "type": "assert",
+      "name": "Verify MCP server is running",
+      "expression": "Menace.ModpackLoader.Mcp.GameMcpServer.IsRunning",
+      "expected": "True"
+    },
+    {
+      "type": "repl",
+      "name": "Check current scene",
+      "code": "Menace.SDK.GameState.CurrentScene"
+    }
+  ]
+}

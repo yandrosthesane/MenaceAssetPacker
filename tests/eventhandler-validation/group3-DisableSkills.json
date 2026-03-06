@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - DisableSkills",
+  "description": "Verify DisableSkills EventHandler loads and can be read. Disables certain skills based on filters.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with DisableSkills EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"DisableSkills\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.suppressed\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is DisableSkills",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.suppressed|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"DisableSkills\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read SkillFilter parameter",
+      "code": "var skillFilter = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.suppressed|EventHandlers[0]\", \"SkillFilter\"); skillFilter != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read HideDisabledSkills parameter",
+      "code": "var hideDisabled = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.suppressed|EventHandlers[0]\", \"HideDisabledSkills\"); hideDisabled != null"
+    }
+  ]
+}

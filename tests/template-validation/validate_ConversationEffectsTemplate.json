@@ -1,0 +1,96 @@
+{
+  "name": "Template Validation - ConversationEffectsTemplate",
+  "description": "Validates all fields can be read from ConversationEffectsTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ConversationEffectsTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ConversationEffectsTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ConversationEffectsTemplate.ce_gain_cheap_item exists",
+      "code": "!Menace.SDK.Templates.Find(\"ConversationEffectsTemplate\", \"ce_gain_cheap_item\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_gain_cheap_item\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_gain_cheap_item\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_gain_cheap_item\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_gain_cheap_item\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ConversationEffectsTemplate.ce_test_stuff_events_1 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ConversationEffectsTemplate\", \"ce_test_stuff_events_1\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_test_stuff_events_1\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_test_stuff_events_1\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_test_stuff_events_1\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"ce_test_stuff_events_1\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ConversationEffectsTemplate.cheap_items_valued_10_to_40 exists",
+      "code": "!Menace.SDK.Templates.Find(\"ConversationEffectsTemplate\", \"cheap_items_valued_10_to_40\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"cheap_items_valued_10_to_40\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"cheap_items_valued_10_to_40\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"cheap_items_valued_10_to_40\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"ConversationEffectsTemplate\", \"cheap_items_valued_10_to_40\", \"DisplayDescription\") != null"
+    }
+  ]
+}

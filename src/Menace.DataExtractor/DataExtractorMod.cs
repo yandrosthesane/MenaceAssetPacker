@@ -155,7 +155,9 @@ namespace Menace.DataExtractor
             _outputPath = Path.Combine(rootDir, "UserData", "ExtractedData");
             _debugLogPath = Path.Combine(_outputPath, "_extraction_debug.log");
             _fingerprintPath = Path.Combine(_outputPath, "_extraction_fingerprint.txt");
-            Directory.CreateDirectory(_outputPath);
+
+            // Run diagnostics on output directory
+            DiagnoseOutputDirectory();
 
             // Clear previous debug log
             try { if (File.Exists(_debugLogPath)) File.Delete(_debugLogPath); } catch { }
@@ -994,7 +996,7 @@ namespace Menace.DataExtractor
         }
 
         // Write directly to a file and flush — survives native crashes
-        private void DebugLog(string message)
+        private void DebugLog(string message, bool alsoLogToConsole = false)
         {
             try
             {
@@ -1002,7 +1004,142 @@ namespace Menace.DataExtractor
                 sw.WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] {message}");
                 sw.Flush();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // If we can't write to debug log, at least try console
+                try { LoggerInstance.Warning($"DebugLog write failed: {ex.Message}"); } catch { }
+            }
+
+            if (alsoLogToConsole)
+            {
+                LoggerInstance.Msg(message);
+            }
+        }
+
+        /// <summary>
+        /// Diagnose the output directory for common issues that would prevent extraction.
+        /// Checks for: directory creation, write permissions, disk space, read-only filesystem.
+        /// </summary>
+        private void DiagnoseOutputDirectory()
+        {
+            bool hasIssues = false;
+
+            // 1. Try to create the directory
+            try
+            {
+                Directory.CreateDirectory(_outputPath);
+            }
+            catch (Exception ex)
+            {
+                LoggerInstance.Error("CRITICAL: Cannot create output directory!");
+                LoggerInstance.Error($"Path: {_outputPath}");
+                LoggerInstance.Error($"Error: {ex.Message}");
+                hasIssues = true;
+                return; // Can't proceed with other checks if directory doesn't exist
+            }
+
+            // 2. Check if path is too long (Windows MAX_PATH = 260 chars)
+            if (_outputPath.Length > 240) // Leave room for filenames
+            {
+                LoggerInstance.Warning($"Output path is very long ({_outputPath.Length} chars).");
+                LoggerInstance.Warning("This may cause issues on Windows (MAX_PATH = 260).");
+                LoggerInstance.Warning($"Path: {_outputPath}");
+                hasIssues = true;
+            }
+
+            // 3. Check available disk space (need at least 50MB for extraction)
+            try
+            {
+                var drive = new DriveInfo(Path.GetPathRoot(_outputPath));
+                long availableSpaceMB = drive.AvailableFreeSpace / (1024 * 1024);
+                long requiredSpaceMB = 50;
+
+                if (availableSpaceMB < requiredSpaceMB)
+                {
+                    LoggerInstance.Error($"CRITICAL: Insufficient disk space!");
+                    LoggerInstance.Error($"Available: {availableSpaceMB} MB");
+                    LoggerInstance.Error($"Required: ~{requiredSpaceMB} MB");
+                    hasIssues = true;
+                }
+                else
+                {
+                    LoggerInstance.Msg($"Disk space: {availableSpaceMB} MB available");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerInstance.Warning($"Could not check disk space: {ex.Message}");
+            }
+
+            // 4. Check if directory or drive is read-only
+            try
+            {
+                var dirInfo = new DirectoryInfo(_outputPath);
+                if ((dirInfo.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    LoggerInstance.Error("CRITICAL: Output directory is marked as READ-ONLY!");
+                    LoggerInstance.Error($"Path: {_outputPath}");
+                    LoggerInstance.Error("Remove the read-only attribute to enable extraction.");
+                    hasIssues = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerInstance.Warning($"Could not check directory attributes: {ex.Message}");
+            }
+
+            // 5. Test write permissions with a temp file
+            try
+            {
+                var testFile = Path.Combine(_outputPath, "_write_test.tmp");
+                var testData = "test data for permission check";
+
+                // Write test
+                File.WriteAllText(testFile, testData);
+
+                // Read back test
+                var readBack = File.ReadAllText(testFile);
+                if (readBack != testData)
+                {
+                    LoggerInstance.Error("CRITICAL: File write verification failed!");
+                    LoggerInstance.Error("Data written does not match data read back.");
+                    hasIssues = true;
+                }
+
+                // Delete test
+                File.Delete(testFile);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                LoggerInstance.Error("CRITICAL: Permission denied when writing to output directory!");
+                LoggerInstance.Error($"Path: {_outputPath}");
+                LoggerInstance.Error($"Error: {ex.Message}");
+                LoggerInstance.Error("The game does not have permission to write files here.");
+                hasIssues = true;
+            }
+            catch (IOException ex)
+            {
+                LoggerInstance.Error("CRITICAL: I/O error when writing to output directory!");
+                LoggerInstance.Error($"Path: {_outputPath}");
+                LoggerInstance.Error($"Error: {ex.Message}");
+                hasIssues = true;
+            }
+            catch (Exception ex)
+            {
+                LoggerInstance.Error("CRITICAL: Cannot write to output directory!");
+                LoggerInstance.Error($"Path: {_outputPath}");
+                LoggerInstance.Error($"Error: {ex.Message}");
+                hasIssues = true;
+            }
+
+            if (hasIssues)
+            {
+                LoggerInstance.Error("Extraction will likely fail due to the issues above.");
+            }
+            else
+            {
+                LoggerInstance.Msg("Output directory verified and writable.");
+            }
         }
 
         // Shared state between PrepareExtraction and the phase loops
@@ -1264,11 +1401,20 @@ namespace Menace.DataExtractor
                         LoggerInstance.Msg($"  Saving {templateType.Name}...");
                         DebugLog($">>> SAVE {templateType.Name}");
                         var dataList = typeCtx.Instances.Select(i => (object)i.Data).ToList();
-                        SaveSingleTemplateType(templateType.Name, dataList);
-                        successCount++;
 
-                        LoggerInstance.Msg($"  {templateType.Name}: {typeCtx.Instances.Count} instances");
-                        ShowExtractionProgress($"Saved {templateType.Name} ({typeCtx.Instances.Count}) [{successCount}/{totalTypes - skippedCount}]");
+                        try
+                        {
+                            SaveSingleTemplateType(templateType.Name, dataList);
+                            successCount++;
+                            LoggerInstance.Msg($"  {templateType.Name}: {typeCtx.Instances.Count} instances");
+                            ShowExtractionProgress($"Saved {templateType.Name} ({typeCtx.Instances.Count}) [{successCount}/{totalTypes - skippedCount}]");
+                        }
+                        catch (Exception saveEx)
+                        {
+                            LoggerInstance.Error($"  SAVE FAILED for {templateType.Name}: {saveEx.Message}");
+                            ShowExtractionProgress($"FAILED to save {templateType.Name} - check permissions!");
+                            // Don't increment successCount - this type failed
+                        }
 
                         // === RELEASE: Clear references so GC can reclaim memory ===
                         DebugLog($">>> RELEASE {templateType.Name}");
@@ -1432,11 +1578,20 @@ namespace Menace.DataExtractor
                         LoggerInstance.Msg($"  Saving {templateType.Name}...");
                         DebugLog($">>> SAVE {templateType.Name}");
                         var dataList = typeCtx.Instances.Select(i => (object)i.Data).ToList();
-                        SaveSingleTemplateType(templateType.Name, dataList);
-                        successCount++;
 
-                        LoggerInstance.Msg($"  {templateType.Name}: {typeCtx.Instances.Count} instances (loose)");
-                        ShowExtractionProgress($"Saved {templateType.Name} ({typeCtx.Instances.Count}) [{successCount}/{totalTypes - skippedCount}]");
+                        try
+                        {
+                            SaveSingleTemplateType(templateType.Name, dataList);
+                            successCount++;
+                            LoggerInstance.Msg($"  {templateType.Name}: {typeCtx.Instances.Count} instances (loose)");
+                            ShowExtractionProgress($"Saved {templateType.Name} ({typeCtx.Instances.Count}) [{successCount}/{totalTypes - skippedCount}]");
+                        }
+                        catch (Exception saveEx)
+                        {
+                            LoggerInstance.Error($"  SAVE FAILED for {templateType.Name}: {saveEx.Message}");
+                            ShowExtractionProgress($"FAILED to save {templateType.Name} - check permissions!");
+                            // Don't increment successCount - this type failed
+                        }
 
                         // === RELEASE: Clear references so GC can reclaim memory ===
                         DebugLog($">>> RELEASE {templateType.Name}");
@@ -1478,6 +1633,19 @@ namespace Menace.DataExtractor
                     ShowExtractionProgress($"Extraction complete: {successCount} template types saved");
 
                     _hasSaved = successCount > 0;
+
+                    // Warn if NO files were saved (complete failure)
+                    if (successCount == 0)
+                    {
+                        LoggerInstance.Error("=== EXTRACTION FAILED ===");
+                        LoggerInstance.Error("No template files were saved!");
+                        LoggerInstance.Error($"Output directory: {_outputPath}");
+                        LoggerInstance.Error("");
+                        LoggerInstance.Error("Running diagnostics to identify the problem...");
+                        DiagnoseOutputDirectory();
+                        ShowExtractionProgress("EXTRACTION FAILED! No files saved. Check MelonLoader console for details.");
+                    }
+
                     // Only save fingerprint if extraction was stable (few or no GC-skipped instances)
                     if (_hasSaved && !_isManualExtraction && !extractionUnstable)
                         SaveFingerprint(fingerprint);
@@ -2580,6 +2748,10 @@ namespace Menace.DataExtractor
 
                     _currentFillRefProp = prop.Name;
                     DebugLog($"    [{inst.Name}].{prop.Name} ({prop.PropertyType.Name})");
+
+                    // DIAGNOSTIC: Log to MelonLoader (persists across restarts) for GenericMissionTemplate
+                    if (templateType.Name == "GenericMissionTemplate")
+                        LoggerInstance.Msg($"        -> Reading property: {prop.Name} ({prop.PropertyType.Name})");
 
                     // Get the IL2CPP field + offset
                     IntPtr field;
@@ -4693,9 +4865,10 @@ namespace Menace.DataExtractor
 
         private void SaveSingleTemplateType(string typeName, List<object> templates)
         {
+            string filePath = Path.Combine(_outputPath, $"{typeName}.json");
+
             try
             {
-                string filePath = Path.Combine(_outputPath, $"{typeName}.json");
 
                 // In manual/additive mode, merge with existing data
                 if (_isManualExtraction && File.Exists(filePath))
@@ -4758,7 +4931,13 @@ namespace Menace.DataExtractor
             }
             catch (Exception ex)
             {
-                DebugLog($"  Failed to save {typeName}: {ex.Message}");
+                var errorMsg = $"Failed to save {typeName}: {ex.Message}";
+                DebugLog($"  {errorMsg}", alsoLogToConsole: true);
+                LoggerInstance.Error($"  [{typeName}] Write failed: {ex.Message}");
+                LoggerInstance.Error($"  Path: {filePath}");
+
+                // Re-throw so caller can track failures
+                throw new IOException($"Failed to save {typeName} to {filePath}", ex);
             }
         }
 

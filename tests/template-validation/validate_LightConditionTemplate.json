@@ -1,0 +1,101 @@
+{
+  "name": "Template Validation - LightConditionTemplate",
+  "description": "Validates all fields can be read from LightConditionTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify LightConditionTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"LightConditionTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify LightConditionTemplate.lightcondition.backbone_day exists",
+      "code": "!Menace.SDK.Templates.Find(\"LightConditionTemplate\", \"lightcondition.backbone_day\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_day\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowAmount",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_day\", \"SnowAmount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DirectionalLightPrefab",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_day\", \"DirectionalLightPrefab\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HDRPProfile",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_day\", \"HDRPProfile\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify LightConditionTemplate.lightcondition.backbone_dayovercast exists",
+      "code": "!Menace.SDK.Templates.Find(\"LightConditionTemplate\", \"lightcondition.backbone_dayovercast\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_dayovercast\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowAmount",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_dayovercast\", \"SnowAmount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DirectionalLightPrefab",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_dayovercast\", \"DirectionalLightPrefab\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HDRPProfile",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_dayovercast\", \"HDRPProfile\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify LightConditionTemplate.lightcondition.backbone_night exists",
+      "code": "!Menace.SDK.Templates.Find(\"LightConditionTemplate\", \"lightcondition.backbone_night\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_night\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SnowAmount",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_night\", \"SnowAmount\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DirectionalLightPrefab",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_night\", \"DirectionalLightPrefab\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HDRPProfile",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_night\", \"HDRPProfile\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkillToApply",
+      "code": "Menace.SDK.Templates.GetProperty(\"LightConditionTemplate\", \"lightcondition.backbone_night\", \"SkillToApply\") != null"
+    }
+  ]
+}

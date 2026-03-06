@@ -1,0 +1,196 @@
+{
+  "name": "Template Validation - WeatherTemplate",
+  "description": "Validates all fields can be read from WeatherTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeatherTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"WeatherTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeatherTemplate.weather.desert_clear exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeatherTemplate\", \"weather.desert_clear\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"DisableDustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DawnTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"DawnTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DayTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"DayTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DuskTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"DuskTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NightTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"NightTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindControlsTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_clear\", \"WindControlsTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeatherTemplate.weather.desert_overcast exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeatherTemplate\", \"weather.desert_overcast\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"DisableDustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DawnTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"DawnTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DayTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"DayTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DuskTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"DuskTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NightTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"NightTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindControlsTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_overcast\", \"WindControlsTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WeatherTemplate.weather.desert_sandstorm exists",
+      "code": "!Menace.SDK.Templates.Find(\"WeatherTemplate\", \"weather.desert_sandstorm\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableDustEffects",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"DisableDustEffects\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CameraEffect",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"CameraEffect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkillToApply",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"SkillToApply\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DawnTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"DawnTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DayTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"DayTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DuskTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"DuskTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field NightTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"NightTemplate\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindControlsTemplate",
+      "code": "Menace.SDK.Templates.GetProperty(\"WeatherTemplate\", \"weather.desert_sandstorm\", \"WindControlsTemplate\") != null"
+    }
+  ]
+}

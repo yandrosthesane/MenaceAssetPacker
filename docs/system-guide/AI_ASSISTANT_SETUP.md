@@ -131,18 +131,29 @@ Create or edit `~/.opencode/config.json`:
 
 Create or edit `~/.opencode/mcp.json`:
 
+**Linux/macOS:**
 ```json
 {
   "mcpServers": {
     "menace-modkit": {
-      "command": "dotnet",
-      "args": ["run", "--project", "/path/to/MenaceAssetPacker/src/Menace.Modkit.Mcp"]
+      "command": "/path/to/modkit/mcp/Menace.Modkit.Mcp"
     }
   }
 }
 ```
 
-Replace `/path/to/MenaceAssetPacker` with your actual modkit installation path.
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "menace-modkit": {
+      "command": "C:\\path\\to\\modkit\\mcp\\Menace.Modkit.Mcp.exe"
+    }
+  }
+}
+```
+
+Replace the path with your actual modkit installation location.
 
 ### Step 4: Test the Connection
 
@@ -192,21 +203,33 @@ Edit the Claude Desktop config file:
 
 - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+- **Linux:** `~/.config/Claude/claude_desktop_config.json`
 
 Add the menace-modkit server:
 
+**macOS/Linux:**
 ```json
 {
   "mcpServers": {
     "menace-modkit": {
-      "command": "dotnet",
-      "args": ["run", "--project", "/path/to/MenaceAssetPacker/src/Menace.Modkit.Mcp"]
+      "command": "/path/to/modkit/mcp/Menace.Modkit.Mcp"
     }
   }
 }
 ```
 
-Restart Claude Desktop after editing.
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "menace-modkit": {
+      "command": "C:\\path\\to\\modkit\\mcp\\Menace.Modkit.Mcp.exe"
+    }
+  }
+}
+```
+
+Replace the path with your actual modkit installation location. Restart Claude Desktop after editing.
 
 ---
 

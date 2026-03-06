@@ -1,0 +1,276 @@
+{
+  "name": "Template Validation - EmotionalStateTemplate",
+  "description": "Validates all fields can be read from EmotionalStateTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify EmotionalStateTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"EmotionalStateTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EmotionalStateTemplate.emotional_state.determined exists",
+      "code": "!Menace.SDK.Templates.Find(\"EmotionalStateTemplate\", \"emotional_state.determined\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StateType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"StateType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Category",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"Category\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsPositive",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"IsPositive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"IsSuperState\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TooltipTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"TooltipTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Effect",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"Effect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"IconBig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.determined\", \"SuperState\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EmotionalStateTemplate.emotional_state.disheartened exists",
+      "code": "!Menace.SDK.Templates.Find(\"EmotionalStateTemplate\", \"emotional_state.disheartened\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StateType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"StateType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Category",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"Category\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsPositive",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"IsPositive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"IsSuperState\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TooltipTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"TooltipTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Effect",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"Effect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"IconBig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.disheartened\", \"SuperState\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EmotionalStateTemplate.emotional_state.eager exists",
+      "code": "!Menace.SDK.Templates.Find(\"EmotionalStateTemplate\", \"emotional_state.eager\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StateType",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"StateType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Category",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"Category\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsPositive",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"IsPositive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsSuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"IsSuperState\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Title",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"Title\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"DisplayTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TooltipTitle",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"TooltipTitle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Effect",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"Effect\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"IconBig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuperState",
+      "code": "Menace.SDK.Templates.GetProperty(\"EmotionalStateTemplate\", \"emotional_state.eager\", \"SuperState\") != null"
+    }
+  ]
+}

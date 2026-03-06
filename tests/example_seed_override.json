@@ -1,0 +1,44 @@
+{
+  "name": "Seed Override Test",
+  "modpack": "SeedOverrideTest",
+  "continueOnFailure": false,
+  "steps": [
+    {
+      "type": "command",
+      "name": "Start test mission",
+      "command": "test.start_mission 99999 1"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for initialization",
+      "durationMs": 2000
+    },
+    {
+      "type": "command",
+      "name": "Navigate to tactical scene",
+      "command": "test.scene TacticalCombat"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 5000
+    },
+    {
+      "type": "assert",
+      "name": "Verify seed was applied",
+      "expression": "TacticalController.GetMission()?.Seed",
+      "expected": "99999"
+    },
+    {
+      "type": "assert_contains",
+      "name": "Check logs for seed override message",
+      "expression": "System.IO.File.ReadAllText(\"MelonLoader/Latest.log\")",
+      "expected": "SEED_OVERRIDE"
+    },
+    {
+      "type": "screenshot",
+      "name": "Capture final state",
+      "filename": "seed_override_test.png"
+    }
+  ]
+}

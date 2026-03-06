@@ -1,0 +1,216 @@
+{
+  "name": "Template Validation - BiomeTemplate",
+  "description": "Validates all fields can be read from BiomeTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify BiomeTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"BiomeTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify BiomeTemplate.biome.desert_canyon exists",
+      "code": "!Menace.SDK.Templates.Find(\"BiomeTemplate\", \"biome.desert_canyon\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BiomeType",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"BiomeType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowInCheatMenu",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"ShowInCheatMenu\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasGrass",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"HasGrass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElevationBlockLoS",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"ElevationBlockLoS\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Material",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"Material\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PropData",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"PropData\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TextureArray",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"TextureArray\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PhysicMaterial",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"PhysicMaterial\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindZone",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.desert_canyon\", \"WindZone\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify BiomeTemplate.biome.snow exists",
+      "code": "!Menace.SDK.Templates.Find(\"BiomeTemplate\", \"biome.snow\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BiomeType",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"BiomeType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowInCheatMenu",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"ShowInCheatMenu\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasGrass",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"HasGrass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElevationBlockLoS",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"ElevationBlockLoS\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Material",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"Material\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PropData",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"PropData\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TextureArray",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"TextureArray\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PhysicMaterial",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"PhysicMaterial\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindZone",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.snow\", \"WindZone\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify BiomeTemplate.biome.temperate_forest exists",
+      "code": "!Menace.SDK.Templates.Find(\"BiomeTemplate\", \"biome.temperate_forest\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BiomeType",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"BiomeType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowInCheatMenu",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"ShowInCheatMenu\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasGrass",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"HasGrass\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ElevationBlockLoS",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"ElevationBlockLoS\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Material",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"Material\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PropData",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"PropData\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TextureArray",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"TextureArray\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PhysicMaterial",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"PhysicMaterial\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field WindZone",
+      "code": "Menace.SDK.Templates.GetProperty(\"BiomeTemplate\", \"biome.temperate_forest\", \"WindZone\") != null"
+    }
+  ]
+}

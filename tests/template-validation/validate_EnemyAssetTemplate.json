@@ -1,0 +1,171 @@
+{
+  "name": "Template Validation - EnemyAssetTemplate",
+  "description": "Validates all fields can be read from EnemyAssetTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnemyAssetTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"EnemyAssetTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnemyAssetTemplate.enemy_asset.anti_tank_weapon_arsenal exists",
+      "code": "!Menace.SDK.Templates.Find(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAfterMission",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"DisableAfterMission\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.anti_tank_weapon_arsenal\", \"IconBig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnemyAssetTemplate.enemy_asset.combat_drug_laboratory exists",
+      "code": "!Menace.SDK.Templates.Find(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAfterMission",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"DisableAfterMission\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_drug_laboratory\", \"IconBig\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify EnemyAssetTemplate.enemy_asset.combat_training_center exists",
+      "code": "!Menace.SDK.Templates.Find(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisableAfterMission",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"DisableAfterMission\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconBig",
+      "code": "Menace.SDK.Templates.GetProperty(\"EnemyAssetTemplate\", \"enemy_asset.combat_training_center\", \"IconBig\") != null"
+    }
+  ]
+}

@@ -31,6 +31,155 @@ public class DeployManager
     }
 
     /// <summary>
+    /// Detect if the game has been updated and clean up stale files if needed.
+    /// Returns true if cleanup was performed (requires user to verify game files via Steam).
+    /// </summary>
+    private async Task<(bool CleanupPerformed, string? Message)> DetectAndHandleGameUpdate(string modsBasePath)
+    {
+        var gameInstallPath = _modpackManager.GetGameInstallPath();
+        if (string.IsNullOrEmpty(gameInstallPath))
+            return (false, null);
+
+        var gameDataDir = Directory.GetDirectories(gameInstallPath, "*_Data").FirstOrDefault();
+        if (string.IsNullOrEmpty(gameDataDir))
+            return (false, null);
+
+        // Try to read game version from globalgamemanagers
+        var currentVersion = await Task.Run(() => DetectGameVersion(gameInstallPath));
+        if (string.IsNullOrEmpty(currentVersion))
+            return (false, null);
+
+        var previousState = DeployState.LoadFrom(DeployStateFilePath);
+        var previousVersion = previousState.GameVersion;
+
+        // If no previous version stored, just record current version
+        if (string.IsNullOrEmpty(previousVersion))
+        {
+            ModkitLog.Info($"[DeployManager] Recording game version: {currentVersion}");
+            return (false, null);
+        }
+
+        // Check if version changed
+        if (currentVersion == previousVersion)
+            return (false, null);
+
+        // Game has been updated!
+        ModkitLog.Warn($"[DeployManager] Game update detected: {previousVersion} → {currentVersion}");
+        ModkitLog.Warn($"[DeployManager] Cleaning up stale patched files from previous version...");
+
+        // Delete patched game data files
+        var filesToDelete = new[] { "resources.assets", "globalgamemanagers" };
+        foreach (var fileName in filesToDelete)
+        {
+            var filePath = Path.Combine(gameDataDir, fileName);
+            var backupPath = Path.Combine(gameDataDir, fileName + ".original");
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                    ModkitLog.Info($"[DeployManager] Deleted stale patched file: {fileName}");
+                }
+                catch (Exception ex)
+                {
+                    ModkitLog.Error($"[DeployManager] Failed to delete {fileName}: {ex.Message}");
+                }
+            }
+
+            if (File.Exists(backupPath))
+            {
+                try
+                {
+                    File.Delete(backupPath);
+                    ModkitLog.Info($"[DeployManager] Deleted stale backup: {fileName}.original");
+                }
+                catch (Exception ex)
+                {
+                    ModkitLog.Error($"[DeployManager] Failed to delete {fileName}.original: {ex.Message}");
+                }
+            }
+        }
+
+        // Delete compiled mod assets (they may be incompatible with new version)
+        var compiledDir = Path.Combine(modsBasePath, "compiled");
+        if (Directory.Exists(compiledDir))
+        {
+            try
+            {
+                Directory.Delete(compiledDir, true);
+                ModkitLog.Info($"[DeployManager] Deleted compiled assets directory");
+            }
+            catch (Exception ex)
+            {
+                ModkitLog.Error($"[DeployManager] Failed to delete compiled directory: {ex.Message}");
+            }
+        }
+
+        var message = $"Game update detected ({previousVersion} → {currentVersion}).\n\n" +
+                     $"Cleaned up stale files from the previous version.\n\n" +
+                     $"ACTION REQUIRED:\n" +
+                     $"1. Verify game files via Steam to download updated game data\n" +
+                     $"2. Then redeploy mods\n\n" +
+                     $"In Steam: Right-click Menace → Properties → Installed Files → Verify integrity";
+
+        return (true, message);
+    }
+
+    /// <summary>
+    /// Detect the game version by reading from globalgamemanagers or app info.
+    /// Returns null if detection fails.
+    /// </summary>
+    private static string? DetectGameVersion(string gameInstallPath)
+    {
+        // Try reading from globalgamemanagers
+        var dataDirs = Directory.GetDirectories(gameInstallPath, "*_Data");
+        foreach (var dataDir in dataDirs)
+        {
+            var ggmPath = Path.Combine(dataDir, "globalgamemanagers");
+            if (!File.Exists(ggmPath))
+                continue;
+
+            try
+            {
+                // Read the Unity version string from globalgamemanagers
+                // Format: offset 0x14 contains a null-terminated version string
+                using var fs = File.OpenRead(ggmPath);
+                using var reader = new BinaryReader(fs);
+
+                // Skip to version offset
+                fs.Seek(0x14, SeekOrigin.Begin);
+                var bytes = new List<byte>();
+                byte b;
+                while ((b = reader.ReadByte()) != 0 && bytes.Count < 50)
+                    bytes.Add(b);
+
+                var unityVersion = System.Text.Encoding.ASCII.GetString(bytes.ToArray());
+
+                // Also try to get game-specific version from nearby bytes
+                // For now, return Unity version + file size as a fingerprint
+                var fileSize = new FileInfo(ggmPath).Length;
+                return $"{unityVersion}_{fileSize}";
+            }
+            catch
+            {
+                // Fall back to file checksum if version reading fails
+                try
+                {
+                    var fileInfo = new FileInfo(ggmPath);
+                    return $"build_{fileInfo.Length}_{fileInfo.LastWriteTimeUtc:yyyyMMddHHmmss}";
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Deploy a single staging modpack to the game's Mods/ folder (with compilation).
     /// </summary>
     public async Task<DeployResult> DeploySingleAsync(ModpackManifest modpack, IProgress<string>? progress = null, CancellationToken ct = default)
@@ -39,8 +188,23 @@ public class DeployManager
         if (string.IsNullOrEmpty(modsBasePath))
             return new DeployResult { Success = false, Message = "Game install path not set" };
 
+        // Check for game updates and clean up stale files if needed
+        progress?.Report("Checking game version...");
+        var (cleanupPerformed, cleanupMessage) = await DetectAndHandleGameUpdate(modsBasePath);
+        if (cleanupPerformed)
+        {
+            return new DeployResult
+            {
+                Success = false,
+                Message = cleanupMessage ?? "Game update detected. Please verify game files via Steam before deploying mods."
+            };
+        }
+
         try
         {
+            // Refresh runtime DLLs from bundled directory to pick up latest builds
+            _modpackManager.RefreshRuntimeDlls();
+
             // Deploy runtime DLLs first so ModpackLoader.dll is available as a reference
             progress?.Report("Deploying runtime DLLs...");
             await Task.Run(() => DeployRuntimeDlls(modsBasePath), ct);
@@ -138,6 +302,19 @@ public class DeployManager
         if (string.IsNullOrEmpty(modsBasePath))
             return new DeployResult { Success = false, Message = "Game install path not set" };
 
+        // Check for game updates and clean up stale files if needed
+        progress?.Report("Checking game version...");
+        var (cleanupPerformed, cleanupMessage) = await DetectAndHandleGameUpdate(modsBasePath);
+        if (cleanupPerformed)
+        {
+            // Game was updated - user needs to verify files via Steam first
+            return new DeployResult
+            {
+                Success = false,
+                Message = cleanupMessage ?? "Game update detected. Please verify game files via Steam before deploying mods."
+            };
+        }
+
         // Get staging modpacks, ordered by load order, excluding dev-only unless enabled.
         // Use DistinctBy on Name to avoid deploying duplicate modpacks if multiple
         // staging directories have the same manifest Name.
@@ -162,13 +339,16 @@ public class DeployManager
             progress?.Report("Cleaning old deployment...");
             await Task.Run(() => CleanPreviousDeployment(previousState, modsBasePath), ct);
 
-            // Step 2: Deploy runtime DLLs first (ModpackLoader, DataExtractor, etc.)
+            // Step 2: Refresh runtime DLLs from bundled directory to pick up latest builds
+            _modpackManager.RefreshRuntimeDlls();
+
+            // Step 3: Deploy runtime DLLs first (ModpackLoader, DataExtractor, etc.)
             // Must happen before compilation so modpacks can reference Menace.ModpackLoader.dll
             progress?.Report("Deploying runtime DLLs...");
             var runtimeFiles = await Task.Run(() => DeployRuntimeDlls(modsBasePath), ct);
             deployedFiles.AddRange(runtimeFiles);
 
-            // Step 3: Compile and deploy each modpack
+            // Step 4: Compile and deploy each modpack
             int total = modpacks.Count;
             for (int i = 0; i < total; i++)
             {
@@ -218,21 +398,25 @@ public class DeployManager
                 });
             }
 
-            // Step 4: Try to compile merged patches into an asset bundle
+            // Step 5: Try to compile merged patches into an asset bundle
             progress?.Report("Compiling asset bundles...");
             var bundleFiles = await TryCompileBundleAsync(modpacks, modsBasePath, ct);
             deployedFiles.AddRange(bundleFiles);
 
-            // Step 5: Deploy patched game data files (resources.assets, globalgamemanagers)
+            // Step 6: Deploy patched game data files (resources.assets, globalgamemanagers)
             progress?.Report("Deploying patched game data...");
             await Task.Run(() => DeployPatchedGameData(modsBasePath), ct);
 
-            // Step 6: Save deploy state
+            // Step 7: Save deploy state with current game version
+            var gameInstallPath = _modpackManager.GetGameInstallPath();
+            var gameVersion = await Task.Run(() => DetectGameVersion(gameInstallPath ?? ""));
+
             var state = new DeployState
             {
                 DeployedModpacks = deployedModpacks,
                 DeployedFiles = deployedFiles,
-                LastDeployTimestamp = DateTime.Now
+                LastDeployTimestamp = DateTime.Now,
+                GameVersion = gameVersion
             };
             state.SaveTo(DeployStateFilePath);
 

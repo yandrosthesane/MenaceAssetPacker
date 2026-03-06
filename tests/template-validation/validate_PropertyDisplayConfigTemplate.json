@@ -1,0 +1,221 @@
+{
+  "name": "Template Validation - PropertyDisplayConfigTemplate",
+  "description": "Validates all fields can be read from PropertyDisplayConfigTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify PropertyDisplayConfigTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"PropertyDisplayConfigTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PropertyDisplayConfigTemplate.property.accuracy exists",
+      "code": "!Menace.SDK.Templates.Find(\"PropertyDisplayConfigTemplate\", \"property.accuracy\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DecimalPlaces",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"DecimalPlaces\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSections",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"ProgressBarSections\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBiggerBetter",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"IsBiggerBetter\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSectionLabels",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy\", \"ProgressBarSectionLabels\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PropertyDisplayConfigTemplate.property.accuracy_modifier exists",
+      "code": "!Menace.SDK.Templates.Find(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DecimalPlaces",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"DecimalPlaces\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSections",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"ProgressBarSections\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBiggerBetter",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"IsBiggerBetter\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HasIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"HasIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IconAssetName",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"IconAssetName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSectionLabels",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.accuracy_modifier\", \"ProgressBarSectionLabels\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify PropertyDisplayConfigTemplate.property.action_points exists",
+      "code": "!Menace.SDK.Templates.Find(\"PropertyDisplayConfigTemplate\", \"property.action_points\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"DefaultValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"MinValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MaxValue",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"MaxValue\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DecimalPlaces",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"DecimalPlaces\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSections",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"ProgressBarSections\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsBiggerBetter",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"IsBiggerBetter\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ProgressBarSectionLabels",
+      "code": "Menace.SDK.Templates.GetProperty(\"PropertyDisplayConfigTemplate\", \"property.action_points\", \"ProgressBarSectionLabels\") != null"
+    }
+  ]
+}

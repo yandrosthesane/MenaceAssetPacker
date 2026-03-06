@@ -1,0 +1,39 @@
+{
+  "name": "EventHandler - EmitAura",
+  "description": "Verify EmitAura EventHandler loads and can be read. Creates aura effects around entity.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with EmitAura EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"EmitAura\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.aura.inspiring_presence\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is EmitAura",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.aura.inspiring_presence|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"EmitAura\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read SkillToAdd parameter",
+      "code": "var skillToAdd = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.aura.inspiring_presence|EventHandlers[0]\", \"SkillToAdd\"); skillToAdd != null && skillToAdd.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read ExcludeSelf parameter",
+      "code": "var excludeSelf = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.aura.inspiring_presence|EventHandlers[0]\", \"ExcludeSelf\"); excludeSelf != null"
+    }
+  ]
+}

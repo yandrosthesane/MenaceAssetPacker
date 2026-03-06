@@ -1,0 +1,34 @@
+{
+  "name": "EventHandler - FilterByMorale",
+  "description": "Verify FilterByMorale EventHandler loads and can be read. Filters skill/perk by morale state.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with FilterByMorale EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillFound = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null) { for(int i = 0; i < handlers.Count; i++) { var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"FilterByMorale\")) { skillFound = skill.name; break; } } } if(skillFound != null) break; } skillFound != null && !skillFound.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array from found skill",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.desperate\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field is FilterByMorale",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.desperate|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Contains(\"FilterByMorale\")"
+    },
+    {
+      "type": "repl",
+      "name": "Read AppliesOnlyToState parameter",
+      "code": "var appliesState = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.desperate|EventHandlers[0]\", \"AppliesOnlyToState\"); appliesState != null"
+    }
+  ]
+}

@@ -119,4 +119,16 @@
     <Compile Include="..\Shared\ModkitVersion.cs" Link="ModkitVersion.cs" />
   </ItemGroup>
 
+  <!-- Auto-sync built DLL to bundled directory after successful build -->
+  <Target Name="SyncToBundled" AfterTargets="Build">
+    <PropertyGroup>
+      <BundledDestination>$(MSBuildThisFileDirectory)..\..\third_party\bundled\ModpackLoader\</BundledDestination>
+    </PropertyGroup>
+    <Copy
+      SourceFiles="$(TargetPath)"
+      DestinationFolder="$(BundledDestination)"
+      SkipUnchangedFiles="false" />
+    <Message Importance="high" Text="✓ Synced $(TargetFileName) to bundled directory" />
+  </Target>
+
 </Project>

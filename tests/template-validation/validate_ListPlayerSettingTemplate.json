@@ -1,0 +1,156 @@
+{
+  "name": "Template Validation - ListPlayerSettingTemplate",
+  "description": "Validates all fields can be read from ListPlayerSettingTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ListPlayerSettingTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ListPlayerSettingTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ListPlayerSettingTemplate.display_display_mode exists",
+      "code": "!Menace.SDK.Templates.Find(\"ListPlayerSettingTemplate\", \"display_display_mode\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UIStyle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"UIStyle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValueIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"DefaultValueIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TranslateValues",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"TranslateValues\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Values",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"Values\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_display_mode\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ListPlayerSettingTemplate.display_max_frame_rate exists",
+      "code": "!Menace.SDK.Templates.Find(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UIStyle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"UIStyle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValueIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"DefaultValueIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TranslateValues",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"TranslateValues\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Values",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"Values\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"display_max_frame_rate\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ListPlayerSettingTemplate.general_text_language exists",
+      "code": "!Menace.SDK.Templates.Find(\"ListPlayerSettingTemplate\", \"general_text_language\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UIStyle",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"UIStyle\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DefaultValueIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"DefaultValueIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TranslateValues",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"TranslateValues\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Values",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"Values\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ListPlayerSettingTemplate\", \"general_text_language\", \"Name\") != null"
+    }
+  ]
+}

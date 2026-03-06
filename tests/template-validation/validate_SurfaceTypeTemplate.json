@@ -1,0 +1,126 @@
+{
+  "name": "Template Validation - SurfaceTypeTemplate",
+  "description": "Validates all fields can be read from SurfaceTypeTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceTypeTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"SurfaceTypeTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceTypeTemplate.surface_type.concrete exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceTypeTemplate\", \"surface_type.concrete\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.concrete\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceTypeTemplate.surface_type.dirt_road exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.dirt_road\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceTypeTemplate.surface_type.earth exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceTypeTemplate\", \"surface_type.earth\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SurfaceType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"SurfaceType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceTypeTemplate\", \"surface_type.earth\", \"DisplayDescription\") != null"
+    }
+  ]
+}

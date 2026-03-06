@@ -1,0 +1,111 @@
+{
+  "name": "Template Validation - InsideCoverTemplate",
+  "description": "Validates all fields can be read from InsideCoverTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify InsideCoverTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"InsideCoverTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify InsideCoverTemplate.cover_inside_bunker exists",
+      "code": "!Menace.SDK.Templates.Find(\"InsideCoverTemplate\", \"cover_inside_bunker\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_bunker\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_bunker\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_bunker\", \"DamageMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuppressionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_bunker\", \"SuppressionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_bunker\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify InsideCoverTemplate.cover_inside_forest exists",
+      "code": "!Menace.SDK.Templates.Find(\"InsideCoverTemplate\", \"cover_inside_forest\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_forest\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_forest\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_forest\", \"DamageMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuppressionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_forest\", \"SuppressionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_forest\", \"Concealment\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify InsideCoverTemplate.cover_inside_vehicle_closed exists",
+      "code": "!Menace.SDK.Templates.Find(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AccuracyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\", \"AccuracyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DamageMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\", \"DamageMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SuppressionMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\", \"SuppressionMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Concealment",
+      "code": "Menace.SDK.Templates.GetProperty(\"InsideCoverTemplate\", \"cover_inside_vehicle_closed\", \"Concealment\") != null"
+    }
+  ]
+}

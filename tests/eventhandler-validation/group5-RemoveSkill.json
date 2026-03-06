@@ -1,0 +1,34 @@
+{
+  "name": "EventHandler - RemoveSkill",
+  "description": "Verify RemoveSkill EventHandler loads and can be read via Templates",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill/perk with RemoveSkill",
+      "code": "\nvar skillName = \"active.detonate_hoverbomb\";\nvar skillOpt = Templates.All<SkillTemplate>().FirstOrDefault(s => s.name == skillName);\nAssert.NotNull(skillOpt, $\"Skill/Perk '{skillName}' should exist\");\nskillOpt\n"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "\nvar handlers = skillOpt.EventHandlers;\nAssert.NotNull(handlers, \"EventHandlers should not be null\");\nAssert.True(handlers.Count > 0, \"Should have at least one EventHandler\");\nvar handler = handlers.FirstOrDefault(h => h._type == \"RemoveSkill\");\nAssert.NotNull(handler, $\"Should find RemoveSkill EventHandler\");\nhandler\n"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "\nAssert.Equal(\"RemoveSkill\", handler._type);\nhandler._type\n"
+    },
+    {
+      "type": "repl",
+      "name": "Read Event parameter",
+      "code": "\nvar fieldValue = handler.Event;\nAssert.NotNull(fieldValue, \"Event should be populated\");\nfieldValue\n"
+    }
+  ]
+}

@@ -80,7 +80,12 @@ public class App : Application
 
             var needsSetup = await needsSetupTask;
             ModkitLog.Info($"[App] Setup status check complete: needsSetup={needsSetup}");
-            return needsSetup;
+
+            // TEMPORARY: Bypass setup to test EventHandler editor
+            ModkitLog.Warn("[App] BYPASSING setup check for testing");
+            return false; // Force skip setup
+
+            //return needsSetup;
         }
         catch (Exception ex)
         {

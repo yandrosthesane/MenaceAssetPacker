@@ -1,0 +1,21 @@
+{
+  "name": "EventHandler Validation - Group 6 (12 types)",
+  "description": "Test all Group 6 EventHandler types: SpawnPrefab through VentHeat",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Group 6 - Test all 12 EventHandler types",
+      "code": "var results = new System.Collections.Generic.Dictionary<string, bool>(); var types = new[] { \"SpawnPrefab\", \"SpawnTileEffect\", \"StanceDeployed\", \"Suppression\", \"SuppressionConstruct\", \"SwitchBetweenSkills\", \"ThrivingUnderPressure\", \"ToggleSkills\", \"TriggerSkillOnHpLost\", \"UseSkill\", \"VehicleMovement\", \"VentHeat\" }; var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); foreach (var typeName in types) { var found = false; foreach (var skill in skills) { try { var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.ReadString(\"name\"), \"EventHandlers\"); if (handlers != null) { var array = handlers.Cast<Il2CppSystem.Object[]>(); foreach (var handler in array) { var type = handler.ReadString(\"_type\"); if (type == typeName) { found = true; break; } } if (found) break; } } catch { } } results[typeName] = found; } var passed = results.Values.Count(v => v); var total = results.Count; UnityEngine.Debug.Log($\"Group 6 Results: {passed}/{total} types found\"); foreach (var kvp in results) { UnityEngine.Debug.Log($\"  {kvp.Key}: {(kvp.Value ? \"✓\" : \"✗\")}\"); } passed == total"
+    }
+  ]
+}

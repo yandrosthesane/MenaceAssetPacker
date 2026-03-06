@@ -1,0 +1,34 @@
+{
+  "name": "EventHandler - RefillAmmo",
+  "description": "Verify RefillAmmo EventHandler loads and can be read via Templates",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill/perk with RefillAmmo",
+      "code": "\nvar skillName = \"active.rogue_ammo_runner_refill_ammo\";\nvar skillOpt = Templates.All<SkillTemplate>().FirstOrDefault(s => s.name == skillName);\nAssert.NotNull(skillOpt, $\"Skill/Perk '{skillName}' should exist\");\nskillOpt\n"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "\nvar handlers = skillOpt.EventHandlers;\nAssert.NotNull(handlers, \"EventHandlers should not be null\");\nAssert.True(handlers.Count > 0, \"Should have at least one EventHandler\");\nvar handler = handlers.FirstOrDefault(h => h._type == \"RefillAmmo\");\nAssert.NotNull(handler, $\"Should find RefillAmmo EventHandler\");\nhandler\n"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field",
+      "code": "\nAssert.Equal(\"RefillAmmo\", handler._type);\nhandler._type\n"
+    },
+    {
+      "type": "repl",
+      "name": "Read RestorePct parameter",
+      "code": "\nvar fieldValue = handler.RestorePct;\nAssert.NotNull(fieldValue, \"RestorePct should be populated\");\nfieldValue\n"
+    }
+  ]
+}

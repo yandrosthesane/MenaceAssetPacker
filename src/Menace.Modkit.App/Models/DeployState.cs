@@ -16,6 +16,12 @@ public class DeployState
     public List<string> DeployedFiles { get; set; } = new();
     public DateTime LastDeployTimestamp { get; set; }
 
+    /// <summary>
+    /// Game version (from Unity Application.version) when mods were last deployed.
+    /// Used to detect game updates and trigger cleanup of stale patched files.
+    /// </summary>
+    public string? GameVersion { get; set; }
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,

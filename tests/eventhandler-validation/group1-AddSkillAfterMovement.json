@@ -1,0 +1,49 @@
+{
+  "name": "EventHandler - AddSkillAfterMovement",
+  "description": "Verify AddSkillAfterMovement EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find skill with AddSkillAfterMovement EventHandler",
+      "type": "repl",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); skills.Length > 0"
+    },
+    {
+      "name": "Get skill with EventHandlers",
+      "type": "repl",
+      "code": "var skill = Menace.SDK.Templates.Find(\"SkillTemplate\", \"effect.drive_by\"); !skill.IsNull"
+    },
+    {
+      "name": "Load EventHandlers array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.drive_by\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.drive_by\", \"EventHandlers\"); handlers.GetType().IsArray"
+    },
+    {
+      "name": "Find AddSkillAfterMovement handler in array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.drive_by\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { var type = h.GetType().Name; if(type == \"AddSkillAfterMovement\") { found = true; break; } } found"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.drive_by\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; break; } } catch {} } found"
+    },
+    {
+      "name": "Read Effect parameter field",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"effect.drive_by\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { var field = h.GetType().GetField(\"Effect\"); if(field != null) { found = true; break; } } catch {} } found"
+    }
+  ]
+}

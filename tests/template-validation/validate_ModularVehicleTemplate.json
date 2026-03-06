@@ -1,0 +1,81 @@
+{
+  "name": "Template Validation - ModularVehicleTemplate",
+  "description": "Validates all fields can be read from ModularVehicleTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"ModularVehicleTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleTemplate.modular_vehicle_atv exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleTemplate\", \"modular_vehicle_atv\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_atv\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_atv\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_atv\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleTemplate.modular_vehicle_carrier exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleTemplate\", \"modular_vehicle_carrier\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_carrier\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_carrier\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_carrier\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify ModularVehicleTemplate.modular_vehicle_heavy_walker exists",
+      "code": "!Menace.SDK.Templates.Find(\"ModularVehicleTemplate\", \"modular_vehicle_heavy_walker\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_heavy_walker\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_heavy_walker\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"ModularVehicleTemplate\", \"modular_vehicle_heavy_walker\", \"m_ID\") != null"
+    }
+  ]
+}

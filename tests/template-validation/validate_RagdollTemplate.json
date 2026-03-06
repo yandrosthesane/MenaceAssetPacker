@@ -1,0 +1,186 @@
+{
+  "name": "Template Validation - RagdollTemplate",
+  "description": "Validates all fields can be read from RagdollTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify RagdollTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"RagdollTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify RagdollTemplate.ragdoll_alien01 exists",
+      "code": "!Menace.SDK.Templates.Find(\"RagdollTemplate\", \"ragdoll_alien01\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BloodPoolPosition",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"BloodPoolPosition\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseCustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"UseCustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"CustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravityForceMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"CustomGravityForceMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DismemberedPartHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"DismemberedPartHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalDismemberedPieceHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"AdditionalDismemberedPieceHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RootHasGeometry",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"RootHasGeometry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CenterPartIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"CenterPartIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GeometryRootIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01\", \"GeometryRootIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify RagdollTemplate.ragdoll_alien01_big exists",
+      "code": "!Menace.SDK.Templates.Find(\"RagdollTemplate\", \"ragdoll_alien01_big\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BloodPoolPosition",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"BloodPoolPosition\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseCustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"UseCustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"CustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravityForceMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"CustomGravityForceMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DismemberedPartHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"DismemberedPartHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalDismemberedPieceHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"AdditionalDismemberedPieceHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RootHasGeometry",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"RootHasGeometry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CenterPartIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"CenterPartIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GeometryRootIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien01_big\", \"GeometryRootIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify RagdollTemplate.ragdoll_alien_bombardier exists",
+      "code": "!Menace.SDK.Templates.Find(\"RagdollTemplate\", \"ragdoll_alien_bombardier\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BloodPoolPosition",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"BloodPoolPosition\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UseCustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"UseCustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravity",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"CustomGravity\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CustomGravityForceMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"CustomGravityForceMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DismemberedPartHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"DismemberedPartHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AdditionalDismemberedPieceHitForceMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"AdditionalDismemberedPieceHitForceMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RootHasGeometry",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"RootHasGeometry\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CenterPartIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"CenterPartIndex\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field GeometryRootIndex",
+      "code": "Menace.SDK.Templates.GetProperty(\"RagdollTemplate\", \"ragdoll_alien_bombardier\", \"GeometryRootIndex\") != null"
+    }
+  ]
+}

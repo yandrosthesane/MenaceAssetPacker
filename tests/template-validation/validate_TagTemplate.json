@@ -1,0 +1,126 @@
+{
+  "name": "Template Validation - TagTemplate",
+  "description": "Validates all fields can be read from TagTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify TagTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"TagTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify TagTemplate.accessory exists",
+      "code": "!Menace.SDK.Templates.Find(\"TagTemplate\", \"accessory\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TagType",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"TagType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVisible",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"IsVisible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Value",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"Value\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accessory\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify TagTemplate.accurate exists",
+      "code": "!Menace.SDK.Templates.Find(\"TagTemplate\", \"accurate\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TagType",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"TagType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVisible",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"IsVisible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Value",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"Value\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"accurate\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify TagTemplate.anti_infantry exists",
+      "code": "!Menace.SDK.Templates.Find(\"TagTemplate\", \"anti_infantry\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TagType",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"TagType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsVisible",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"IsVisible\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Value",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"Value\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"TagTemplate\", \"anti_infantry\", \"Name\") != null"
+    }
+  ]
+}

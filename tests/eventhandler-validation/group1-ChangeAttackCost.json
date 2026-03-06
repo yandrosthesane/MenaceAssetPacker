@@ -1,0 +1,49 @@
+{
+  "name": "EventHandler - ChangeAttackCost",
+  "description": "Verify ChangeAttackCost EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find skill with ChangeAttackCost EventHandler",
+      "type": "repl",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); skills.Length > 0"
+    },
+    {
+      "name": "Get skill with EventHandlers",
+      "type": "repl",
+      "code": "var skill = Menace.SDK.Templates.Find(\"SkillTemplate\", \"active.change_plates\"); !skill.IsNull"
+    },
+    {
+      "name": "Load EventHandlers array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"EventHandlers\"); handlers.GetType().IsArray"
+    },
+    {
+      "name": "Find ChangeAttackCost handler in array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { var type = h.GetType().Name; if(type == \"ChangeAttackCost\") { found = true; break; } } found"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { if(h.GetType().Name == \"ChangeAttackCost\") { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; } break; } } catch {} } found"
+    },
+    {
+      "name": "Read CostPerAttackMult parameter field",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"EventHandlers\"); var found = false; foreach(var h in (System.Collections.IEnumerable)handlers) { try { if(h.GetType().Name == \"ChangeAttackCost\") { var field = h.GetType().GetField(\"CostPerAttackMult\"); if(field != null) { found = true; } break; } } catch {} } found"
+    }
+  ]
+}

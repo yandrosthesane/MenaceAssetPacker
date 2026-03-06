@@ -1031,6 +1031,15 @@ public class ModpackManager
             .ToList();
     }
 
+    /// <summary>
+    /// Refresh runtime DLLs from bundled directory.
+    /// Call this before deployment to ensure the latest built DLLs are used.
+    /// </summary>
+    public void RefreshRuntimeDlls()
+    {
+        SeedBundledRuntimeDlls();
+    }
+
     private void EnsureDirectoriesExist()
     {
         Directory.CreateDirectory(_stagingBasePath);
@@ -1050,23 +1059,108 @@ public class ModpackManager
     private static readonly string[] BundledRuntimeDllDirs = { "DataExtractor", "ModpackLoader" };
 
     /// <summary>
+    /// Try to find the source tree bundled directory for development workflow.
+    /// Returns null if not found (production build).
+    /// </summary>
+    private static string? FindSourceTreeBundledDirectory()
+    {
+        // Start from app directory and walk up looking for the source tree marker
+        var current = new DirectoryInfo(AppContext.BaseDirectory);
+        while (current != null)
+        {
+            // Check for source tree marker (src/ directory with .csproj files)
+            var srcDir = Path.Combine(current.FullName, "src");
+            if (Directory.Exists(srcDir))
+            {
+                // Verify this looks like our source tree
+                var modpackLoaderProj = Path.Combine(srcDir, "Menace.ModpackLoader", "Menace.ModpackLoader.csproj");
+                if (File.Exists(modpackLoaderProj))
+                {
+                    // Found the source tree!
+                    var bundledPath = Path.Combine(current.FullName, "third_party", "bundled");
+                    if (Directory.Exists(bundledPath))
+                    {
+                        ModkitLog.Info($"[ModpackManager] Found source tree bundled directory: {bundledPath}");
+                        return bundledPath;
+                    }
+                }
+            }
+
+            current = current.Parent;
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Copies bundled infrastructure DLLs into the runtime/ directory so they are
     /// automatically deployed alongside modpacks by DeployRuntimeDlls.
     /// Only overwrites when the bundled copy differs (size check).
     /// </summary>
     private void SeedBundledRuntimeDlls()
     {
-        var bundledBase = Path.Combine(AppContext.BaseDirectory, "third_party", "bundled");
+        // Check both app directory (production) and source tree (development)
+        // Prefer source tree if available and newer (development workflow)
+        var appBundledBase = Path.Combine(AppContext.BaseDirectory, "third_party", "bundled");
+        var sourceTreeBundledBase = FindSourceTreeBundledDirectory();
+
         var bundledDlls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var dirName in BundledRuntimeDllDirs)
         {
-            var srcDir = Path.Combine(bundledBase, dirName);
-            if (!Directory.Exists(srcDir)) continue;
-
-            foreach (var srcFile in Directory.GetFiles(srcDir, "*.dll"))
+            // Check source tree first (development workflow)
+            if (sourceTreeBundledBase != null)
             {
-                bundledDlls[Path.GetFileName(srcFile)] = srcFile;
+                var sourceDir = Path.Combine(sourceTreeBundledBase, dirName);
+                if (Directory.Exists(sourceDir))
+                {
+                    foreach (var srcFile in Directory.GetFiles(sourceDir, "*.dll"))
+                    {
+                        var fileName = Path.GetFileName(srcFile);
+                        // Use source tree version if it doesn't exist yet or is newer
+                        if (!bundledDlls.ContainsKey(fileName))
+                        {
+                            bundledDlls[fileName] = srcFile;
+                        }
+                        else
+                        {
+                            var existingSrc = bundledDlls[fileName];
+                            var sourceInfo = new FileInfo(srcFile);
+                            var existingInfo = new FileInfo(existingSrc);
+                            // Prefer newer file
+                            if (sourceInfo.LastWriteTimeUtc > existingInfo.LastWriteTimeUtc)
+                            {
+                                bundledDlls[fileName] = srcFile;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Check app directory (production workflow or fallback)
+            var appDir = Path.Combine(appBundledBase, dirName);
+            if (Directory.Exists(appDir))
+            {
+                foreach (var srcFile in Directory.GetFiles(appDir, "*.dll"))
+                {
+                    var fileName = Path.GetFileName(srcFile);
+                    // Only add if not already found in source tree, or if app version is newer
+                    if (!bundledDlls.ContainsKey(fileName))
+                    {
+                        bundledDlls[fileName] = srcFile;
+                    }
+                    else
+                    {
+                        var existingSrc = bundledDlls[fileName];
+                        var appInfo = new FileInfo(srcFile);
+                        var existingInfo = new FileInfo(existingSrc);
+                        // Prefer newer file
+                        if (appInfo.LastWriteTimeUtc > existingInfo.LastWriteTimeUtc)
+                        {
+                            bundledDlls[fileName] = srcFile;
+                        }
+                    }
+                }
             }
         }
 

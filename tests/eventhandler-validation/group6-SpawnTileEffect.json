@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - SpawnTileEffect",
+  "description": "Verify SpawnTileEffect EventHandler loads and can be read",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "name": "Find skill with SpawnTileEffect EventHandler",
+      "type": "repl",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); skills.Length > 0"
+    },
+    {
+      "name": "Search for skill with SpawnTileEffect handler",
+      "type": "repl",
+      "code": "var found = false; var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); foreach(var skillName in skills) { var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skillName, \"EventHandlers\"); if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"SpawnTileEffect\") { found = true; break; } } if(found) break; } } found"
+    },
+    {
+      "name": "Load EventHandlers from a specific skill",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"EventHandlers\"); handlers != null"
+    },
+    {
+      "name": "Verify EventHandlers is array",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"EventHandlers\"); handlers != null && handlers.GetType().IsArray"
+    },
+    {
+      "name": "Verify _type field readable",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { var typeField = h.GetType().GetField(\"_type\"); if(typeField != null) { found = true; break; } } } found"
+    },
+    {
+      "name": "Read ChanceAtCenter parameter field from SpawnTileEffect",
+      "type": "repl",
+      "code": "var handlers = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"EventHandlers\"); var found = false; if(handlers != null) { foreach(var h in (System.Collections.IEnumerable)handlers) { if(h.GetType().Name == \"SpawnTileEffect\") { var field = h.GetType().GetField(\"ChanceAtCenter\"); if(field != null) { found = true; break; } } } } found"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Template Validation - SurfaceSoundsTemplate",
+  "description": "Validates all fields can be read from SurfaceSoundsTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceSoundsTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"SurfaceSoundsTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceSoundsTemplate.construct_soldier_movement_sounds exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceSoundsTemplate\", \"construct_soldier_movement_sounds\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceSoundsTemplate\", \"construct_soldier_movement_sounds\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceSoundsTemplate.human_steps_heavy_movement_sounds exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceSoundsTemplate\", \"human_steps_heavy_movement_sounds\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceSoundsTemplate\", \"human_steps_heavy_movement_sounds\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SurfaceSoundsTemplate.human_steps_movement_sounds exists",
+      "code": "!Menace.SDK.Templates.Find(\"SurfaceSoundsTemplate\", \"human_steps_movement_sounds\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SurfaceSoundsTemplate\", \"human_steps_movement_sounds\", \"name\") != null"
+    }
+  ]
+}

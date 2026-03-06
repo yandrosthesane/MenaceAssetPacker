@@ -1,0 +1,276 @@
+{
+  "name": "Template Validation - OperationTemplate",
+  "description": "Validates all fields can be read from OperationTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"OperationTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationTemplate.operation.alien_wildlife_alien_infestation exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Repeatable",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"Repeatable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanTimeout",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"CanTimeout\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkipOperationScreens",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"SkipOperationScreens\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowStartConfirmationDialog",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"ShowStartConfirmationDialog\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SystemMapIconIdx",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"SystemMapIconIdx\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanHaveFriendlyForce",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"CanHaveFriendlyForce\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Goal",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"Goal\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VictoryDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"VictoryDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FailureDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"FailureDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartConfirmationDialogText",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.alien_wildlife_alien_infestation\", \"StartConfirmationDialogText\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationTemplate.operation.constructs_story1 exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationTemplate\", \"operation.constructs_story1\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Repeatable",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"Repeatable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanTimeout",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"CanTimeout\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkipOperationScreens",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"SkipOperationScreens\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowStartConfirmationDialog",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"ShowStartConfirmationDialog\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SystemMapIconIdx",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"SystemMapIconIdx\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanHaveFriendlyForce",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"CanHaveFriendlyForce\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Goal",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"Goal\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VictoryDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"VictoryDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FailureDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"FailureDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartConfirmationDialogText",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"StartConfirmationDialogText\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VictoryEvent",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"VictoryEvent\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FailureEvent",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"FailureEvent\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AbortEvent",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_story1\", \"AbortEvent\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify OperationTemplate.operation.constructs_suspected_activity exists",
+      "code": "!Menace.SDK.Templates.Find(\"OperationTemplate\", \"operation.constructs_suspected_activity\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Repeatable",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"Repeatable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanTimeout",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"CanTimeout\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SkipOperationScreens",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"SkipOperationScreens\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ShowStartConfirmationDialog",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"ShowStartConfirmationDialog\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SystemMapIconIdx",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"SystemMapIconIdx\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field CanHaveFriendlyForce",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"CanHaveFriendlyForce\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Goal",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"Goal\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field VictoryDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"VictoryDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field FailureDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"FailureDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartConfirmationDialogText",
+      "code": "Menace.SDK.Templates.GetProperty(\"OperationTemplate\", \"operation.constructs_suspected_activity\", \"StartConfirmationDialogText\") != null"
+    }
+  ]
+}

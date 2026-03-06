@@ -411,11 +411,21 @@ public class AiAssistantService
 
     private JsonObject CreateMcpServerEntry()
     {
-        // Use the MCP project path for development, or bundled path for release
-        var projectPath = _mcpProjectPath;
+        // Check for bundled MCP executable first (released distributions)
+        var mcpExePath = Path.Combine(_modkitRoot, "mcp",
+            OperatingSystem.IsWindows() ? "Menace.Modkit.Mcp.exe" : "Menace.Modkit.Mcp");
 
-        // For bundled releases, we might use a different approach
-        // For now, assume dotnet run --project works
+        if (File.Exists(mcpExePath))
+        {
+            // Use bundled executable directly (no .NET SDK required)
+            return new JsonObject
+            {
+                ["command"] = mcpExePath
+            };
+        }
+
+        // Fall back to source project path (development mode)
+        var projectPath = _mcpProjectPath;
         return new JsonObject
         {
             ["command"] = "dotnet",

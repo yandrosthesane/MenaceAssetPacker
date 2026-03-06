@@ -1,0 +1,276 @@
+{
+  "name": "Template Validation - GenericMissionTemplate",
+  "description": "Validates all fields can be read from GenericMissionTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify GenericMissionTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"GenericMissionTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify GenericMissionTemplate.mission.alien_wildlife_clear_landing_zone exists",
+      "code": "!Menace.SDK.Templates.Find(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AllowedDifficulties",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"AllowedDifficulties\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartAnimationSequence",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"StartAnimationSequence\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PlayerSupplyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"PlayerSupplyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyArmyPointsMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"EnemyArmyPointsMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemySpawnAreaSettings",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"EnemySpawnAreaSettings\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyStartInSleepMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"EnemyStartInSleepMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RoamWhileSleeping",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"RoamWhileSleeping\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SetpieceOwner",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"SetpieceOwner\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ObjectiveProgressText",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"ObjectiveProgressText\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PoiIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_clear_landing_zone\", \"PoiIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify GenericMissionTemplate.mission.alien_wildlife_collect_samples exists",
+      "code": "!Menace.SDK.Templates.Find(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AllowedDifficulties",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"AllowedDifficulties\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartAnimationSequence",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"StartAnimationSequence\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PlayerSupplyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"PlayerSupplyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyArmyPointsMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"EnemyArmyPointsMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemySpawnAreaSettings",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"EnemySpawnAreaSettings\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyStartInSleepMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"EnemyStartInSleepMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RoamWhileSleeping",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"RoamWhileSleeping\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SetpieceOwner",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"SetpieceOwner\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ObjectiveProgressText",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"ObjectiveProgressText\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PoiIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_collect_samples\", \"PoiIcon\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify GenericMissionTemplate.mission.alien_wildlife_contain_migration exists",
+      "code": "!Menace.SDK.Templates.Find(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AllowedDifficulties",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"AllowedDifficulties\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field MinCampaignProgress",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"MinCampaignProgress\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field StartAnimationSequence",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"StartAnimationSequence\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PlayerSupplyMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"PlayerSupplyMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyArmyPointsMult",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"EnemyArmyPointsMult\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemySpawnAreaSettings",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"EnemySpawnAreaSettings\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field EnemyStartInSleepMode",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"EnemyStartInSleepMode\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field RoamWhileSleeping",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"RoamWhileSleeping\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SetpieceOwner",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"SetpieceOwner\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field m_ID",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"m_ID\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Name",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"Name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Description",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"Description\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DisplayDescription",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"DisplayDescription\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ObjectiveProgressText",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"ObjectiveProgressText\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PoiIcon",
+      "code": "Menace.SDK.Templates.GetProperty(\"GenericMissionTemplate\", \"mission.alien_wildlife_contain_migration\", \"PoiIcon\") != null"
+    }
+  ]
+}

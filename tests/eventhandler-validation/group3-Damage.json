@@ -1,0 +1,44 @@
+{
+  "name": "EventHandler - Damage",
+  "description": "Verify Damage EventHandler loads and can be read. Damage handlers appear on skills that deal damage.",
+  "steps": [
+    {
+      "type": "command",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "durationMs": 2000
+    },
+    {
+      "type": "repl",
+      "name": "Find skill with Damage EventHandler",
+      "code": "var skills = Menace.SDK.Templates.FindAll(\"SkillTemplate\"); var skillWithDamage = null; foreach(var skill in skills) { var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name, \"EventHandlers\"); if(handlers != null && handlers.Count > 0) { for(int i = 0; i < handlers.Count; i++) { var h = handlers[i]; var hType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", skill.name + \"|EventHandlers[\" + i + \"]\", \"_type\"); if(hType != null && hType.ToString().Contains(\"Damage\")) { skillWithDamage = skill.name; break; } } } if(skillWithDamage != null) break; } skillWithDamage != null && !skillWithDamage.IsEmpty"
+    },
+    {
+      "type": "repl",
+      "name": "Load EventHandlers array",
+      "code": "var handlers = (System.Collections.IList)Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_assault_rifle\", \"EventHandlers\"); handlers != null && handlers.Count > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify _type field contains Damage",
+      "code": "var typeField = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_assault_rifle|EventHandlers[0]\", \"_type\"); typeField != null && typeField.ToString().Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamageFlatAmount parameter",
+      "code": "var dmgFlat = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_assault_rifle|EventHandlers[0]\", \"DamageFlatAmount\"); dmgFlat != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read DamageVisualizationType parameter",
+      "code": "var vizType = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_assault_rifle|EventHandlers[0]\", \"DamageVisualizationType\"); vizType != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read ArmorPenetration parameter",
+      "code": "var armorPen = Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.shoot_assault_rifle|EventHandlers[0]\", \"ArmorPenetration\"); armorPen != null"
+    }
+  ]
+}

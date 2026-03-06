@@ -3,7 +3,7 @@
   "mcpServers": {
     "menace-modkit": {
       "command": "dotnet",
-      "args": ["run", "--project", "${workspaceFolder}/src/Menace.Modkit.Mcp/Menace.Modkit.Mcp.csproj", "--no-build"],
+      "args": ["run", "--project", "${workspaceFolder}/src/Menace.Modkit.Mcp/Menace.Modkit.Mcp.csproj"],
       "description": "Menace Modkit MCP server for modpack management, template editing, compilation, and deployment",
       "env": {}
     }

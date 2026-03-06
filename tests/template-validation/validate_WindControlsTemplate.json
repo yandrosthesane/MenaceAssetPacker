@@ -1,0 +1,31 @@
+{
+  "name": "Template Validation - WindControlsTemplate",
+  "description": "Validates all fields can be read from WindControlsTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify WindControlsTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"WindControlsTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify WindControlsTemplate.wind.calm exists",
+      "code": "!Menace.SDK.Templates.Find(\"WindControlsTemplate\", \"wind.calm\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"WindControlsTemplate\", \"wind.calm\", \"name\") != null"
+    }
+  ]
+}

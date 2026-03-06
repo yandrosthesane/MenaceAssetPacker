@@ -1,0 +1,131 @@
+{
+  "name": "Template Validation - AIWeightsTemplate",
+  "description": "Validates all fields can be read from AIWeightsTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify AIWeightsTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"AIWeightsTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AIWeightsTemplate.ai_config exists",
+      "code": "!Menace.SDK.Templates.Find(\"AIWeightsTemplate\", \"ai_config\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field BehaviorScorePOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"BehaviorScorePOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TTL_MAX",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"TTL_MAX\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UtilityPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"UtilityPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UtilityScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"UtilityScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UtilityPostPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"UtilityPostPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field UtilityPostScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"UtilityPostScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyPostPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyPostPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyPostScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyPostScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DistanceScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"DistanceScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DistancePickScale",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"DistancePickScale\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ThreatLevelPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"ThreatLevelPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OpportunityLevelPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"OpportunityLevelPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field PickingScoreMultPOW",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"PickingScoreMultPOW\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DistanceToCurrentTile",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"DistanceToCurrentTile\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DistanceToZones",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"DistanceToZones\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field DistanceToAdvanceZones",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"DistanceToAdvanceZones\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyOutsideDefendZones",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyOutsideDefendZones\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field SafetyOutsideDefendZonesVehicles",
+      "code": "Menace.SDK.Templates.GetProperty(\"AIWeightsTemplate\", \"ai_config\", \"SafetyOutsideDefendZonesVehicles\") != null"
+    }
+  ]
+}

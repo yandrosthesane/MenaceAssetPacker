@@ -1,0 +1,351 @@
+{
+  "name": "Template Validation - SkillTemplate",
+  "description": "Validates all fields can be read from SkillTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify SkillTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"SkillTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SkillTemplate.active.change_plates exists",
+      "code": "!Menace.SDK.Templates.Find(\"SkillTemplate\", \"active.change_plates\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.change_plates\", \"IsAlwaysHitting\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SkillTemplate.active.deploy_explosive_charge exists",
+      "code": "!Menace.SDK.Templates.Find(\"SkillTemplate\", \"active.deploy_explosive_charge\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.deploy_explosive_charge\", \"IsAlwaysHitting\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify SkillTemplate.active.detonate_explosive_charge exists",
+      "code": "!Menace.SDK.Templates.Find(\"SkillTemplate\", \"active.detonate_explosive_charge\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Type",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"Type\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Order",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"Order\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ActionPointCost",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"ActionPointCost\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLimitedUses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsLimitedUses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field Uses",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"Uses\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsActive",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsActive\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field HideApCosts",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"HideApCosts\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeyBind",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"KeyBind\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ExecutingElement",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"ExecutingElement\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AnimationType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"AnimationType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field AimingType",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"AimingType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsOverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsOverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field OverrideAimSlot",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"OverrideAimSlot\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsTargeted",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsTargeted\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetingCursor",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"TargetingCursor\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field TargetsAllowed",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"TargetsAllowed\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field KeepSelectedIfStillUsable",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"KeepSelectedIfStillUsable\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsLineOfFireNeeded",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsLineOfFireNeeded\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAttack",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsAttack\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field IsAlwaysHitting",
+      "code": "Menace.SDK.Templates.GetProperty(\"SkillTemplate\", \"active.detonate_explosive_charge\", \"IsAlwaysHitting\") != null"
+    }
+  ]
+}

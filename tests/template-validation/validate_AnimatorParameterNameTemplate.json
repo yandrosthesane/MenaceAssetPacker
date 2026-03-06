@@ -1,0 +1,81 @@
+{
+  "name": "Template Validation - AnimatorParameterNameTemplate",
+  "description": "Validates all fields can be read from AnimatorParameterNameTemplate instances",
+  "steps": [
+    {
+      "type": "command",
+      "name": "Navigate to main menu to load templates",
+      "command": "test.goto_main"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for scene load",
+      "durationMs": 3000
+    },
+    {
+      "type": "repl",
+      "name": "Verify AnimatorParameterNameTemplate templates load",
+      "code": "Menace.SDK.Templates.FindAll(\"AnimatorParameterNameTemplate\").Length > 0"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AnimatorParameterNameTemplate.BoolDisabled exists",
+      "code": "!Menace.SDK.Templates.Find(\"AnimatorParameterNameTemplate\", \"BoolDisabled\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolDisabled\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolDisabled\", \"ParameterName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolDisabled\", \"ParameterType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AnimatorParameterNameTemplate.BoolIsEjected exists",
+      "code": "!Menace.SDK.Templates.Find(\"AnimatorParameterNameTemplate\", \"BoolIsEjected\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolIsEjected\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolIsEjected\", \"ParameterName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"BoolIsEjected\", \"ParameterType\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Verify AnimatorParameterNameTemplate.IntAmmoCount exists",
+      "code": "!Menace.SDK.Templates.Find(\"AnimatorParameterNameTemplate\", \"IntAmmoCount\").IsNull"
+    },
+    {
+      "type": "repl",
+      "name": "Read field name",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"IntAmmoCount\", \"name\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterName",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"IntAmmoCount\", \"ParameterName\") != null"
+    },
+    {
+      "type": "repl",
+      "name": "Read field ParameterType",
+      "code": "Menace.SDK.Templates.GetProperty(\"AnimatorParameterNameTemplate\", \"IntAmmoCount\", \"ParameterType\") != null"
+    }
+  ]
+}
