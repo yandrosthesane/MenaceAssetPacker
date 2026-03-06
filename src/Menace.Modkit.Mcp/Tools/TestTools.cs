@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text;
 using System.Text.Json;
 using Menace.Modkit.App.Services;
 using ModelContextProtocol.Server;
@@ -227,6 +228,24 @@ public static class TestTools
                 case "eval":
                     return await ExecuteRepl(step);
 
+                case "ui_navigate":
+                    return await ExecuteUINavigate(step);
+
+                case "ui_select":
+                    return await ExecuteUISelect(step);
+
+                case "ui_set_field":
+                    return await ExecuteUISetField(step);
+
+                case "ui_get_property":
+                    return await ExecuteUIGetProperty(step);
+
+                case "ui_set_complex_property":
+                    return await ExecuteUISetComplexProperty(step);
+
+                case "ui_list_templates":
+                    return await ExecuteUIListTemplates(step);
+
                 default:
                     return new
                     {
@@ -346,6 +365,249 @@ public static class TestTools
         };
     }
 
+    private static async Task<dynamic> ExecuteUINavigate(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                ["section"] = step.Section,
+                ["subSection"] = step.SubSection
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://127.0.0.1:21421/ui/navigate", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_navigate",
+                status = success ? "pass" : "fail",
+                section = step.Section,
+                subSection = step.SubSection,
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_navigate",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
+    private static async Task<dynamic> ExecuteUISelect(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                ["target"] = step.Target,
+                ["value"] = step.Value
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://127.0.0.1:21421/ui/select", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_select",
+                status = success ? "pass" : "fail",
+                target = step.Target,
+                value = step.Value,
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_select",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
+    private static async Task<dynamic> ExecuteUISetField(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                ["field"] = step.Field,
+                ["value"] = step.Value
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://127.0.0.1:21421/ui/set-field", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_set_field",
+                status = success ? "pass" : "fail",
+                field = step.Field,
+                value = step.Value,
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_set_field",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
+    private static async Task<dynamic> ExecuteUIGetProperty(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                ["property"] = step.Property
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://127.0.0.1:21421/ui/get-property", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            // If we have an expected value, check it matches
+            if (!string.IsNullOrEmpty(step.Expected) && success)
+            {
+                var match = result.Contains(step.Expected);
+                return new
+                {
+                    step = step.Name,
+                    type = "ui_get_property",
+                    status = match ? "pass" : "fail",
+                    property = step.Property,
+                    expected = step.Expected,
+                    result
+                };
+            }
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_get_property",
+                status = success ? "pass" : "fail",
+                property = step.Property,
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_get_property",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
+    private static async Task<dynamic> ExecuteUISetComplexProperty(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                ["property"] = step.Property,
+                ["value"] = step.Value
+            };
+
+            var json = JsonSerializer.Serialize(payload, JsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://127.0.0.1:21421/ui/set-complex-property", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_set_complex_property",
+                status = success ? "pass" : "fail",
+                property = step.Property,
+                value = step.Value,
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_set_complex_property",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
+    private static async Task<dynamic> ExecuteUIListTemplates(TestStep step)
+    {
+        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        try
+        {
+            var response = await httpClient.GetAsync("http://127.0.0.1:21421/ui/templates");
+            var result = await response.Content.ReadAsStringAsync();
+
+            var success = result.Contains("\"success\": true");
+
+            return new
+            {
+                step = step.Name,
+                type = "ui_list_templates",
+                status = success ? "pass" : "fail",
+                result
+            };
+        }
+        catch (Exception ex)
+        {
+            return new
+            {
+                step = step.Name,
+                type = "ui_list_templates",
+                status = "fail",
+                error = $"Failed to connect to UI server: {ex.Message}"
+            };
+        }
+    }
+
     // Test specification models
     private class TestSpec
     {
@@ -365,5 +627,13 @@ public static class TestTools
         public string? Code { get; set; }
         public int? DurationMs { get; set; }
         public string? Filename { get; set; }
+
+        // UI test step properties
+        public string? Section { get; set; }
+        public string? SubSection { get; set; }
+        public string? Target { get; set; }
+        public string? Value { get; set; }
+        public string? Field { get; set; }
+        public string? Property { get; set; }
     }
 }

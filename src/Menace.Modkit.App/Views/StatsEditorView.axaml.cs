@@ -19,6 +19,12 @@ public class StatsEditorView : UserControl
   // Converter to check if an object is non-null (for visibility bindings)
   private static readonly Avalonia.Data.Converters.FuncValueConverter<object?, bool> ObjectToBoolConverter =
     new(obj => obj != null);
+  private static IBrush GetPrimaryBrush()
+  {
+    return Application.Current?.FindResource("BrushPrimary") as IBrush
+      ?? new SolidColorBrush(Color.Parse("#004f43"));
+  }
+
 
   // Read-only fields that are computed from other properties and cannot be edited
   // These are displayed but editing is disabled with a tooltip explanation
@@ -1367,7 +1373,7 @@ public class StatsEditorView : UserControl
               Content = "Edit EventHandlers...",
               HorizontalAlignment = HorizontalAlignment.Left,
               Margin = new Thickness(0, 4),
-              Background = new SolidColorBrush(Color.Parse("#0078D4")),
+              Background = GetPrimaryBrush(),
               Foreground = Brushes.White,
               BorderThickness = new Thickness(0),
               Padding = new Thickness(12, 6)
@@ -1380,12 +1386,21 @@ public class StatsEditorView : UserControl
 
               if (patchVm == null) return;
 
-              var dialog = new EventHandlerEditorDialog(name, vanillaArray, patchVm);
-              var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
-
-              if (result.HasValue)
+              // Pass modified array if it exists, otherwise fall back to vanilla
+              var arrayToEdit = vanillaArray;
+              if (patchVm.ModifiedProperties?.TryGetValue(name, out var modifiedVal) == true &&
+                  modifiedVal is System.Text.Json.JsonElement modifiedArray &&
+                  modifiedArray.ValueKind == System.Text.Json.JsonValueKind.Array)
               {
-                patchVm.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+                arrayToEdit = modifiedArray;
+              }
+
+              var dialog = new EventHandlerEditorDialog(name, arrayToEdit, patchVm);
+              await dialog.ShowDialog(window);
+
+              if (dialog.Result.HasValue)
+              {
+                patchVm.UpdateComplexArrayProperty(name, dialog.Result.Value.GetRawText());
               }
             };
 
@@ -1480,7 +1495,7 @@ public class StatsEditorView : UserControl
                     Content = "Edit EventHandlers...",
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Margin = new Thickness(0, 4),
-                    Background = new SolidColorBrush(Color.Parse("#0078D4")),
+                    Background = GetPrimaryBrush(),
                     Foreground = Brushes.White,
                     BorderThickness = new Thickness(0),
                     Padding = new Thickness(12, 6)
@@ -1493,12 +1508,21 @@ public class StatsEditorView : UserControl
 
                     if (patchVm2 == null) return;
 
-                    var dialog = new EventHandlerEditorDialog(name, vanillaArray2, patchVm2);
-                    var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
-
-                    if (result.HasValue)
+                    // Pass modified array if it exists, otherwise fall back to vanilla
+                    var arrayToEdit2 = vanillaArray2;
+                    if (patchVm2.ModifiedProperties?.TryGetValue(name, out var modifiedVal2) == true &&
+                        modifiedVal2 is System.Text.Json.JsonElement modifiedArray2 &&
+                        modifiedArray2.ValueKind == System.Text.Json.JsonValueKind.Array)
                     {
-                      patchVm2.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+                      arrayToEdit2 = modifiedArray2;
+                    }
+
+                    var dialog = new EventHandlerEditorDialog(name, arrayToEdit2, patchVm2);
+                    await dialog.ShowDialog(window);
+
+                    if (dialog.Result.HasValue)
+                    {
+                      patchVm2.UpdateComplexArrayProperty(name, dialog.Result.Value.GetRawText());
                     }
                   };
 
@@ -1593,7 +1617,7 @@ public class StatsEditorView : UserControl
                 Content = "Edit EventHandlers...",
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 4),
-                Background = new SolidColorBrush(Color.Parse("#0078D4")),
+                Background = GetPrimaryBrush(),
                 Foreground = Brushes.White,
                 BorderThickness = new Thickness(0),
                 Padding = new Thickness(12, 6)
@@ -1604,12 +1628,21 @@ public class StatsEditorView : UserControl
                 var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
                 if (topLevel is not Window window) return;
 
-                var dialog = new EventHandlerEditorDialog(name, jsonElement, ehVm);
-                var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
-
-                if (result.HasValue)
+                // Get current value from ModifiedProperties, not the captured jsonElement
+                var currentElement = jsonElement;
+                if (ehVm.ModifiedProperties?.TryGetValue(name, out var modifiedVal) == true &&
+                    modifiedVal is System.Text.Json.JsonElement modifiedArray &&
+                    modifiedArray.ValueKind == System.Text.Json.JsonValueKind.Array)
                 {
-                  ehVm.UpdateComplexArrayProperty(name, result.Value.GetRawText());
+                  currentElement = modifiedArray;
+                }
+
+                var dialog = new EventHandlerEditorDialog(name, currentElement, ehVm);
+                await dialog.ShowDialog(window);
+
+                if (dialog.Result.HasValue)
+                {
+                  ehVm.UpdateComplexArrayProperty(name, dialog.Result.Value.GetRawText());
                 }
               };
 
@@ -3091,7 +3124,7 @@ public class StatsEditorView : UserControl
               Content = "Edit EventHandlers...",
               HorizontalAlignment = HorizontalAlignment.Left,
               Margin = new Thickness(0, 4),
-              Background = new SolidColorBrush(Color.Parse("#0078D4")),
+              Background = GetPrimaryBrush(),
               Foreground = Brushes.White,
               BorderThickness = new Thickness(0),
               Padding = new Thickness(12, 6)
@@ -3102,12 +3135,21 @@ public class StatsEditorView : UserControl
               var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
               if (topLevel is not Window window) return;
 
-              var dialog = new EventHandlerEditorDialog(propName, je, vm);
-              var result = await dialog.ShowDialog<System.Text.Json.JsonElement?>(window);
-
-              if (result.HasValue)
+              // Get current value from ModifiedProperties, not the captured je
+              var currentElement = je;
+              if (vm != null && vm.ModifiedProperties?.TryGetValue(propName, out var modifiedVal) == true &&
+                  modifiedVal is System.Text.Json.JsonElement modifiedArray &&
+                  modifiedArray.ValueKind == System.Text.Json.JsonValueKind.Array)
               {
-                element[propName] = result.Value;
+                currentElement = modifiedArray;
+              }
+
+              var dialog = new EventHandlerEditorDialog(propName, currentElement, vm);
+              await dialog.ShowDialog(window);
+
+              if (dialog.Result.HasValue)
+              {
+                element[propName] = dialog.Result.Value;
                 syncToViewModel();
               }
             };

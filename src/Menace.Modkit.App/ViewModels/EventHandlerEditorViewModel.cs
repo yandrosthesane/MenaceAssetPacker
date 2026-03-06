@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
@@ -226,9 +228,43 @@ public class EventHandlerEditorViewModel
 /// <summary>
 /// Represents a single EventHandler in the array
 /// </summary>
-public class HandlerItem
+public class HandlerItem : INotifyPropertyChanged
 {
-    public int Index { get; set; }
-    public string? TypeName { get; set; }
+    private int _index;
+    private string? _typeName;
+
+    public int Index
+    {
+        get => _index;
+        set
+        {
+            if (_index != value)
+            {
+                _index = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string? TypeName
+    {
+        get => _typeName;
+        set
+        {
+            if (_typeName != value)
+            {
+                _typeName = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public Dictionary<string, object?> Data { get; set; } = new();
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

@@ -350,6 +350,25 @@ Unable to determine exact property due to debug log being cleared on next game l
 
 ---
 
+## EventHandler Validation Results (2026-03-06)
+
+### ✅ VALIDATION COMPLETE - ALL TESTS PASSED
+
+**Direct JSON Analysis Results:**
+- **Expected Types:** 111 (from 6 test groups)
+- **Found Types:** 129 (in extracted game data)
+- **Match Rate:** 111/111 (100%)
+- **Additional Types Discovered:** 18 types not in original schema
+- **Total Instances:** 1,384 EventHandlers across 724 templates
+
+**Group Results:** All 6 test groups passed (100%)
+
+**Methodology:** Analyzed extracted `SkillTemplate.json` and `PerkTemplate.json` directly instead of using game REPL (which has multi-statement limitations).
+
+**Report:** `docs/validation/eventhandler-validation-2026-03-06.md`
+
+---
+
 ## Field Compatibility Analysis Results (2026-03-04)
 
 ### Comprehensive Testing Completed

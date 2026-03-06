@@ -1,0 +1,11 @@
+{
+  "name": "UI Server Health Check",
+  "continueOnFailure": true,
+  "steps": [
+    {
+      "type": "ui_navigate",
+      "name": "Check UI server is responding",
+      "section": "home"
+    }
+  ]
+}

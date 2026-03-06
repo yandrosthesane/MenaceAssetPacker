@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using Avalonia;
@@ -9,6 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Menace.Modkit.App.Services;
 using Menace.Modkit.App.ViewModels;
+using ReactiveUI;
 
 namespace Menace.Modkit.App.Views;
 
@@ -26,6 +28,17 @@ public class EventHandlerEditorDialog : Window
     private bool _jsonViewMode = false;
     private TextBox? _jsonTextBox;
 
+    /// <summary>
+    /// The result to return to the caller. Set when Apply is clicked.
+    /// </summary>
+    public JsonElement? Result { get; private set; }
+
+    private static IBrush GetPrimaryBrush()
+    {
+        return Application.Current?.FindResource("BrushPrimary") as IBrush
+            ?? new SolidColorBrush(Color.Parse("#004f43"));
+    }
+
     public EventHandlerEditorDialog(
         string fieldName,
         JsonElement arrayElement,
@@ -37,6 +50,7 @@ public class EventHandlerEditorDialog : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
         CanResize = true;
+        SystemDecorations = SystemDecorations.Full;
 
         _viewModel = new EventHandlerEditorViewModel(fieldName, arrayElement, parentVm);
 
@@ -149,25 +163,36 @@ public class EventHandlerEditorDialog : Window
             Margin = new Thickness(0, 2)
         };
 
-        grid.Children.Add(new TextBlock
+        var indexBlock = new TextBlock
         {
-            Text = $"[{item.Index}]",
             Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 8, 0)
-        });
-        Grid.SetColumn(grid.Children[0], 0);
-
-        grid.Children.Add(new TextBlock
+        };
+        indexBlock.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("Index")
         {
-            Text = item.TypeName ?? "(empty)",
+            StringFormat = "[{0}]",
+            Source = item
+        });
+        grid.Children.Add(indexBlock);
+        Grid.SetColumn(indexBlock, 0);
+
+        var typeBlock = new TextBlock
+        {
             Foreground = Brushes.White,
             FontSize = 12,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center
+        };
+        typeBlock.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("TypeName")
+        {
+            Source = item,
+            FallbackValue = "(empty)",
+            TargetNullValue = "(empty)"
         });
-        Grid.SetColumn(grid.Children[1], 1);
+        grid.Children.Add(typeBlock);
+        Grid.SetColumn(typeBlock, 1);
 
         var deleteBtn = new Button
         {
@@ -211,6 +236,16 @@ public class EventHandlerEditorDialog : Window
 
         _viewModel.SelectedHandler = item;
         RenderHandlerEditor(item);
+    }
+
+    private void RefreshListBox()
+    {
+        // Force ListBox to refresh by temporarily swapping ItemsSource
+        var selectedItem = _handlerListBox.SelectedItem;
+        var items = _handlerListBox.ItemsSource;
+        _handlerListBox.ItemsSource = null;
+        _handlerListBox.ItemsSource = items;
+        _handlerListBox.SelectedItem = selectedItem;
     }
 
     private void RenderHandlerEditor(HandlerItem item)
@@ -276,6 +311,7 @@ public class EventHandlerEditorDialog : Window
                 item.TypeName = newType;
                 item.Data["_type"] = newType;
                 _viewModel.InitializeFieldsForType(item, newType);
+                RefreshListBox();
                 RenderHandlerEditor(item);
             }
         };
@@ -332,6 +368,7 @@ public class EventHandlerEditorDialog : Window
         {
             "enum" => CreateEnumDropdownForField(item, field, currentValue),
             "reference" => CreateReferencePickerForField(item, field, currentValue),
+            "collection" => CreateCollectionFieldControl(item, field, currentValue),
             "primitive" => CreatePrimitiveControlForField(item, field, currentValue),
             _ => CreateTextBoxForField(item, field, currentValue)
         };
@@ -416,6 +453,199 @@ public class EventHandlerEditorDialog : Window
             });
 
         return autoComplete;
+    }
+
+    private Control CreateCollectionFieldControl(HandlerItem item, SchemaService.FieldMeta field, object? currentValue)
+    {
+        var stack = new StackPanel { Spacing = 4 };
+
+        // Parse current value as list
+        var items = new ObservableCollection<string>();
+        if (currentValue is JsonElement je && je.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var elem in je.EnumerateArray())
+            {
+                if (elem.ValueKind == JsonValueKind.String)
+                    items.Add(elem.GetString() ?? "");
+            }
+        }
+        else if (currentValue is List<object> list)
+        {
+            foreach (var elem in list)
+                items.Add(elem?.ToString() ?? "");
+        }
+
+        // List display with items
+        var listBox = new ListBox
+        {
+            ItemsSource = items,
+            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderThickness = new Thickness(1),
+            MaxHeight = 150,
+            Margin = new Thickness(0, 4)
+        };
+
+        stack.Children.Add(listBox);
+
+        // Add/Remove buttons
+        var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+
+        var addButton = new Button
+        {
+            Content = "+",
+            Width = 30,
+            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"))
+        };
+
+        var removeButton = new Button
+        {
+            Content = "−",
+            Width = 30,
+            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Foreground = Brushes.White,
+            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"))
+        };
+
+        // Add handler - show list of available items to select from
+        addButton.Click += async (_, _) =>
+        {
+            var elementType = field.ElementType;
+            Control selectionControl;
+            string? selectedValue = null;
+
+            // Check if element type is a template - if so, show list of instances
+            if (!string.IsNullOrEmpty(elementType))
+            {
+                var availableInstances = _viewModel.ParentVm.GetTemplateInstanceNames(elementType);
+
+                if (availableInstances != null && availableInstances.Count > 0)
+                {
+                    // Show list of available instances
+                    var listBox = new ListBox
+                    {
+                        ItemsSource = availableInstances,
+                        Height = 300,
+                        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                        BorderThickness = new Thickness(1),
+                        Margin = new Thickness(0, 8)
+                    };
+
+                    listBox.SelectionChanged += (_, _) =>
+                    {
+                        selectedValue = listBox.SelectedItem?.ToString();
+                    };
+
+                    selectionControl = listBox;
+                }
+                else
+                {
+                    // Fallback to text input if no instances found
+                    var inputBox = new TextBox
+                    {
+                        Watermark = $"Enter {elementType}...",
+                        Width = 300,
+                        Margin = new Thickness(0, 8)
+                    };
+
+                    inputBox.TextChanged += (_, _) =>
+                    {
+                        selectedValue = inputBox.Text;
+                    };
+
+                    selectionControl = inputBox;
+                }
+            }
+            else
+            {
+                // No element type specified, use text input
+                var inputBox = new TextBox
+                {
+                    Watermark = "Enter value...",
+                    Width = 300,
+                    Margin = new Thickness(0, 8)
+                };
+
+                inputBox.TextChanged += (_, _) =>
+                {
+                    selectedValue = inputBox.Text;
+                };
+
+                selectionControl = inputBox;
+            }
+
+            var okButton = new Button
+            {
+                Content = "Add",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Background = GetPrimaryBrush(),
+                Foreground = Brushes.White,
+                BorderThickness = new Thickness(0)
+            };
+
+            var dialog = new Window
+            {
+                Title = $"Add {elementType ?? "Item"}",
+                Width = 400,
+                Height = 450,
+                Content = new StackPanel
+                {
+                    Margin = new Thickness(16),
+                    Spacing = 8,
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = $"Select {elementType ?? "item"} to add:",
+                            Foreground = Brushes.White,
+                            FontWeight = FontWeight.SemiBold
+                        },
+                        selectionControl,
+                        okButton
+                    }
+                },
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                SystemDecorations = SystemDecorations.Full
+            };
+
+            okButton.Click += (_, _) =>
+            {
+                if (!string.IsNullOrWhiteSpace(selectedValue) && !items.Contains(selectedValue))
+                {
+                    items.Add(selectedValue);
+                    UpdateCollectionData(item, field.Name, items);
+                }
+                dialog.Close();
+            };
+
+            await dialog.ShowDialog(this);
+        };
+
+        // Remove handler
+        removeButton.Click += (_, _) =>
+        {
+            if (listBox.SelectedItem is string selected)
+            {
+                items.Remove(selected);
+                UpdateCollectionData(item, field.Name, items);
+            }
+        };
+
+        buttonPanel.Children.Add(addButton);
+        buttonPanel.Children.Add(removeButton);
+        stack.Children.Add(buttonPanel);
+
+        return stack;
+    }
+
+    private void UpdateCollectionData(HandlerItem item, string fieldName, ObservableCollection<string> items)
+    {
+        var list = new List<object>(items);
+        item.Data[fieldName] = list;
     }
 
     private Control CreatePrimitiveControlForField(HandlerItem item, SchemaService.FieldMeta field, object? currentValue)
@@ -580,78 +810,95 @@ public class EventHandlerEditorDialog : Window
             BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
             BorderThickness = new Thickness(1)
         };
-        cancelBtn.Click += (_, _) => Close(null);
+        cancelBtn.Click += (_, _) =>
+        {
+            Result = null;
+            Close();
+        };
         panel.Children.Add(cancelBtn);
 
         var applyBtn = new Button
         {
             Content = "Apply",
-            Background = new SolidColorBrush(Color.Parse("#0078D4")),
+            Background = GetPrimaryBrush(),
             Foreground = Brushes.White,
             BorderThickness = new Thickness(0)
         };
         applyBtn.Click += async (_, _) =>
         {
-            // Sync JSON edits back to data if in JSON mode
-            if (_jsonViewMode && _jsonTextBox != null && _viewModel.SelectedHandler != null)
+            try
             {
-                try
+                // Sync JSON edits back to data if in JSON mode
+                if (_jsonViewMode && _jsonTextBox != null && _viewModel.SelectedHandler != null)
                 {
-                    var text = _jsonTextBox.Text ?? "{}";
-                    var parsed = JsonSerializer.Deserialize<Dictionary<string, object?>>(text);
-                    if (parsed != null)
-                        _viewModel.SelectedHandler.Data = parsed;
+                    try
+                    {
+                        var text = _jsonTextBox.Text ?? "{}";
+                        var parsed = JsonSerializer.Deserialize<Dictionary<string, object?>>(text);
+                        if (parsed != null)
+                            _viewModel.SelectedHandler.Data = parsed;
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Show error dialog
+                        var errorDialog = new Window
+                        {
+                            Title = "Invalid JSON",
+                            Width = 400,
+                            Height = 200,
+                            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                            SystemDecorations = SystemDecorations.Full
+                        };
+
+                        var panel = new StackPanel
+                        {
+                            Margin = new Thickness(16),
+                            Spacing = 12
+                        };
+
+                        panel.Children.Add(new TextBlock
+                        {
+                            Text = "Cannot apply changes - JSON is invalid:",
+                            Foreground = Brushes.White,
+                            FontWeight = FontWeight.SemiBold
+                        });
+
+                        panel.Children.Add(new TextBlock
+                        {
+                            Text = ex.Message,
+                            Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
+                            TextWrapping = TextWrapping.Wrap
+                        });
+
+                        var okBtn = new Button
+                        {
+                            Content = "OK",
+                            HorizontalAlignment = HorizontalAlignment.Right,
+                            Background = GetPrimaryBrush(),
+                            Foreground = Brushes.White,
+                            BorderThickness = new Thickness(0)
+                        };
+                        okBtn.Click += (_, _) => errorDialog.Close();
+                        panel.Children.Add(okBtn);
+
+                        errorDialog.Content = panel;
+                        await errorDialog.ShowDialog(this);
+                        return;
+                    }
                 }
-                catch (JsonException ex)
-                {
-                    // Show error dialog
-                    var errorDialog = new Window
-                    {
-                        Title = "Invalid JSON",
-                        Width = 400,
-                        Height = 200,
-                        WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                        Background = new SolidColorBrush(Color.Parse("#1E1E1E"))
-                    };
 
-                    var panel = new StackPanel
-                    {
-                        Margin = new Thickness(16),
-                        Spacing = 12
-                    };
+                var result = _viewModel.BuildResult();
 
-                    panel.Children.Add(new TextBlock
-                    {
-                        Text = "Cannot apply changes - JSON is invalid:",
-                        Foreground = Brushes.White,
-                        FontWeight = FontWeight.SemiBold
-                    });
-
-                    panel.Children.Add(new TextBlock
-                    {
-                        Text = ex.Message,
-                        Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
-                        TextWrapping = TextWrapping.Wrap
-                    });
-
-                    var okBtn = new Button
-                    {
-                        Content = "OK",
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        Background = new SolidColorBrush(Color.Parse("#0078D4")),
-                        Foreground = Brushes.White,
-                        BorderThickness = new Thickness(0)
-                    };
-                    okBtn.Click += (_, _) => errorDialog.Close();
-                    panel.Children.Add(okBtn);
-
-                    errorDialog.Content = panel;
-                    await errorDialog.ShowDialog(this);
-                    return;
-                }
+                // Set the Result property so the parent can access it
+                Result = result;
+                Close();
             }
-
-            Close(_viewModel.BuildResult());
+            catch (Exception ex)
+            {
+                ModkitLog.Error($"[EventHandlerEditor] Error in Apply: {ex.Message}");
+                ModkitLog.Error($"[EventHandlerEditor] Stack trace: {ex.StackTrace}");
+            }
         };
         panel.Children.Add(applyBtn);
 
@@ -668,18 +915,31 @@ public class EventHandlerEditorDialog : Window
         };
 
         _viewModel.Handlers.Add(newHandler);
-        _handlerListBox.SelectedItem = newHandler;
 
         // Reindex handlers
         for (int i = 0; i < _viewModel.Handlers.Count; i++)
         {
             _viewModel.Handlers[i].Index = i;
         }
+
+        RefreshListBox();
+        _handlerListBox.SelectedItem = newHandler;
     }
 
     private void OnDeleteHandler(HandlerItem item)
     {
+        // Store current index before removal
         var index = _viewModel.Handlers.IndexOf(item);
+        if (index < 0)
+            return; // Item not found
+
+        // Temporarily disable selection events to prevent re-render during deletion
+        _handlerListBox.SelectionChanged -= OnHandlerSelected;
+
+        // Clear editor first to avoid rendering issues
+        _editorPanel.Children.Clear();
+
+        // Remove the item
         _viewModel.Handlers.Remove(item);
 
         // Reindex handlers
@@ -688,14 +948,23 @@ public class EventHandlerEditorDialog : Window
             _viewModel.Handlers[i].Index = i;
         }
 
-        // Select next item or previous if at end
+        // Re-enable selection events
+        _handlerListBox.SelectionChanged += OnHandlerSelected;
+
+        // Select next item safely
         if (_viewModel.Handlers.Count > 0)
         {
             var newIndex = Math.Min(index, _viewModel.Handlers.Count - 1);
-            _handlerListBox.SelectedItem = _viewModel.Handlers[newIndex];
+            var nextItem = _viewModel.Handlers[newIndex];
+            _handlerListBox.SelectedItem = nextItem;
+
+            // Manually trigger render since we disabled events
+            _viewModel.SelectedHandler = nextItem;
+            RenderHandlerEditor(nextItem);
         }
         else
         {
+            // No handlers left, just show empty state
             _editorPanel.Children.Clear();
         }
     }

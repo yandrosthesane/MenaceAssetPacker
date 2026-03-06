@@ -1,0 +1,32 @@
+{
+  "name": "EventHandler Automated Test with Discovery",
+  "continueOnFailure": false,
+  "steps": [
+    {
+      "type": "ui_navigate",
+      "name": "Navigate to Data section",
+      "section": "moddingtools",
+      "subSection": "data"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for navigation",
+      "durationMs": 1000
+    },
+    {
+      "type": "ui_list_templates",
+      "name": "List available templates"
+    },
+    {
+      "type": "ui_select",
+      "name": "Select EntityTemplate type",
+      "target": "templatetype",
+      "value": "EntityTemplate"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for templates to load",
+      "durationMs": 500
+    }
+  ]
+}

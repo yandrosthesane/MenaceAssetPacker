@@ -943,13 +943,23 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
     {
         if (_suppressPropertyUpdates)
             return;
-        if (_modifiedProperties == null || !_modifiedProperties.ContainsKey(fieldName))
+
+        if (_modifiedProperties == null)
             return;
 
         try
         {
             using var doc = JsonDocument.Parse(jsonText);
             var newElement = doc.RootElement.Clone();
+
+            // Add property if it doesn't exist yet
+            if (!_modifiedProperties.ContainsKey(fieldName))
+            {
+                _modifiedProperties[fieldName] = newElement;
+                _userEditedFields.Add(fieldName);
+                this.RaisePropertyChanged(nameof(HasModifications));
+                return;
+            }
 
             // Only mark as edited if the value actually changed
             // This prevents spurious field additions during render when TextChanged fires
@@ -961,9 +971,9 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
             _modifiedProperties[fieldName] = newElement;
             this.RaisePropertyChanged(nameof(HasModifications));
         }
-        catch
+        catch (Exception ex)
         {
-            // Invalid JSON — ignore the update
+            ModkitLog.Error($"[StatsEditor] Error parsing JSON for '{fieldName}': {ex.Message}");
         }
     }
 

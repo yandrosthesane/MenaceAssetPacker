@@ -82,11 +82,11 @@ public static class TemplateLoadingFixes
         }
     }
 
-    private static void GetBaseFolderPostfix(Type type, ref string __result)
+    private static void GetBaseFolderPostfix(Type _type, ref string __result)
     {
         try
         {
-            var typeName = type?.Name;
+            var typeName = _type?.Name;
             if (string.IsNullOrEmpty(typeName))
                 return;
 

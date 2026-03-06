@@ -98,9 +98,12 @@ public sealed class UIHttpServer : IDisposable
                 "/" => GetHealthStatus(),
                 "/ui" or "/ui/state" => GetUIState(),
                 "/ui/controls" => GetControlTree(),
+                "/ui/templates" => GetAvailableTemplates(),
                 "/ui/navigate" when request.HttpMethod == "POST" => await HandleNavigate(request),
                 "/ui/select" when request.HttpMethod == "POST" => await HandleSelect(request),
                 "/ui/set-field" when request.HttpMethod == "POST" => await HandleSetField(request),
+                "/ui/get-property" when request.HttpMethod == "POST" => await HandleGetProperty(request),
+                "/ui/set-complex-property" when request.HttpMethod == "POST" => await HandleSetComplexProperty(request),
                 "/ui/click" when request.HttpMethod == "POST" => await HandleClick(request),
                 "/ui/actions" => GetAvailableActions(),
                 "/deploy" when request.HttpMethod == "POST" => await HandleDeploy(request),
@@ -385,6 +388,7 @@ public sealed class UIHttpServer : IDisposable
                             if (node != null)
                             {
                                 statsVm.SelectedNode = node;
+                                ModkitLog.Info($"[UIHttpServer] Selected template: {node.Name}");
                                 return new { success = true, selected = node.Name };
                             }
                             return new { error = $"Template not found: {value}" };
@@ -464,6 +468,81 @@ public sealed class UIHttpServer : IDisposable
         });
     }
 
+    private async Task<object> HandleGetProperty(HttpListenerRequest request)
+    {
+        var body = await ReadBody(request);
+        var property = body.GetValueOrDefault("property")?.ToString();
+
+        if (string.IsNullOrEmpty(property))
+            return new { error = "Missing 'property' parameter" };
+
+        return Dispatcher.UIThread.Invoke<object>(() =>
+        {
+            if (_mainViewModel?.SelectedViewModel is not StatsEditorViewModel stats)
+                return new { error = "Not on Stats Editor view" };
+
+            if (stats.SelectedNode?.Template == null)
+                return new { error = "No template selected" };
+
+            try
+            {
+                // Check both vanilla and modified properties
+                if (stats.ModifiedProperties != null && stats.ModifiedProperties.TryGetValue(property, out var modValue))
+                {
+                    return new { success = true, property, value = FormatValue(modValue), source = "modified" };
+                }
+
+                if (stats.VanillaProperties != null && stats.VanillaProperties.TryGetValue(property, out var vanillaValue))
+                {
+                    return new { success = true, property, value = FormatValue(vanillaValue), source = "vanilla" };
+                }
+
+                return new { error = $"Property '{property}' not found" };
+            }
+            catch (Exception ex)
+            {
+                return new { error = ex.Message };
+            }
+        });
+    }
+
+    private async Task<object> HandleSetComplexProperty(HttpListenerRequest request)
+    {
+        var body = await ReadBody(request);
+        var property = body.GetValueOrDefault("property")?.ToString();
+        var valueJson = body.GetValueOrDefault("value")?.ToString();
+
+        if (string.IsNullOrEmpty(property))
+            return new { error = "Missing 'property' parameter" };
+
+        if (string.IsNullOrEmpty(valueJson))
+            return new { error = "Missing 'value' parameter" };
+
+        return Dispatcher.UIThread.Invoke<object>(() =>
+        {
+            if (_mainViewModel?.SelectedViewModel is not StatsEditorViewModel stats)
+                return new { error = "Not on Stats Editor view" };
+
+            if (stats.SelectedNode?.Template == null)
+                return new { error = "No template selected" };
+
+            try
+            {
+                // UpdateComplexArrayProperty expects JSON string
+                stats.UpdateComplexArrayProperty(property, valueJson);
+
+                ModkitLog.Info($"[UIHttpServer] Set complex property '{property}' to: {valueJson}");
+
+                return new { success = true, property, value = valueJson };
+            }
+            catch (Exception ex)
+            {
+                ModkitLog.Error($"[UIHttpServer] Error setting complex property: {ex.Message}");
+                return new { error = ex.Message };
+            }
+        });
+    }
+
     private async Task<object> HandleClick(HttpListenerRequest request)
     {
         var body = await ReadBody(request);
@@ -518,6 +597,38 @@ public sealed class UIHttpServer : IDisposable
                     ["modloader"] = new[] { "loadorder", "saves", "settings" },
                     ["moddingtools"] = new[] { "data", "assets", "code", "docs", "settings" }
                 }
+            };
+        });
+    }
+
+    private object GetAvailableTemplates()
+    {
+        return Dispatcher.UIThread.Invoke<object>(() =>
+        {
+            if (_mainViewModel?.SelectedViewModel is not StatsEditorViewModel stats)
+                return new { error = "Not on Stats Editor view" };
+
+            var templatesByType = new Dictionary<string, List<string>>();
+
+            foreach (var category in stats.TreeNodes.Where(n => n.IsCategory))
+            {
+                var templates = category.Children
+                    .Where(n => !n.IsCategory)
+                    .Select(n => n.Name)
+                    .ToList();
+
+                if (templates.Count > 0)
+                {
+                    templatesByType[category.Name] = templates;
+                }
+            }
+
+            return new
+            {
+                success = true,
+                templateTypes = templatesByType.Keys.ToList(),
+                templates = templatesByType,
+                totalTemplates = templatesByType.Values.Sum(list => list.Count)
             };
         });
     }

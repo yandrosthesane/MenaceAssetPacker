@@ -149,11 +149,11 @@ public static class DataTemplateLoaderDiagnostics
         });
     }
 
-    private static void GetBaseFolderPostfix(Type type, ref string __result)
+    private static void GetBaseFolderPostfix(Type _type, ref string __result)
     {
         try
         {
-            var typeName = type?.Name ?? "null";
+            var typeName = _type?.Name ?? "null";
             var folder = __result ?? "null";
             var logEntry = $"GetBaseFolder({typeName}) -> '{folder}'";
             _diagnosticLog.Add(logEntry);

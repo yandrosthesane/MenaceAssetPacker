@@ -1,0 +1,79 @@
+{
+  "name": "EventHandler Persistence Test",
+  "continueOnFailure": false,
+  "steps": [
+    {
+      "type": "ui_navigate",
+      "name": "Navigate to Data section",
+      "section": "moddingtools",
+      "subSection": "data"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for navigation",
+      "durationMs": 1000
+    },
+    {
+      "type": "ui_select",
+      "name": "Select template type SkillTemplate",
+      "target": "templatetype",
+      "value": "SkillTemplate"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for templates to load",
+      "durationMs": 500
+    },
+    {
+      "type": "ui_select",
+      "name": "Select first Skill template",
+      "target": "template",
+      "value": "skill.dash"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for template to load",
+      "durationMs": 500
+    },
+    {
+      "type": "ui_set_complex_property",
+      "name": "Set EventHandlers with test data",
+      "property": "EventHandlers",
+      "value": "[{\"_type\":\"AttackEventHandler\",\"Damage\":100,\"DamageType\":\"Physical\"},{\"_type\":\"HealEventHandler\",\"HealAmount\":50}]"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for property to update",
+      "durationMs": 500
+    },
+    {
+      "type": "ui_get_property",
+      "name": "Verify EventHandlers persisted",
+      "property": "EventHandlers",
+      "expected": "AttackEventHandler"
+    },
+    {
+      "type": "ui_get_property",
+      "name": "Verify EventHandlers contains both handlers",
+      "property": "EventHandlers",
+      "expected": "HealEventHandler"
+    },
+    {
+      "type": "ui_set_complex_property",
+      "name": "Modify EventHandlers (change damage)",
+      "property": "EventHandlers",
+      "value": "[{\"_type\":\"AttackEventHandler\",\"Damage\":200,\"DamageType\":\"Physical\"},{\"_type\":\"HealEventHandler\",\"HealAmount\":50}]"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for property to update",
+      "durationMs": 500
+    },
+    {
+      "type": "ui_get_property",
+      "name": "Verify modification persisted (Damage=200)",
+      "property": "EventHandlers",
+      "expected": "200"
+    }
+  ]
+}
