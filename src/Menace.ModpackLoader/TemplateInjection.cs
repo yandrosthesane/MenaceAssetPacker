@@ -1076,8 +1076,13 @@ public partial class ModpackLoaderMod
 
         clearMethod.Invoke(list, null);
 
-        if (typeof(UnityEngine.Object).IsAssignableFrom(elementType))
+        // Check if elements are string references (asset names) or embedded objects (JObjects with data)
+        // EventHandlers are embedded objects with _type field, not string references
+        bool hasEmbeddedObjects = jArray.Any(item => item is JObject);
+
+        if (typeof(UnityEngine.Object).IsAssignableFrom(elementType) && !hasEmbeddedObjects)
         {
+            // String references to existing assets (templates, ScriptableObjects, etc.)
             var lookup = BuildNameLookup(elementType);
 
             foreach (var item in jArray)
@@ -1097,14 +1102,35 @@ public partial class ModpackLoaderMod
         }
         else
         {
-            foreach (var item in jArray)
+            int successCount = 0;
+            for (int i = 0; i < jArray.Count; i++)
             {
-                var converted = ConvertJTokenToType(item, elementType);
-                addMethod.Invoke(list, new[] { converted });
+                var item = jArray[i];
+                try
+                {
+                    var converted = ConvertJTokenToType(item, elementType);
+                    if (converted == null)
+                    {
+                        // Log details about what failed to convert
+                        var typeHint = item is JObject jObj && jObj.TryGetValue("_type", out var typeToken)
+                            ? typeToken.Value<string>() : "unknown";
+                        SdkLogger.Warning($"    {prop.Name}[{i}]: conversion returned null (item type: {typeHint}, target: {elementType.Name})");
+                        continue;
+                    }
+                    addMethod.Invoke(list, new[] { converted });
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    var inner = ex.InnerException ?? ex;
+                    var typeHint = item is JObject jObj && jObj.TryGetValue("_type", out var typeToken)
+                        ? typeToken.Value<string>() : "unknown";
+                    SdkLogger.Error($"    {prop.Name}[{i}]: failed to add item (type: {typeHint}): {inner.GetType().Name}: {inner.Message}");
+                }
             }
+            SdkLogger.Msg($"    {prop.Name}: set List<{elementType.Name}> with {successCount}/{jArray.Count} elements");
         }
 
-        SdkLogger.Msg($"    {prop.Name}: set List<{elementType.Name}> with {jArray.Count} elements");
         return true;
     }
 
@@ -1406,24 +1432,180 @@ public partial class ModpackLoaderMod
         return null;
     }
 
+    // Cache for polymorphic type resolution (base type name + _type value → concrete Type)
+    private static readonly Dictionary<string, Type> _polymorphicTypeCache = new(StringComparer.Ordinal);
+
     /// <summary>
     /// Constructs a new IL2CPP proxy object from a JObject and recursively sets its properties.
+    /// Handles polymorphic types by checking for _type field and resolving the concrete type.
     /// </summary>
     private object CreateIl2CppObject(Type targetType, JObject jObj, Type skipType = null)
     {
+        // Check for polymorphic _type field
+        Type actualType = targetType;
+        string typeDiscriminator = null;
+
+        if (jObj.TryGetValue("_type", out var typeToken))
+        {
+            typeDiscriminator = typeToken.Value<string>();
+            if (!string.IsNullOrEmpty(typeDiscriminator))
+            {
+                actualType = ResolvePolymorphicType(targetType, typeDiscriminator);
+                if (actualType == null)
+                {
+                    SdkLogger.Warning($"    Failed to resolve polymorphic type '{typeDiscriminator}' (base: {targetType.Name})");
+                    return null;
+                }
+            }
+        }
+
         object newObj;
         try
         {
-            newObj = Activator.CreateInstance(targetType);
+            newObj = Activator.CreateInstance(actualType);
         }
         catch (Exception ex)
         {
-            SdkLogger.Warning($"    Failed to construct {targetType.Name}: {ex.Message}");
+            SdkLogger.Warning($"    Failed to construct {actualType.Name}: {ex.Message}");
             return null;
         }
 
-        ApplyFieldOverrides(newObj, jObj, skipType);
+        // Create a copy of jObj without the _type field for property application
+        var propsToApply = new JObject();
+        foreach (var kvp in jObj)
+        {
+            if (kvp.Key != "_type")
+                propsToApply[kvp.Key] = kvp.Value;
+        }
+
+        ApplyFieldOverrides(newObj, propsToApply, skipType);
         return newObj;
+    }
+
+    /// <summary>
+    /// Resolves a polymorphic type from a _type discriminator string.
+    /// Searches for concrete implementations in the game assembly.
+    /// </summary>
+    private Type ResolvePolymorphicType(Type baseType, string typeDiscriminator)
+    {
+        // Build cache key from base type and discriminator
+        var cacheKey = $"{baseType.FullName}:{typeDiscriminator}";
+        if (_polymorphicTypeCache.TryGetValue(cacheKey, out var cached))
+            return cached;
+
+        // Get the game assembly
+        var gameAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.GetName().Name == "Assembly-CSharp");
+
+        if (gameAssembly == null)
+        {
+            SdkLogger.Warning($"    ResolvePolymorphicType: Assembly-CSharp not found");
+            return null;
+        }
+
+        // For EventHandlers, the naming pattern is: discriminator + "Handler"
+        // e.g., "ChangeProperty" → "ChangePropertyHandler"
+        // e.g., "Attack" → "AttackHandler"
+        // The base types may be SkillEventHandlerTemplate (schema) or SkillEventHandler (runtime)
+        var candidateNames = new List<string>
+        {
+            // Primary pattern for EventHandlers (most common)
+            $"{typeDiscriminator}Handler",
+            // Direct match
+            typeDiscriminator,
+            // Other possible suffixes
+            $"{typeDiscriminator}EventHandler",
+            $"{typeDiscriminator}Template",
+            // With "Skill" prefix (for skill event handlers)
+            $"Skill{typeDiscriminator}Handler",
+            $"Skill{typeDiscriminator}",
+        };
+
+        // Also try with base type's namespace
+        var baseNamespace = baseType.Namespace;
+        if (!string.IsNullOrEmpty(baseNamespace))
+        {
+            foreach (var name in candidateNames.ToArray())
+            {
+                candidateNames.Add($"{baseNamespace}.{name}");
+            }
+        }
+
+        // Search for the type - check both direct inheritance and via intermediate base classes
+        Type resolvedType = null;
+        foreach (var candidate in candidateNames)
+        {
+            resolvedType = gameAssembly.GetType(candidate, throwOnError: false, ignoreCase: true);
+            if (resolvedType != null && !resolvedType.IsAbstract)
+            {
+                // Check if it's assignable from baseType OR shares a common ancestor
+                // (handles cases where schema uses SkillEventHandlerTemplate but runtime uses SkillEventHandler)
+                if (baseType.IsAssignableFrom(resolvedType) || IsCompatibleHandlerType(resolvedType, baseType))
+                {
+                    SdkLogger.Msg($"    Resolved polymorphic type: '{typeDiscriminator}' → {resolvedType.FullName}");
+                    _polymorphicTypeCache[cacheKey] = resolvedType;
+                    return resolvedType;
+                }
+            }
+        }
+
+        // Fallback: search all types in assembly that might be handlers
+        // and match the discriminator (case-insensitive, partial match)
+        try
+        {
+            var allTypes = gameAssembly.GetTypes();
+            foreach (var type in allTypes)
+            {
+                if (type.IsAbstract)
+                    continue;
+
+                // Check if type name matches the discriminator pattern
+                var typeName = type.Name;
+                bool nameMatches = typeName.Equals($"{typeDiscriminator}Handler", StringComparison.OrdinalIgnoreCase) ||
+                                   typeName.Equals(typeDiscriminator, StringComparison.OrdinalIgnoreCase);
+
+                if (nameMatches && (baseType.IsAssignableFrom(type) || IsCompatibleHandlerType(type, baseType)))
+                {
+                    SdkLogger.Msg($"    Resolved polymorphic type (fallback): '{typeDiscriminator}' → {type.FullName}");
+                    _polymorphicTypeCache[cacheKey] = type;
+                    return type;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"    ResolvePolymorphicType fallback failed: {ex.Message}");
+        }
+
+        // Cache null result to avoid repeated lookups
+        SdkLogger.Warning($"    ResolvePolymorphicType: could not find type for '{typeDiscriminator}' (base: {baseType.Name})");
+        _polymorphicTypeCache[cacheKey] = null;
+        return null;
+    }
+
+    /// <summary>
+    /// Checks if a candidate type is compatible with the expected base type for handlers.
+    /// Handles the case where the schema uses SkillEventHandlerTemplate but the runtime
+    /// classes inherit from SkillEventHandler.
+    /// </summary>
+    private static bool IsCompatibleHandlerType(Type candidateType, Type expectedBaseType)
+    {
+        // Walk up the inheritance chain looking for handler base types
+        var current = candidateType;
+        while (current != null && current != typeof(object))
+        {
+            var name = current.Name;
+            // Check for known handler base types
+            if (name == "SkillEventHandlerTemplate" ||
+                name == "SkillEventHandler" ||
+                name == "TileEffectHandler" ||
+                name == "SerializedScriptableObject")
+            {
+                return true;
+            }
+            current = current.BaseType;
+        }
+        return false;
     }
 
     /// <summary>
