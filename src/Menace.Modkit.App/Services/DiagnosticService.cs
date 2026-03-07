@@ -683,6 +683,7 @@ public class DiagnosticService
 
     // ========== DESTRUCTIVE TESTS ==========
     // These tests actually deploy and undeploy, modifying game files.
+    // State is preserved: any deployed mods are undeployed, test runs, then original mods are redeployed.
 
     private async Task<DiagnosticCheck> TestDeployUndeployCycleAsync(ModpackManager modpackManager, CancellationToken ct)
     {
@@ -701,21 +702,59 @@ public class DiagnosticService
         var testModpackPath = Path.Combine(modsPath, testModpackName);
         var stages = new List<string>();
 
+        // Track original state for restoration
+        var deployManager = new DeployManager(modpackManager);
+        DeployState? originalState = null;
+        List<ModpackManifest>? originalModpacks = null;
+
         try
         {
-            // Stage 1: Create a minimal test modpack in staging
+            // ===== PHASE 1: Snapshot current state =====
             var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var stagingPath = Path.Combine(documentsPath, "MenaceModkit", "staging");
-            if (!Directory.Exists(stagingPath))
+            var deployStatePath = Path.Combine(documentsPath, "MenaceModkit", "deploy-state.json");
+
+            if (File.Exists(deployStatePath))
             {
-                Directory.CreateDirectory(stagingPath);
+                originalState = DeployState.LoadFrom(deployStatePath);
+                if (originalState.DeployedModpacks.Count > 0)
+                {
+                    stages.Add($"Snapshot: {originalState.DeployedModpacks.Count} mod(s) currently deployed");
+
+                    // Get the actual modpack manifests so we can redeploy them
+                    originalModpacks = modpackManager.GetStagingModpacks()
+                        .Where(m => originalState.DeployedModpacks.Any(d =>
+                            string.Equals(d.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
+                        .ToList();
+                }
             }
 
-            var testStagingPath = Path.Combine(stagingPath, testModpackName);
-            if (Directory.Exists(testStagingPath))
-                Directory.Delete(testStagingPath, true);
+            // ===== PHASE 2: Undeploy existing mods (if any) =====
+            if (originalState?.DeployedModpacks.Count > 0)
+            {
+                stages.Add("Undeploying existing mods for clean test environment...");
+                var preUndeployResult = await deployManager.UndeployAllAsync(null, ct);
+                if (!preUndeployResult.Success)
+                {
+                    stages.Add($"Pre-test undeploy: FAILED - {preUndeployResult.Message}");
+                    check.Status = DiagnosticStatus.Fail;
+                    check.Message = "Failed to prepare clean test environment";
+                    check.Details = string.Join("\n", stages);
+                    return check;
+                }
+                stages.Add("Pre-test undeploy: OK (clean environment ready)");
+            }
+            else
+            {
+                stages.Add("No mods currently deployed (clean environment)");
+            }
 
+            // ===== PHASE 3: Create test modpack in isolated temp staging =====
+            // Use a temp directory, NOT the real staging path, to avoid polluting user's staging
+            var tempStagingPath = Path.Combine(Path.GetTempPath(), $"diag-staging-{Guid.NewGuid():N}");
+            Directory.CreateDirectory(tempStagingPath);
+            var testStagingPath = Path.Combine(tempStagingPath, testModpackName);
             Directory.CreateDirectory(testStagingPath);
+
             var manifest = new
             {
                 name = testModpackName,
@@ -727,10 +766,9 @@ public class DiagnosticService
                 Path.Combine(testStagingPath, "modpack.json"),
                 JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }),
                 ct);
-            stages.Add("Created test modpack in staging: OK");
+            stages.Add("Created test modpack in temp staging: OK");
 
-            // Stage 2: Deploy the test modpack
-            var deployManager = new DeployManager(modpackManager);
+            // ===== PHASE 4: Deploy test modpack =====
             var testManifest = new ModpackManifest
             {
                 Name = testModpackName,
@@ -739,59 +777,99 @@ public class DiagnosticService
                 LoadOrder = 9999
             };
 
-            // Deploy single modpack (simpler for testing)
             var deployResult = await deployManager.DeploySingleAsync(testManifest, null, ct);
             if (!deployResult.Success)
             {
-                stages.Add($"Deploy: FAILED - {deployResult.Message}");
+                stages.Add($"Deploy test modpack: FAILED - {deployResult.Message}");
                 check.Status = DiagnosticStatus.Fail;
                 check.Message = "Deploy failed";
                 check.Details = string.Join("\n", stages);
+                // Cleanup temp staging
+                try { Directory.Delete(tempStagingPath, true); } catch { }
+                // Try to restore original mods
+                await TryRestoreOriginalModsAsync(deployManager, originalModpacks, stages, ct);
                 return check;
             }
             stages.Add("Deployed test modpack: OK");
 
-            // Stage 3: Verify deployment
+            // ===== PHASE 5: Verify deployment =====
             if (!Directory.Exists(testModpackPath))
             {
-                stages.Add("Verify deployment: FAILED - modpack directory not found");
+                stages.Add("Verify deployment: FAILED - modpack directory not found in Mods/");
                 check.Status = DiagnosticStatus.Fail;
                 check.Message = "Deployment verification failed";
                 check.Details = string.Join("\n", stages);
+                try { Directory.Delete(tempStagingPath, true); } catch { }
+                await TryRestoreOriginalModsAsync(deployManager, originalModpacks, stages, ct);
                 return check;
             }
-            stages.Add("Verified deployment exists: OK");
+            stages.Add("Verified test modpack exists in Mods/: OK");
 
-            // Stage 4: Undeploy
+            // ===== PHASE 6: Undeploy test modpack =====
+            // Since we undeployed everything first, UndeployAllAsync now only undeploys our test
             var undeployResult = await deployManager.UndeployAllAsync(null, ct);
             if (!undeployResult.Success)
             {
-                stages.Add($"Undeploy: FAILED - {undeployResult.Message}");
+                stages.Add($"Undeploy test modpack: FAILED - {undeployResult.Message}");
                 check.Status = DiagnosticStatus.Fail;
                 check.Message = "Undeploy failed";
                 check.Details = string.Join("\n", stages);
+                try { Directory.Delete(tempStagingPath, true); } catch { }
+                await TryRestoreOriginalModsAsync(deployManager, originalModpacks, stages, ct);
                 return check;
             }
-            stages.Add("Undeployed: OK");
+            stages.Add("Undeployed test modpack: OK");
 
-            // Stage 5: Verify undeploy
+            // ===== PHASE 7: Verify undeploy =====
             if (Directory.Exists(testModpackPath))
             {
-                stages.Add("Verify undeploy: FAILED - modpack directory still exists");
+                stages.Add("Verify undeploy: FAILED - test modpack directory still exists");
                 check.Status = DiagnosticStatus.Warn;
                 check.Message = "Undeploy incomplete";
                 check.Details = string.Join("\n", stages);
+                try { Directory.Delete(testModpackPath, true); } catch { }
+                try { Directory.Delete(tempStagingPath, true); } catch { }
+                await TryRestoreOriginalModsAsync(deployManager, originalModpacks, stages, ct);
                 return check;
             }
-            stages.Add("Verified undeploy complete: OK");
+            stages.Add("Verified test modpack removed: OK");
 
-            // Cleanup test modpack from staging
-            if (Directory.Exists(testStagingPath))
-                Directory.Delete(testStagingPath, true);
-            stages.Add("Cleaned up test modpack: OK");
+            // Cleanup temp staging
+            try { Directory.Delete(tempStagingPath, true); } catch { }
+            stages.Add("Cleaned up temp staging: OK");
+
+            // ===== PHASE 8: Restore original mods =====
+            if (originalModpacks != null && originalModpacks.Count > 0)
+            {
+                stages.Add($"Restoring {originalModpacks.Count} original mod(s)...");
+                var restoreResult = await deployManager.DeployAllAsync(null, ct);
+                if (!restoreResult.Success)
+                {
+                    stages.Add($"Restore original mods: FAILED - {restoreResult.Message}");
+                    stages.Add("WARNING: Your mods may need to be redeployed manually!");
+                    check.Status = DiagnosticStatus.Warn;
+                    check.Message = "Test passed but failed to restore original mods";
+                    check.Details = string.Join("\n", stages);
+                    return check;
+                }
+                stages.Add("Restored original mods: OK");
+
+                // Verify restoration
+                var restoredState = File.Exists(deployStatePath) ? DeployState.LoadFrom(deployStatePath) : null;
+                var restoredCount = restoredState?.DeployedModpacks.Count ?? 0;
+                var expectedCount = originalState?.DeployedModpacks.Count ?? 0;
+                if (restoredCount == expectedCount)
+                {
+                    stages.Add($"State verification: OK ({restoredCount} mods deployed, matches original)");
+                }
+                else
+                {
+                    stages.Add($"State verification: WARN (expected {expectedCount}, got {restoredCount})");
+                }
+            }
 
             check.Status = DiagnosticStatus.Pass;
-            check.Message = "Full deploy/undeploy cycle succeeded";
+            check.Message = "Full deploy/undeploy cycle succeeded with state preservation";
             check.Details = string.Join("\n", stages);
         }
         catch (Exception ex)
@@ -801,20 +879,51 @@ public class DiagnosticService
             check.Message = "Deploy/undeploy cycle threw exception";
             check.Details = string.Join("\n", stages) + $"\n\n{ex}";
 
-            // Attempt cleanup
+            // Attempt cleanup and restoration
             try
             {
-                var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var testStagingPath = Path.Combine(documentsPath, "MenaceModkit", "staging", testModpackName);
-                if (Directory.Exists(testStagingPath))
-                    Directory.Delete(testStagingPath, true);
                 if (Directory.Exists(testModpackPath))
                     Directory.Delete(testModpackPath, true);
             }
             catch { /* best effort */ }
+
+            await TryRestoreOriginalModsAsync(deployManager, originalModpacks, stages, ct);
         }
 
         return check;
+    }
+
+    /// <summary>
+    /// Best-effort attempt to restore original mods after test failure.
+    /// </summary>
+    private async Task TryRestoreOriginalModsAsync(
+        DeployManager deployManager,
+        List<ModpackManifest>? originalModpacks,
+        List<string> stages,
+        CancellationToken ct)
+    {
+        if (originalModpacks == null || originalModpacks.Count == 0)
+            return;
+
+        try
+        {
+            stages.Add($"Attempting to restore {originalModpacks.Count} original mod(s)...");
+            var result = await deployManager.DeployAllAsync(null, ct);
+            if (result.Success)
+            {
+                stages.Add("Restoration: OK");
+            }
+            else
+            {
+                stages.Add($"Restoration: FAILED - {result.Message}");
+                stages.Add("WARNING: Your mods may need to be redeployed manually from the Mod Loader!");
+            }
+        }
+        catch (Exception ex)
+        {
+            stages.Add($"Restoration threw exception: {ex.Message}");
+            stages.Add("WARNING: Your mods may need to be redeployed manually from the Mod Loader!");
+        }
     }
 
     private async Task<DiagnosticCheck> TestTransactionRollbackAsync(ModpackManager modpackManager, CancellationToken ct)

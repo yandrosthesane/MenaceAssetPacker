@@ -1414,30 +1414,15 @@ public class StatsEditorView : UserControl
     labelRow.Children.Add(label);
 
     // Add info icon if description is available
-    if (DataContext is StatsEditorViewModel vm)
+    if (DataContext is StatsEditorViewModel vm &&
+        vm.SelectedNode?.Template is Models.DynamicDataTemplate dyn &&
+        !string.IsNullOrEmpty(dyn.TemplateTypeName))
     {
-      if (vm.SelectedNode?.Template is Models.DynamicDataTemplate dyn &&
-          !string.IsNullOrEmpty(dyn.TemplateTypeName))
+      var description = vm.SchemaService?.GetTemplateFieldDescription(dyn.TemplateTypeName, fieldNamePart);
+      if (!string.IsNullOrEmpty(description))
       {
-        var description = vm.SchemaService?.GetTemplateFieldDescription(dyn.TemplateTypeName, fieldNamePart);
-        if (!string.IsNullOrEmpty(description))
-        {
-          var infoButton = new InfoButton { TooltipText = description };
-          labelRow.Children.Add(infoButton);
-        }
-        else
-        {
-          // DEBUG: Show a test button to verify InfoButton renders - shows what was looked up
-          var debugButton = new InfoButton { TooltipText = $"[DEBUG] No desc for {dyn.TemplateTypeName}.{fieldNamePart}" };
-          labelRow.Children.Add(debugButton);
-        }
-      }
-      else
-      {
-        // DEBUG: Show why no lookup was attempted
-        var templateType = (vm.SelectedNode?.Template as Models.DynamicDataTemplate)?.TemplateTypeName ?? "(null)";
-        var debugButton = new InfoButton { TooltipText = $"[DEBUG] TemplateTypeName={templateType}" };
-        labelRow.Children.Add(debugButton);
+        var infoButton = new InfoButton { TooltipText = description };
+        labelRow.Children.Add(infoButton);
       }
     }
 
@@ -1836,6 +1821,57 @@ public class StatsEditorView : UserControl
       }
       fieldStack.Children.Add(checkBox);
       return fieldStack;
+    }
+
+    // Enum fields: render as dropdown if we can determine the field type
+    if (isEditable && DataContext is StatsEditorViewModel enumVm &&
+        enumVm.SelectedNode?.Template is Models.DynamicDataTemplate enumDyn &&
+        !string.IsNullOrEmpty(enumDyn.TemplateTypeName))
+    {
+      var fieldMeta = enumVm.GetFieldMetadata(fieldNamePart);
+      if (fieldMeta?.Category == "enum" && !string.IsNullOrEmpty(fieldMeta.Type))
+      {
+        var enumValues = enumVm.SchemaService?.GetEnumValues(fieldMeta.Type);
+        if (enumValues != null && enumValues.Count > 0)
+        {
+          // Get current value as int
+          int currentValue = 0;
+          if (value is long lv) currentValue = (int)lv;
+          else if (value is int iv) currentValue = iv;
+          else if (value is double dv) currentValue = (int)dv;
+          else if (value is string sv && int.TryParse(sv, out var parsed)) currentValue = parsed;
+
+          // Create sorted list of enum items (by value) using KeyValuePair
+          var enumItems = enumValues.OrderBy(kv => kv.Key).ToList();
+          var selectedIndex = enumItems.FindIndex(e => e.Key == currentValue);
+
+          var enumCombo = new ComboBox
+          {
+            ItemsSource = enumItems,
+            SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0,
+            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Foreground = Brushes.White,
+            FontSize = 12,
+            MinWidth = 200,
+            Tag = name
+          };
+
+          // Display the enum name
+          enumCombo.ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<KeyValuePair<int, string>>((item, _) =>
+            new TextBlock { Text = $"{item.Value} ({item.Key})", Foreground = Brushes.White });
+
+          enumCombo.SelectionChanged += (s, _) =>
+          {
+            if (s is ComboBox cb && cb.SelectedItem is KeyValuePair<int, string> selected && cb.Tag is string fieldName)
+            {
+              enumVm.UpdateModifiedProperty(fieldName, selected.Key.ToString());
+            }
+          };
+
+          fieldStack.Children.Add(enumCombo);
+          return fieldStack;
+        }
+      }
     }
 
     // Property value (other primitive types)
@@ -3277,11 +3313,11 @@ public class StatsEditorView : UserControl
             button.Click += async (_, _) =>
             {
               var topLevel = Avalonia.Controls.TopLevel.GetTopLevel(this);
-              if (topLevel is not Window window) return;
+              if (topLevel is not Window window || vm == null) return;
 
               // Get current value from ModifiedProperties, not the captured je
               var currentElement = je;
-              if (vm != null && vm.ModifiedProperties?.TryGetValue(propName, out var modifiedVal) == true &&
+              if (vm.ModifiedProperties?.TryGetValue(propName, out var modifiedVal) == true &&
                   modifiedVal is System.Text.Json.JsonElement modifiedArray &&
                   modifiedArray.ValueKind == System.Text.Json.JsonValueKind.Array)
               {

@@ -145,7 +145,10 @@ public class FieldDescriptionService
                 desc.EnumValues = new Dictionary<string, string>();
                 foreach (var ev in enumValues.EnumerateObject())
                 {
-                    desc.EnumValues[ev.Name] = ev.Value.GetString() ?? "";
+                    // Handle both string and integer enum values
+                    desc.EnumValues[ev.Name] = ev.Value.ValueKind == JsonValueKind.String
+                        ? ev.Value.GetString() ?? ""
+                        : ev.Value.ToString();
                 }
             }
 

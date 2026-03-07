@@ -899,7 +899,7 @@ public class ToolSettingsView : UserControl
         });
         warningStack.Children.Add(new TextBlock
         {
-            Text = "Destructive test will deploy and undeploy a test modpack, modifying game files.",
+            Text = "Destructive test temporarily undeploys your mods, runs the test, then redeploys them.",
             Foreground = new SolidColorBrush(Color.Parse("#FFB347")),
             FontSize = 12,
             VerticalAlignment = VerticalAlignment.Center,
@@ -938,11 +938,13 @@ public class ToolSettingsView : UserControl
                 parentWindow,
                 "Destructive Diagnostic Test",
                 "This test will:\n\n" +
-                "- Create a temporary test modpack\n" +
-                "- Deploy it to your game directory\n" +
-                "- Verify deployment succeeded\n" +
-                "- Undeploy and clean up\n\n" +
-                "This modifies game files. Your existing mods will NOT be affected.\n\n" +
+                "1. Undeploy any currently deployed mods\n" +
+                "2. Deploy a temporary test modpack\n" +
+                "3. Verify deployment succeeded\n" +
+                "4. Undeploy the test modpack\n" +
+                "5. Redeploy your original mods\n\n" +
+                "This temporarily modifies game files. Your mods will be restored afterward, " +
+                "but if the test fails mid-way, you may need to redeploy manually.\n\n" +
                 "Continue?",
                 "Run Test",
                 isDestructive: true);
