@@ -219,7 +219,100 @@ public class LuaScriptEngine
 
         // Legacy compatibility aliases
         "actor_damaged",  // alias for damage_received
-        "ability_used"    // alias for skill_used
+        "ability_used",   // alias for skill_used
+
+        // ═══════════════════════════════════════════════════════════════════
+        //  INTERCEPTOR EVENTS (from Intercept.cs)
+        // ═══════════════════════════════════════════════════════════════════
+
+        // Property interceptors - EntityProperties
+        "property_damage",
+        "property_accuracy",
+        "property_armor",
+        "property_concealment",
+        "property_detection",
+        "property_vision",
+        "property_damage_dropoff",
+        "property_damage_to_armor_durability",
+        "property_damage_to_armor_durability_dropoff",
+        "property_accuracy_dropoff",
+        "property_armor_penetration",
+        "property_armor_penetration_dropoff",
+        "property_suppression",
+        "property_discipline",
+        "property_hitpoints_per_element",
+        "property_max_hitpoints",
+        "property_action_points",
+        "property_movement_cost_modifier",
+        "property_value",
+
+        // Skill interceptors
+        "skill_hitchance",
+        "skill_covermult",
+        "skill_expected_damage",
+        "skill_expected_suppression",
+        "skill_ap_cost",
+        "skill_ideal_range",
+        "skill_max_range",
+        "skill_min_range",
+        "skill_is_in_range",
+        "skill_is_in_range_shape",
+        "skill_is_movement",
+
+        // Actor interceptors
+        "actor_los",
+
+        // Entity state interceptors
+        "entity_hitpoints_pct",
+        "entity_armor_durability_pct",
+        "entity_cover_usage",
+        "entity_provided_cover",
+        "entity_is_discovered",
+        "entity_last_skill_used",
+        "entity_scale_range",
+
+        // Tile interceptors
+        "tile_has_los",
+        "tile_blocking_los",
+        "tile_get_cover",
+        "tile_get_cover_mask",
+        "tile_entity_cover",
+        "tile_can_enter",
+        "tile_can_enter_by",
+
+        // BaseTile interceptors
+        "basetile_has_cover",
+        "basetile_has_half_cover",
+        "basetile_has_half_cover_dir",
+        "basetile_movement_blocked",
+
+        // LineOfSight interceptors
+        "los_raytrace",
+        "los_near_corner",
+
+        // Movement interceptors
+        "movement_max_speed",
+        "movement_path_cost",
+        "movement_turn_speed",
+        "movement_slowdown_distance",
+        "movement_max_angle_turn_slowdown",
+        "movement_clip_path",
+
+        // Strategy layer interceptors
+        "strategy_action_points",
+        "strategy_hitpoints_per_element",
+        "strategy_damage_sustained_mult",
+        "strategy_hitpoints_pct",
+        "strategy_can_be_promoted",
+        "strategy_can_be_demoted",
+        "strategy_entity_property",
+        "strategy_vehicle_armor",
+
+        // AI behavior interceptors
+        "ai_attack_score",
+        "ai_threat_value",
+        "ai_action_priority",
+        "ai_should_flee"
     };
 
     private LuaScriptEngine()

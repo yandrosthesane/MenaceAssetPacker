@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using AvaloniaEdit;
@@ -506,17 +507,74 @@ public class CodeEditorView : UserControl
         grid.Children.Add(sep);
         Grid.SetRow(sep, 3);
 
-        // Row 4: Lua API Reference label
+        // Row 4: API Reference header with Lua/C# toggle
+        var apiHeaderPanel = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+            Margin = new Thickness(8, 8, 8, 4)
+        };
+
         var apiLabel = new TextBlock
         {
-            Text = "Lua API Reference",
+            Text = "API Reference",
             FontSize = 12,
             FontWeight = FontWeight.SemiBold,
             Foreground = Brushes.White,
-            Margin = new Thickness(8, 8, 8, 4)
+            VerticalAlignment = VerticalAlignment.Center
         };
-        grid.Children.Add(apiLabel);
-        Grid.SetRow(apiLabel, 4);
+        apiHeaderPanel.Children.Add(apiLabel);
+        Grid.SetColumn(apiLabel, 0);
+
+        // Language toggle (Lua / C#)
+        var langToggle = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 0
+        };
+
+        var luaButton = new ToggleButton
+        {
+            Content = "Lua",
+            FontSize = 10,
+            Padding = new Thickness(8, 2),
+            IsChecked = true,
+            CornerRadius = new CornerRadius(3, 0, 0, 3)
+        };
+        luaButton.Classes.Add("tabToggle");
+
+        var csharpButton = new ToggleButton
+        {
+            Content = "C#",
+            FontSize = 10,
+            Padding = new Thickness(8, 2),
+            IsChecked = false,
+            CornerRadius = new CornerRadius(0, 3, 3, 0)
+        };
+        csharpButton.Classes.Add("tabToggle");
+
+        // Toggle behavior - mutual exclusion
+        luaButton.Click += (_, _) =>
+        {
+            luaButton.IsChecked = true;
+            csharpButton.IsChecked = false;
+            if (DataContext is CodeEditorViewModel vm)
+                vm.ShowCSharpApi = false;
+        };
+        csharpButton.Click += (_, _) =>
+        {
+            luaButton.IsChecked = false;
+            csharpButton.IsChecked = true;
+            if (DataContext is CodeEditorViewModel vm)
+                vm.ShowCSharpApi = true;
+        };
+
+        langToggle.Children.Add(luaButton);
+        langToggle.Children.Add(csharpButton);
+        apiHeaderPanel.Children.Add(langToggle);
+        Grid.SetColumn(langToggle, 2);
+
+        grid.Children.Add(apiHeaderPanel);
+        Grid.SetRow(apiHeaderPanel, 4);
 
         // Row 5: Lua API Tree (takes remaining space)
         var apiTree = new TreeView
@@ -550,33 +608,58 @@ public class CodeEditorView : UserControl
                     Spacing = 6
                 };
 
-                // Icon/type indicator
-                var typeText = item.ItemType switch
+                // Icon for all items - categories get folder icon, functions/events get type badges
+                if (item.IsCategory)
                 {
-                    LuaApiItemType.Category => "",
-                    LuaApiItemType.Function => "fn",
-                    LuaApiItemType.Event => "ev",
-                    _ => ""
-                };
-
-                if (!string.IsNullOrEmpty(typeText))
-                {
-                    var typeBadge = new Border
+                    // Folder icon for categories - white, flat Fluent style
+                    var iconPath = new Avalonia.Controls.Shapes.Path
                     {
-                        Background = item.ItemType == LuaApiItemType.Function
-                            ? new SolidColorBrush(Color.Parse("#3B7DD8"))
-                            : new SolidColorBrush(Color.Parse("#8B5CF6")),
-                        CornerRadius = new CornerRadius(3),
-                        Padding = new Thickness(4, 1),
-                        Child = new TextBlock
-                        {
-                            Text = typeText,
-                            FontSize = 9,
-                            Foreground = Brushes.White,
-                            FontFamily = new FontFamily("monospace")
-                        }
+                        Width = 14,
+                        Height = 14,
+                        Stretch = Stretch.Uniform,
+                        Fill = item.IsInterceptor
+                            ? new SolidColorBrush(Color.Parse("#004f43"))  // Dark teal for interceptors
+                            : new SolidColorBrush(Color.Parse("#AAAAAA")), // White/gray for regular
+                        Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
+                        VerticalAlignment = VerticalAlignment.Center
                     };
-                    panel.Children.Add(typeBadge);
+                    panel.Children.Add(iconPath);
+                }
+                else
+                {
+                    // Type badge for functions/events
+                    var typeText = item.ItemType switch
+                    {
+                        LuaApiItemType.Function => "fn",
+                        LuaApiItemType.Event => "ev",
+                        _ => ""
+                    };
+
+                    if (!string.IsNullOrEmpty(typeText))
+                    {
+                        IBrush badgeColor;
+                        if (item.IsInterceptor)
+                            badgeColor = new SolidColorBrush(Color.Parse("#004f43")); // Dark teal
+                        else if (item.ItemType == LuaApiItemType.Function)
+                            badgeColor = new SolidColorBrush(Color.Parse("#3B7DD8")); // Blue
+                        else
+                            badgeColor = new SolidColorBrush(Color.Parse("#8B5CF6")); // Purple
+
+                        var typeBadge = new Border
+                        {
+                            Background = badgeColor,
+                            CornerRadius = new CornerRadius(3),
+                            Padding = new Thickness(4, 1),
+                            Child = new TextBlock
+                            {
+                                Text = typeText,
+                                FontSize = 9,
+                                Foreground = Brushes.White,
+                                FontFamily = new FontFamily("monospace")
+                            }
+                        };
+                        panel.Children.Add(typeBadge);
+                    }
                 }
 
                 var nameBlock = new TextBlock
@@ -641,6 +724,27 @@ public class CodeEditorView : UserControl
         return new Avalonia.Controls.Templates.FuncTreeDataTemplate<CodeTreeNode>(
             (node, _) =>
             {
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 6
+                };
+
+                // Folder icon for non-file items (flat white Fluent style)
+                if (!node.IsFile)
+                {
+                    var iconPath = new Avalonia.Controls.Shapes.Path
+                    {
+                        Width = 14,
+                        Height = 14,
+                        Stretch = Stretch.Uniform,
+                        Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                        Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    panel.Children.Add(iconPath);
+                }
+
                 var textBlock = new TextBlock
                 {
                     FontSize = 12,
@@ -651,7 +755,9 @@ public class CodeEditorView : UserControl
                     FontWeight = node.IsFile ? FontWeight.Normal : FontWeight.SemiBold
                 };
                 textBlock.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("Name"));
-                return textBlock;
+                panel.Children.Add(textBlock);
+
+                return panel;
             },
             node => node.Children);
     }

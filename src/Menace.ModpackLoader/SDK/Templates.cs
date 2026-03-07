@@ -296,25 +296,7 @@ public static class Templates
     }
 
     private static object GetManagedProxy(GameObj obj, Type managedType)
-    {
-        try
-        {
-            // Create a managed wrapper via the IL2CPP pointer constructor
-            var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
-            if (ptrCtor != null)
-                return ptrCtor.Invoke(new object[] { obj.Pointer });
-
-            ModError.WarnInternal("Templates",
-                $"No IntPtr constructor on {managedType.Name}");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            ModError.ReportInternal("Templates",
-                $"Failed to create proxy for {managedType.Name}", ex);
-            return null;
-        }
-    }
+        => Il2CppUtils.GetManagedProxy(obj, managedType);
 
     private static object ConvertValue(object value, Type targetType)
     {

@@ -734,18 +734,5 @@ public static class AICoordination
     }
 
     private static object GetManagedProxy(GameObj obj, Type managedType)
-    {
-        if (obj.IsNull || managedType == null)
-            return null;
-
-        try
-        {
-            var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
-            return ptrCtor?.Invoke(new object[] { obj.Pointer });
-        }
-        catch
-        {
-            return null;
-        }
-    }
+        => Il2CppUtils.GetManagedProxy(obj, managedType);
 }

@@ -1,0 +1,294 @@
+{
+  "analysis_date": "2026-03-07",
+  "analysis_tool": "Ghidra MCP",
+  "description": "Analysis of miscellaneous skill effect handlers focusing on fields at offset 0x58+",
+  "base_handler_layout": {
+    "description": "All handlers inherit from SkillEventHandler base class",
+    "fields": {
+      "+0x00": "Object header (Il2Cpp)",
+      "+0x10": "Skill (reference to owning skill instance)",
+      "+0x18": "Effect (reference to effect data template)"
+    }
+  },
+  "handlers": [
+    {
+      "name": "ToggleSkillsHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "description": "Cycles through a list of skills, enabling one at a time while disabling others",
+      "handler_layout": {
+        "+0x10": {
+          "name": "skill",
+          "type": "Skill",
+          "description": "Owning skill instance"
+        },
+        "+0x18": {
+          "name": "effect",
+          "type": "ToggleSkills",
+          "description": "Effect data template"
+        },
+        "+0x20": {
+          "name": "currentIndex",
+          "type": "int",
+          "description": "Index of currently enabled skill in the toggle list"
+        }
+      },
+      "effect_layout": {
+        "+0x58": {
+          "name": "SkillsToToggle",
+          "type": "SkillTemplate[]",
+          "description": "Array of skill templates to cycle through"
+        }
+      },
+      "functions": [
+        {
+          "name": "EnableOnlySkillWithIndex",
+          "address": "0x1807208e0",
+          "description": "Enables skill at specified index, disables all others"
+        },
+        {
+          "name": "OnMissionStarted",
+          "address": "0x180720ad0",
+          "description": "Initializes handler, resets index to 0, enables first skill"
+        },
+        {
+          "name": "OnUse",
+          "address": "0x180720af0",
+          "description": "Cycles to next skill using modulo arithmetic"
+        },
+        {
+          "name": "Create",
+          "address": "0x180720b30",
+          "description": "Factory method creating handler instance"
+        }
+      ],
+      "behavior": "On use, increments currentIndex modulo array length, then enables only that skill. Sets skill.IsEnabled (+0x38) to true/false."
+    },
+    {
+      "name": "DelayTurnHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "description": "Ends the current turn without further action (delay/wait functionality)",
+      "handler_layout": {
+        "+0x10": {
+          "name": "skill",
+          "type": "Skill",
+          "description": "Owning skill instance"
+        },
+        "+0x18": {
+          "name": "effect",
+          "type": "DelayTurn",
+          "description": "Effect data template"
+        }
+      },
+      "effect_layout": {
+        "note": "No specific fields at 0x58+ - this is a simple action effect"
+      },
+      "functions": [
+        {
+          "name": "OnUse",
+          "address": "0x1807038b0",
+          "description": "Deselects actor and ends turn"
+        },
+        {
+          "name": "Create",
+          "address": "0x180703980",
+          "description": "Factory method creating handler instance"
+        },
+        {
+          "name": "IsUsable",
+          "address": "0x1807039e0",
+          "description": "Returns true if player-controlled and hasn't acted"
+        }
+      ],
+      "behavior": "Calls TacticalManager.SetActiveActor(null) to deselect, then TacticalState.EndTurn() to end the turn."
+    },
+    {
+      "name": "UseSkillHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "description": "Triggers use of another skill as part of this skill's effect",
+      "handler_layout": {
+        "+0x10": {
+          "name": "skill",
+          "type": "Skill",
+          "description": "Owning skill instance"
+        },
+        "+0x18": {
+          "name": "effect",
+          "type": "UseSkill",
+          "description": "Effect data template"
+        }
+      },
+      "effect_layout": {
+        "+0x58": {
+          "name": "SkillToUse",
+          "type": "SkillTemplate",
+          "description": "Template of the skill to trigger"
+        },
+        "+0x60": {
+          "name": "TriggerType",
+          "type": "int",
+          "description": "When to trigger: 0=OnAdded (immediate)"
+        }
+      },
+      "related_skill_fields": {
+        "+0xB4": {
+          "name": "MinRange",
+          "type": "int",
+          "description": "Minimum range for target calculation"
+        },
+        "+0xBC": {
+          "name": "MaxRange",
+          "type": "int",
+          "description": "Maximum range for target calculation"
+        }
+      },
+      "functions": [
+        {
+          "name": "ApplySkill",
+          "address": "0x180721510",
+          "description": "Finds and uses the linked skill at calculated target position"
+        },
+        {
+          "name": "OnAdded",
+          "address": "0x180721790",
+          "description": "Checks TriggerType and calls ApplySkill if 0"
+        },
+        {
+          "name": "Create",
+          "address": "0x1807217c0",
+          "description": "Factory method creating handler instance"
+        }
+      ],
+      "behavior": "Gets actor's skill container, finds skill by template, calculates target using actor direction and random range, then uses the skill."
+    },
+    {
+      "name": "RecallTargetHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "description": "Overrides target tile to return to a previously targeted location",
+      "handler_layout": {
+        "+0x10": {
+          "name": "skill",
+          "type": "Skill",
+          "description": "Owning skill instance"
+        },
+        "+0x18": {
+          "name": "effect",
+          "type": "RecallTarget",
+          "description": "Effect data template"
+        }
+      },
+      "effect_layout": {
+        "+0x58": {
+          "name": "RecallSkillTemplate",
+          "type": "SkillTemplate",
+          "description": "Template of skill whose last target should be recalled"
+        }
+      },
+      "related_skill_fields": {
+        "+0x18": {
+          "name": "SkillContainer",
+          "type": "SkillContainer",
+          "description": "Container holding all skills"
+        },
+        "+0x28": {
+          "name": "TargetingContext",
+          "type": "object",
+          "description": "Context for skill targeting"
+        },
+        "+0x68": {
+          "name": "lastTargetTile",
+          "type": "Tile",
+          "description": "Last tile targeted by this skill"
+        }
+      },
+      "functions": [
+        {
+          "name": "OnDetermineActualTargetTile",
+          "address": "0x180718430",
+          "description": "Returns last target tile from linked skill or null"
+        },
+        {
+          "name": "Create",
+          "address": "0x180718510",
+          "description": "Factory method creating handler instance"
+        },
+        {
+          "name": "GetLastTargetTile",
+          "address": "0x180718570",
+          "description": "Static helper to retrieve last target from any effect/skill pair"
+        }
+      ],
+      "behavior": "Looks up RecallSkillTemplate in skill container, retrieves its lastTargetTile (+0x68), returns it as the actual target. Used for 'return' or 'recall' abilities."
+    },
+    {
+      "name": "GrantBonusTurnHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "description": "Grants an additional turn with modified action points",
+      "handler_layout": {
+        "+0x10": {
+          "name": "skill",
+          "type": "Skill",
+          "description": "Owning skill instance"
+        },
+        "+0x18": {
+          "name": "effect",
+          "type": "GrantBonusTurn",
+          "description": "Effect data template"
+        },
+        "+0x20": {
+          "name": "hasGrantedTurn",
+          "type": "bool",
+          "description": "Prevents multiple bonus turns per use"
+        }
+      },
+      "effect_layout": {
+        "+0x58": {
+          "name": "ActionPointMultiplier",
+          "type": "float",
+          "description": "Multiplier applied to current AP for the bonus turn"
+        }
+      },
+      "functions": [
+        {
+          "name": "OnTurnEnd",
+          "address": "0x180706440",
+          "description": "Grants bonus turn if not already granted this use"
+        },
+        {
+          "name": "Create",
+          "address": "0x1807064f0",
+          "description": "Factory method creating handler instance"
+        },
+        {
+          "name": "GetAPNextTurn",
+          "address": "0x180706550",
+          "description": "Static helper to calculate AP for bonus turn"
+        }
+      ],
+      "behavior": "On turn end, if hasGrantedTurn is false: resets actor's turn done state, calculates new AP as currentAP * multiplier, sets hasGrantedTurn to true."
+    }
+  ],
+  "common_patterns": {
+    "handler_creation": "All handlers created via static Create() factory method that allocates object, calls base ctor, stores effect at +0x18",
+    "effect_storage": "Effect data template always stored at handler+0x18",
+    "skill_reference": "Owning skill stored at handler+0x10",
+    "entity_access": "GetEntity/GetActor/GetOwner methods used to access owning entity",
+    "skill_container_access": "Virtual call at vtable+0x3E8/0x3F0 retrieves SkillContainer from entity"
+  },
+  "ghidra_comments_added": [
+    "0x180706440 - GrantBonusTurnHandler.OnTurnEnd",
+    "0x1807064f0 - GrantBonusTurn.Create",
+    "0x180706550 - GrantBonusTurn.GetAPNextTurn",
+    "0x1807038b0 - DelayTurnHandler.OnUse",
+    "0x180703980 - DelayTurn.Create",
+    "0x1807208e0 - ToggleSkillsHandler.EnableOnlySkillWithIndex",
+    "0x180720ad0 - ToggleSkillsHandler.OnMissionStarted",
+    "0x180720af0 - ToggleSkillsHandler.OnUse",
+    "0x180720b30 - ToggleSkills.Create",
+    "0x180721510 - UseSkillHandler.ApplySkill",
+    "0x180721790 - UseSkillHandler.OnAdded",
+    "0x1807217c0 - UseSkill.Create",
+    "0x180718430 - RecallTargetHandler.OnDetermineActualTargetTile",
+    "0x180718510 - RecallTarget.Create",
+    "0x180718570 - RecallTarget.GetLastTargetTile"
+  ]
+}

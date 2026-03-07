@@ -1,0 +1,224 @@
+{
+  "handler_name": "ChangeStanceHandler",
+  "namespace": "Menace.Tactical.Skills.Effects",
+  "description": "Event handler for changing actor stance. Stances affect movement, cover usage, and skill availability. Connected to the suppression system - suppression triggers automatic stance changes.",
+  "related_handlers": [
+    "FilterByStanceHandler",
+    "SuppressionHandler"
+  ],
+  "key_addresses": {
+    "ChangeStance$$Create": "0x180700420",
+    "ChangeStanceHandler$$OnUse": "0x1807003f0",
+    "ChangeStanceHandler$$IsHidden": "0x180700330",
+    "ChangeStanceHandler$$IsUsable": "0x180700380",
+    "Actor$$SetStance": "0x1805e7600",
+    "Actor$$GetSuppressionState": "0x1805df730",
+    "FilterByStanceHandler$$IsEnabled": "0x180705cb0",
+    "FilterByStanceHandler$$IsHidden": "0x180705d20",
+    "SuppressionHandler$$OnSuppressionStateChanged": "0x18071f8a0"
+  },
+  "stance_enum": {
+    "type": "int",
+    "values": {
+      "0": {
+        "name": "Standing",
+        "description": "Normal standing posture. Default stance."
+      },
+      "1": {
+        "name": "Crouching/Suppressed",
+        "description": "Crouching stance. Set automatically when actor becomes suppressed (suppression state 1). Provides better cover usage."
+      },
+      "2": {
+        "name": "Prone/PinnedDown",
+        "description": "Prone/lying down stance. Set automatically when actor becomes pinned down (suppression state 2). Maximum cover, severely restricted actions."
+      }
+    }
+  },
+  "fields_analyzed": [
+    {
+      "name": "TargetStance",
+      "offset": "0x58",
+      "type": "int",
+      "parent_class": "ChangeStance (effect data)",
+      "description": "The stance to apply when this effect is used. Values: 0=Standing, 1=Crouching, 2=Prone.",
+      "confidence": "high",
+      "evidence": "OnUse reads from effect+0x58 and passes to Actor.SetStance"
+    },
+    {
+      "name": "RequiresCurrentStance",
+      "offset": "0x5C",
+      "type": "bool",
+      "parent_class": "ChangeStance (effect data)",
+      "description": "If true, the skill is only visible/usable when actor is in a specific stance.",
+      "confidence": "high",
+      "evidence": "IsHidden and IsUsable check effect+0x5C as condition before comparing stances"
+    },
+    {
+      "name": "RequiredStance",
+      "offset": "0x60",
+      "type": "int",
+      "parent_class": "ChangeStance (effect data)",
+      "description": "The stance required for this skill to be visible/usable (when RequiresCurrentStance is true).",
+      "confidence": "high",
+      "evidence": "IsHidden compares Actor+0xD0 with effect+0x60"
+    },
+    {
+      "name": "CurrentStance",
+      "offset": "0xD0",
+      "type": "int",
+      "parent_class": "Actor",
+      "description": "The actor's current stance (0=Standing, 1=Crouching, 2=Prone). Updated by SetStance.",
+      "confidence": "high",
+      "evidence": "SetStance writes to param_1+0xD0, IsHidden reads from Actor+0xD0"
+    },
+    {
+      "name": "Suppression",
+      "offset": "0x15C",
+      "type": "float",
+      "parent_class": "Actor",
+      "description": "Current suppression value. Determines suppression state which auto-sets stance.",
+      "confidence": "high",
+      "evidence": "SetSuppression writes to Actor+0x15C, GetSuppressionState reads it"
+    },
+    {
+      "name": "UnknownFlag",
+      "offset": "0x16F",
+      "type": "bool",
+      "parent_class": "Actor",
+      "description": "Flag cleared when stance becomes 0 (standing). Purpose unclear, possibly related to suppression recovery.",
+      "confidence": "medium",
+      "evidence": "SetStance clears Actor+0x16F when stance param is 0"
+    },
+    {
+      "name": "EffectData",
+      "offset": "0x18",
+      "type": "pointer (ChangeStance)",
+      "parent_class": "ChangeStanceHandler",
+      "description": "Reference to the ChangeStance effect data containing TargetStance and other configuration.",
+      "confidence": "high",
+      "evidence": "Create stores effect reference at handler+0x18"
+    },
+    {
+      "name": "SoundWhenSuppressed",
+      "offset": "0x58",
+      "type": "Stem_ID",
+      "parent_class": "Suppression (effect data)",
+      "description": "Sound played when actor enters suppressed state (state 1).",
+      "confidence": "high",
+      "evidence": "OnSuppressionStateChanged plays Stem_ID at effect+0x58 when param_3==1"
+    },
+    {
+      "name": "SoundWhenPinnedDown",
+      "offset": "0x60",
+      "type": "Stem_ID",
+      "parent_class": "Suppression (effect data)",
+      "description": "Sound played when actor enters pinned down state (state 2).",
+      "confidence": "high",
+      "evidence": "OnSuppressionStateChanged plays Stem_ID at effect+0x60 when param_3==2"
+    },
+    {
+      "name": "PinnedDownSkill",
+      "offset": "0x68",
+      "type": "SkillTemplate (pointer)",
+      "parent_class": "Suppression (effect data)",
+      "description": "Skill added when pinned down (state 2), removed when recovering from pinned down.",
+      "confidence": "high",
+      "evidence": "OnSuppressionStateChanged adds/removes skill at effect+0x68 based on state"
+    },
+    {
+      "name": "RequiredStance (FilterByStance)",
+      "offset": "0x58",
+      "type": "int",
+      "parent_class": "FilterByStance (effect data)",
+      "description": "Stance required for skills with this filter to be enabled/visible.",
+      "confidence": "high",
+      "evidence": "FilterByStanceHandler::IsEnabled compares Actor stance with effect+0x58"
+    },
+    {
+      "name": "UsableWhenPinnedDown",
+      "offset": "0x115",
+      "type": "bool",
+      "parent_class": "SkillTemplate",
+      "description": "Flag indicating skill can be used when pinned down (stance 2). Checked to determine if turn ends.",
+      "confidence": "high",
+      "evidence": "HasUsableActiveSkillForPinnedDown checks skill template+0x115"
+    }
+  ],
+  "key_discoveries": [
+    {
+      "finding": "Stance-Suppression Connection",
+      "description": "Stance is tightly coupled with suppression. SuppressionHandler automatically sets stance to 1 (Crouching) when suppressed and 2 (Prone) when pinned down. The suppression state is calculated from a float value with thresholds at DAT_182d8fe40 and DAT_182d8fe48.",
+      "importance": "critical"
+    },
+    {
+      "finding": "Pinned Down Turn End",
+      "description": "When an actor becomes pinned down (state 2), their AP is set to 0 and turn may end unless they have a skill with UsableWhenPinnedDown flag. This is checked via HasUsableActiveSkillForPinnedDown.",
+      "importance": "high"
+    },
+    {
+      "finding": "Suppression AP Penalty",
+      "description": "Becoming suppressed (state 1) reduces AP by 30 (0x1E). This is a one-time penalty applied in OnSuppressionStateChanged.",
+      "importance": "high"
+    },
+    {
+      "finding": "Animation Integration",
+      "description": "Stance changes trigger ElementAnimator.OnStanceChanged which updates animator int parameter and notifies HeavyWeaponComp. Animation changes can be immediate or delayed with random timing.",
+      "importance": "medium"
+    },
+    {
+      "finding": "Vehicle Special Handling",
+      "description": "Vehicles (EntityTemplate type 4) have special stance change handling - all elements get OnStanceChanged called individually when suppression state changes.",
+      "importance": "medium"
+    },
+    {
+      "finding": "Filter System",
+      "description": "FilterByStanceHandler allows skills to be conditionally enabled/hidden based on current stance. This enables stance-specific abilities (e.g., prone-only skills).",
+      "importance": "high"
+    },
+    {
+      "finding": "Tutorial Integration",
+      "description": "Tutorial uses SetStance(actor, 0, 1) to force standing stance with immediate animation update, demonstrating the force flag parameter.",
+      "importance": "low"
+    }
+  ],
+  "suppression_thresholds": {
+    "note": "These are constant addresses - actual values require runtime inspection",
+    "suppressed_threshold": "DAT_182d8fe40",
+    "pinned_down_threshold": "DAT_182d8fe48",
+    "max_suppression": "DAT_182d8fd78"
+  },
+  "methods_documented": [
+    {
+      "name": "Actor::SetStance",
+      "address": "0x1805e7600",
+      "signature": "void SetStance(Actor* this, int stance, bool forceUpdate)",
+      "behavior": "Updates Actor.CurrentStance at offset 0xD0. Iterates through all Elements calling OnStanceChanged. Clears flag at 0x16F when stance becomes 0."
+    },
+    {
+      "name": "ChangeStanceHandler::OnUse",
+      "address": "0x1807003f0",
+      "signature": "void OnUse(Handler* this, Actor* target)",
+      "behavior": "Reads TargetStance from effect data (offset 0x58) and calls Actor.SetStance to apply it."
+    },
+    {
+      "name": "ChangeStanceHandler::IsHidden",
+      "address": "0x180700330",
+      "signature": "bool IsHidden(Handler* this)",
+      "behavior": "Returns true if actor is null, or if RequiresCurrentStance is set and actor's stance doesn't match RequiredStance."
+    },
+    {
+      "name": "ChangeStanceHandler::IsUsable",
+      "address": "0x180700380",
+      "signature": "bool IsUsable(Handler* this)",
+      "behavior": "Similar to IsHidden. Checks if stance change is valid based on RequiresCurrentStance and RequiredStance."
+    },
+    {
+      "name": "SuppressionHandler::OnSuppressionStateChanged",
+      "address": "0x18071f8a0",
+      "signature": "void OnSuppressionStateChanged(Handler* this, Actor* actor, int newState, int oldState)",
+      "behavior": "Handles state transitions. State 1: plays suppressed sound, reduces AP by 30, sets stance to 1. State 2: plays pinned sound, adds PinnedDownSkill, sets stance to 2, drains all AP, may end turn."
+    }
+  ],
+  "analysis_date": "2026-03-06",
+  "analyst": "Claude (Ghidra MCP analysis)"
+}

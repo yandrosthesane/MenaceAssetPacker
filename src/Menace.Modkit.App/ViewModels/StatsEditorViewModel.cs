@@ -2801,8 +2801,8 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
             }
         }
 
-        // Add root-level nodes to TreeNodes and save for later restoration
-        _topLevelNodes = rootDict.Values.ToList();
+        // Add root-level nodes to TreeNodes and save for later restoration (sorted alphabetically)
+        _topLevelNodes = rootDict.Values.OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase).ToList();
         foreach (var node in _topLevelNodes)
             TreeNodes.Add(node);
 

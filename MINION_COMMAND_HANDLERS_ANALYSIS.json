@@ -1,0 +1,383 @@
+{
+  "analysis_title": "Minion Command Handlers Analysis",
+  "analysis_date": "2026-03-07",
+  "binary_type": "Il2Cpp Unity Game (Windows x64)",
+
+  "handlers": [
+    {
+      "name": "CommandMoveHandler",
+      "namespace": "Menace.Tactical.Skills.Effects.Minions",
+      "base_class": "SkillEventHandler",
+      "description": "Handles minion movement commands. Allows the player to command a summoned minion to move to a specific tile.",
+      "functions": [
+        {
+          "name": "OnMinionSpawned",
+          "address": "0x180713e60",
+          "signature": "void OnMinionSpawned(this, Entity minion)",
+          "description": "Registers spawned minion with movement command. Stores minion reference at handler+0x20."
+        },
+        {
+          "name": "OnMovementFinished",
+          "address": "0x180713ec0",
+          "signature": "void OnMovementFinished(this)",
+          "description": "Called when minion completes movement. Clears skill busy state and updates tile highlighter."
+        },
+        {
+          "name": "OnUse",
+          "address": "0x180713f80",
+          "signature": "void OnUse(this, Actor owner, Tile targetTile)",
+          "description": "Commands minion to move to target tile using MoveToWithSkill with flags=5."
+        }
+      ],
+      "fields": [
+        {
+          "offset": "0x00",
+          "size": 16,
+          "type": "Il2CppObject",
+          "name": "objectHeader",
+          "description": "Il2Cpp object header (class pointer + monitor)"
+        },
+        {
+          "offset": "0x10",
+          "size": 8,
+          "type": "Skill*",
+          "name": "skill",
+          "description": "Parent skill reference that owns this handler"
+        },
+        {
+          "offset": "0x18",
+          "size": 8,
+          "type": "CommandMove*",
+          "name": "effectData",
+          "description": "CommandMove effect configuration data (ScriptableObject)"
+        },
+        {
+          "offset": "0x20",
+          "size": 8,
+          "type": "Actor*",
+          "name": "minionActor",
+          "description": "Reference to the controlled minion actor"
+        }
+      ]
+    },
+    {
+      "name": "CommandUseSkillHandler",
+      "namespace": "Menace.Tactical.Skills.Effects.Minions",
+      "base_class": "SkillEventHandler",
+      "description": "Handles commanding minions to use skills. Allows the player to order a summoned minion to execute a specific skill at a target.",
+      "functions": [
+        {
+          "name": "IsHidden",
+          "address": "0x180713e10",
+          "signature": "bool IsHidden(this)",
+          "description": "Returns true if minion is not usable (inverts IsUsable check)."
+        },
+        {
+          "name": "IsUsable",
+          "address": "0x180713e40",
+          "signature": "bool IsUsable(this)",
+          "description": "Returns minion's alive status (byte at minion+0x48). False if minion is null."
+        },
+        {
+          "name": "OnDeath",
+          "address": "0x180714180",
+          "signature": "void OnDeath(this, Entity deadEntity)",
+          "description": "Handles minion death - clears reference and schedules skill container update."
+        },
+        {
+          "name": "OnMinionSpawned",
+          "address": "0x180714260",
+          "signature": "void OnMinionSpawned(this, Entity minion)",
+          "description": "Registers minion and sets up skill/container references for coordination."
+        },
+        {
+          "name": "OnMissionFinished",
+          "address": "0x180714360",
+          "signature": "void OnMissionFinished(this)",
+          "description": "Cleanup - clears minion ref and unsubscribes from TacticalManager.OnDeath event."
+        },
+        {
+          "name": "OnMissionStarted",
+          "address": "0x180714430",
+          "signature": "void OnMissionStarted(this)",
+          "description": "Setup - clears minion ref and subscribes to TacticalManager.OnDeath event."
+        },
+        {
+          "name": "OnUse",
+          "address": "0x180714500",
+          "signature": "void OnUse(this, Actor owner, Tile targetTile)",
+          "description": "Creates skill from template at effectData+0x60, assigns minion as caster, calls Skill.Use with priority 3."
+        }
+      ],
+      "fields": [
+        {
+          "offset": "0x00",
+          "size": 16,
+          "type": "Il2CppObject",
+          "name": "objectHeader",
+          "description": "Il2Cpp object header (class pointer + monitor)"
+        },
+        {
+          "offset": "0x10",
+          "size": 8,
+          "type": "Skill*",
+          "name": "skill",
+          "description": "Parent skill reference that owns this handler"
+        },
+        {
+          "offset": "0x18",
+          "size": 8,
+          "type": "CommandUseSkill*",
+          "name": "effectData",
+          "description": "CommandUseSkill effect data (contains SkillTemplate at +0x60)"
+        },
+        {
+          "offset": "0x20",
+          "size": 8,
+          "type": "Actor*",
+          "name": "minionActor",
+          "description": "Reference to the controlled minion actor"
+        }
+      ]
+    }
+  ],
+
+  "base_classes": {
+    "SkillEventHandler": {
+      "description": "Base class for all skill effect handlers",
+      "fields": [
+        {
+          "offset": "0x00",
+          "size": 16,
+          "type": "Il2CppObject",
+          "name": "objectHeader",
+          "description": "Il2Cpp object header"
+        },
+        {
+          "offset": "0x10",
+          "size": 8,
+          "type": "Skill*",
+          "name": "skill",
+          "description": "Parent skill reference"
+        },
+        {
+          "offset": "0x18",
+          "size": 8,
+          "type": "ScriptableObject*",
+          "name": "effectData",
+          "description": "Effect-specific configuration data"
+        }
+      ],
+      "functions": [
+        {
+          "name": "GetActor",
+          "address": "0x1806eef20",
+          "description": "Returns actor using skill via skill->GetActor()"
+        },
+        {
+          "name": "GetEntity",
+          "address": "0x1806eef40",
+          "description": "Returns entity using skill via skill->GetEntity()"
+        },
+        {
+          "name": "GetOwner",
+          "address": "0x1806eef60",
+          "description": "Returns owner via skill+0x10->+0x18->+0x10"
+        }
+      ]
+    }
+  },
+
+  "effect_data_structures": {
+    "CommandMove": {
+      "description": "ScriptableObject containing movement command configuration",
+      "create_function": "0x180714120",
+      "note": "Minimal configuration - movement behavior is hardcoded in handler"
+    },
+    "CommandUseSkill": {
+      "description": "ScriptableObject containing skill usage command configuration",
+      "create_function": "0x180714620",
+      "fields": [
+        {
+          "offset": "0x60",
+          "size": 8,
+          "type": "SkillTemplate*",
+          "name": "skillTemplate",
+          "description": "Template for the skill the minion will use"
+        }
+      ]
+    }
+  },
+
+  "skill_class_fields_at_0x58_plus": {
+    "description": "Fields in the Skill class starting from offset 0x58",
+    "constructor_address": "0x1806e3a00",
+    "fields": [
+      {
+        "offset": "0x58",
+        "size": 8,
+        "type": "List<Tile>*",
+        "name": "aoeTiles",
+        "description": "Cached list of tiles affected by area-of-effect"
+      },
+      {
+        "offset": "0x60",
+        "size": 8,
+        "type": "unknown",
+        "name": "field_0x60",
+        "description": "Unconfirmed - possibly related to targeting"
+      },
+      {
+        "offset": "0x98",
+        "size": 1,
+        "type": "bool",
+        "name": "usableByPlayer",
+        "description": "Whether skill can be used by player (default true)"
+      },
+      {
+        "offset": "0x9A",
+        "size": 1,
+        "type": "bool",
+        "name": "hasChargeAbility",
+        "description": "Set true if any handler is ChargeHandler type"
+      },
+      {
+        "offset": "0x9C",
+        "size": 4,
+        "type": "int",
+        "name": "charges",
+        "description": "Current charges remaining"
+      },
+      {
+        "offset": "0xA0",
+        "size": 4,
+        "type": "int",
+        "name": "actionPointCost",
+        "description": "AP cost to use skill"
+      },
+      {
+        "offset": "0xA4",
+        "size": 4,
+        "type": "int",
+        "name": "minimumActionPointCost",
+        "description": "Minimum AP cost after reductions"
+      },
+      {
+        "offset": "0xA8",
+        "size": 4,
+        "type": "int",
+        "name": "usesPerTurn",
+        "description": "Maximum uses allowed per turn"
+      },
+      {
+        "offset": "0xAC",
+        "size": 4,
+        "type": "int",
+        "name": "maxCharges",
+        "description": "Maximum charges capacity"
+      },
+      {
+        "offset": "0xB0",
+        "size": 4,
+        "type": "int",
+        "name": "executingElementsAmount",
+        "description": "Number of executing elements (default 1)"
+      },
+      {
+        "offset": "0xD0",
+        "size": 8,
+        "type": "Actor*",
+        "name": "apConsumer",
+        "description": "Actor that consumes AP (for minion/vehicle skills, overrides caster)"
+      },
+      {
+        "offset": "0xD8",
+        "size": 4,
+        "type": "int",
+        "name": "skillUseId",
+        "description": "Unique ID assigned each time skill is used"
+      },
+      {
+        "offset": "0xDD",
+        "size": 1,
+        "type": "bool",
+        "name": "isBusy",
+        "description": "Whether skill is currently executing"
+      }
+    ]
+  },
+
+  "key_discoveries": [
+    {
+      "title": "Minion Command Pattern",
+      "description": "Both CommandMoveHandler and CommandUseSkillHandler follow a consistent pattern: store minion reference at handler+0x20, effect data at handler+0x18, and parent skill at handler+0x10. This allows unified minion control."
+    },
+    {
+      "title": "Minion Registration via OnMinionSpawned",
+      "description": "When a minion spawns, handlers receive OnMinionSpawned callback. CommandUseSkillHandler additionally sets skill+0x30 (caster) and skill+0xD0 (apConsumer) to enable proper skill targeting and AP deduction from the correct entity."
+    },
+    {
+      "title": "Death Event Subscription",
+      "description": "CommandUseSkillHandler subscribes to TacticalManager.OnDeath during OnMissionStarted and unsubscribes during OnMissionFinished. This prevents stale handlers and ensures cleanup when minions die."
+    },
+    {
+      "title": "Movement Uses MoveToWithSkill",
+      "description": "CommandMoveHandler uses Actor.MoveToWithSkill with flags=5 to move minions. The flag value likely indicates 'commanded movement' behavior (different from regular pathfinding)."
+    },
+    {
+      "title": "Skill Creation from Template",
+      "description": "CommandUseSkillHandler creates skills dynamically from SkillTemplate stored at effectData+0x60. The created skill's caster (skill+0x30) is set to the minion, enabling proper damage attribution."
+    },
+    {
+      "title": "IsUsable Returns Minion Alive State",
+      "description": "CommandUseSkillHandler.IsUsable checks byte at minionActor+0x48 which is the IsAlive flag. Returns false if minion is null or dead."
+    },
+    {
+      "title": "Skill Class Field 0x58 is AoE Tiles",
+      "description": "The Skill class stores a List<Tile> at offset 0x58 for caching area-of-effect tiles. This is initialized in the constructor and used during skill targeting and execution."
+    },
+    {
+      "title": "Handler Event Flow",
+      "description": "Event sequence: OnMissionStarted -> OnMinionSpawned -> (multiple OnUse calls) -> OnMovementFinished/OnDeath -> OnMissionFinished. Each handler manages its lifecycle within this flow."
+    }
+  ],
+
+  "related_types": {
+    "Actor": {
+      "relevant_offsets": {
+        "0x48": "bool isAlive - Checked by CommandUseSkillHandler.IsUsable"
+      }
+    },
+    "Skill": {
+      "relevant_offsets": {
+        "0x10": "SkillTemplate* template",
+        "0x18": "SkillContainer* container",
+        "0x30": "Entity* caster - Set by CommandUseSkillHandler.OnMinionSpawned",
+        "0x48": "SkillEventHandler[] handlers",
+        "0x58": "List<Tile>* aoeTiles",
+        "0xD0": "Actor* apConsumer - Set by CommandUseSkillHandler.OnMinionSpawned"
+      }
+    },
+    "SkillTemplate": {
+      "relevant_offsets": {
+        "0xB0": "int charges - Copied to Skill.charges in ctor",
+        "0xB4": "int maxCharges - Copied to Skill.actionPointCost in ctor"
+      }
+    }
+  },
+
+  "vtable_offsets": {
+    "description": "Virtual method table offsets observed in decompilation",
+    "SkillEventHandler": {
+      "0x198": "IsUsable (vtable call in IsHidden)",
+      "0x238": "OnTargetVerify (called during Skill.Use)",
+      "0x4A8": "OnTargetTileOverride (modifies target tile)"
+    },
+    "Actor": {
+      "0x378": "GetPosition",
+      "0x388": "GetCurrentTile",
+      "0x3D8": "GetMovementComponent",
+      "0x458": "GetActionPoints"
+    }
+  }
+}

@@ -1,0 +1,341 @@
+{
+  "analysis_title": "Stealth/Invisibility EventHandlers Analysis",
+  "analysis_date": "2026-03-07",
+  "binary_analyzed": "Menace Tactical Game Binary (IL2CPP)",
+
+  "handlers": [
+    {
+      "name": "DisallowInvisibleHandler",
+      "address": "0x180704df0",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "purpose": "Prevents targeting of invisible entities",
+      "key_method": "OnVerifyTarget",
+      "fields": [
+        {
+          "offset": "0x1c (param_3/tile)",
+          "type": "uint (bitmask)",
+          "description": "Tile flags - bit 3 (mask 0x8) indicates player has direct LOS to tile"
+        },
+        {
+          "offset": "0x90 (entity)",
+          "type": "int (enum)",
+          "description": "Entity visibility state - value 2 indicates invisible/hidden"
+        }
+      ],
+      "return_behavior": "Returns 1 (allow targeting) if target visible, 0 (disallow) if invisible"
+    },
+    {
+      "name": "HideByConditionHandler",
+      "address": "0x1807073e0",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "purpose": "Conditionally hides skill icons based on tactical condition evaluation",
+      "key_method": "IsHidden",
+      "fields": [
+        {
+          "offset": "0x18 (handler)",
+          "type": "pointer",
+          "description": "Reference to HideByCondition data object"
+        },
+        {
+          "offset": "0x58 (data object)",
+          "type": "ITacticalCondition interface",
+          "description": "Condition to evaluate for hiding decision"
+        }
+      ],
+      "return_behavior": "Returns INVERSE of condition result (XOR 1) - skill hidden when condition is FALSE"
+    },
+    {
+      "name": "IsHiddenCondition",
+      "address": "0x1806d36f0",
+      "namespace": "Menace.Tactical.Skills",
+      "purpose": "Tactical condition checking if actor is hidden from opposing side",
+      "key_method": "IsTrue",
+      "fields": [],
+      "return_behavior": "For player-controlled actors: checks IsHiddenToAI. For AI actors: checks IsHiddenToPlayer"
+    }
+  ],
+
+  "core_visibility_system": {
+    "actor_class": {
+      "namespace": "Menace.Tactical.Actor",
+      "fields": [
+        {
+          "offset": "0x4c",
+          "type": "int",
+          "description": "Faction ID (0=None, 1=Player, 2=Ally, 3+=Enemy AI factions)"
+        },
+        {
+          "offset": "0x50",
+          "type": "uint (bitmask)",
+          "description": "Discovery flags - one bit per faction indicating if entity has been spotted"
+        },
+        {
+          "offset": "0x90",
+          "type": "int (enum)",
+          "description": "Visibility state to player: 1=Visible, 2=Hidden"
+        },
+        {
+          "offset": "0xe8",
+          "type": "pointer (WorldSpaceIcon)",
+          "description": "Hidden indicator icon shown when actor is hidden from player"
+        },
+        {
+          "offset": "0x138",
+          "type": "ulong (bitmask)",
+          "description": "Per-faction discovery tracking bitmask"
+        },
+        {
+          "offset": "0x16d",
+          "type": "bool",
+          "description": "Flag indicating actor is currently visible to player"
+        },
+        {
+          "offset": "0x1a4",
+          "type": "int (enum)",
+          "description": "Cached AI visibility state: 0=Unknown, 1=Visible to AI, 2=Hidden from AI"
+        },
+        {
+          "offset": "0x1a8",
+          "type": "int (enum)",
+          "description": "VisibilityState property: 0=Unknown, 1=Visible, 2=Hidden"
+        },
+        {
+          "offset": "0x1ac",
+          "type": "bool",
+          "description": "Revealed flag - when true, bypasses concealment penalties, always visible in vision range"
+        },
+        {
+          "offset": "0x1ad",
+          "type": "bool",
+          "description": "VisionDirty flag - triggers visibility recalculation when set"
+        }
+      ],
+      "key_methods": [
+        {
+          "name": "SetVisibility",
+          "address": "0x1805e7cf0",
+          "description": "Sets visibility state, fires OnVisibleToPlayer/OnHiddenToPlayer events"
+        },
+        {
+          "name": "IsHiddenToAI",
+          "address": "0x1805e01a0",
+          "description": "Checks if hidden from all AI factions using LOS from each AI actor"
+        },
+        {
+          "name": "IsHiddenToPlayerAtTile",
+          "address": "0x1805e0430",
+          "description": "Checks visibility from player/ally factions considering fog-of-war"
+        },
+        {
+          "name": "OnVisibleToPlayer",
+          "address": "0x1805e50b0",
+          "description": "Handler when becoming visible - removes icon, updates animation speed"
+        },
+        {
+          "name": "OnHiddenToPlayer",
+          "address": "0x1805e3190",
+          "description": "Handler when becoming hidden - adds icon, pauses animations"
+        },
+        {
+          "name": "ResetVisibilityToAI",
+          "address": "0x1805e5d30",
+          "description": "Resets cached AI visibility state to unknown"
+        }
+      ]
+    },
+
+    "entity_properties": {
+      "namespace": "Menace.Tactical.EntityProperties",
+      "fields": [
+        {
+          "offset": "0xc4",
+          "type": "int",
+          "description": "Base vision range"
+        },
+        {
+          "offset": "0xc8",
+          "type": "float",
+          "description": "Vision range multiplier"
+        },
+        {
+          "offset": "0xcc",
+          "type": "int",
+          "description": "Base detection value"
+        },
+        {
+          "offset": "0xd0",
+          "type": "float",
+          "description": "Detection multiplier"
+        },
+        {
+          "offset": "0xd4",
+          "type": "int",
+          "description": "Base concealment value"
+        },
+        {
+          "offset": "0xd8",
+          "type": "float",
+          "description": "Concealment multiplier"
+        },
+        {
+          "offset": "0xec",
+          "type": "uint (bitmask)",
+          "description": "Entity flags - bit 11 indicates always visible"
+        }
+      ],
+      "key_methods": [
+        {
+          "name": "GetVision",
+          "address": "0x18060c7b0",
+          "description": "Returns floor(base * clamp(mult)), minimum 1"
+        },
+        {
+          "name": "GetDetection",
+          "address": "0x18060bd90",
+          "description": "Returns floor(base * clamp(mult)), clamped >= 0"
+        },
+        {
+          "name": "GetConcealment",
+          "address": "0x18060bc90",
+          "description": "Returns floor(base * clamp(mult))"
+        }
+      ]
+    }
+  },
+
+  "line_of_sight_system": {
+    "functions": [
+      {
+        "name": "Actor_HasLineOfSightTo",
+        "address": "0x1805dfa10",
+        "description": "Core visibility calculation between two actors",
+        "algorithm": "EffectiveVision = Vision - max(0, (Concealment - Detection) + CoverBonus + ElevationBonus). Returns true if Distance <= EffectiveVision AND unobstructed LOS exists"
+      },
+      {
+        "name": "LineOfSight_HasLineOfSight",
+        "address": "0x18051df40",
+        "description": "Low-level tile raycasting for LOS obstruction check",
+        "notes": "Checks bit 11 at tile+0x1c for LOS blocking. Max 1000 iterations safety limit."
+      }
+    ]
+  },
+
+  "visibility_report": {
+    "address": "0x18064f0b0",
+    "class": "VisibilityCheckAction.VisibilityReport",
+    "fields": [
+      {"offset": "0x10", "type": "bool", "description": "Is visible"},
+      {"offset": "0x14", "type": "int (enum)", "description": "Visibility reason code"},
+      {"offset": "0x18", "type": "int", "description": "Vision range"},
+      {"offset": "0x1c", "type": "int", "description": "Distance"},
+      {"offset": "0x20", "type": "int", "description": "Detection value"},
+      {"offset": "0x24", "type": "int", "description": "Effective vision range"},
+      {"offset": "0x28", "type": "int", "description": "Concealment value"},
+      {"offset": "0x2c", "type": "int", "description": "Elevation bonus"},
+      {"offset": "0x30", "type": "int", "description": "Cover bonus"},
+      {"offset": "0x34", "type": "int", "description": "Total visibility penalty"}
+    ],
+    "reason_codes": {
+      "1": "Dead",
+      "2": "No tiles (missing position)",
+      "3": "Same actor",
+      "4": "Flying",
+      "5": "Always visible flag set",
+      "6": "No line of sight",
+      "7": "Out of range but revealed",
+      "8": "In range and revealed",
+      "9": "Out of effective range",
+      "10": "In effective range (visible)",
+      "11": "Allied faction"
+    }
+  },
+
+  "fog_of_war": {
+    "map_field_offset": "0x38",
+    "description": "Boolean at Map+0x38 controls fog-of-war enabled state",
+    "set_function": "0x18062eda0 (Map.SetUseFogOfWar)",
+    "behavior": "When enabled, visibility is recalculated for all player faction actors. Tiles outside vision range appear fogged."
+  },
+
+  "tactical_manager_events": [
+    {
+      "event": "OnVisibleToPlayer",
+      "add_address": "0x180678980",
+      "invoke_address": "0x1806727b0",
+      "description": "Fired when any actor becomes visible to player faction"
+    },
+    {
+      "event": "OnHiddenToPlayer",
+      "add_address": "0x180677c70",
+      "invoke_address": "0x180671500",
+      "description": "Fired when any actor becomes hidden from player faction"
+    },
+    {
+      "event": "OnDiscovered",
+      "invoke_address": "implied from Entity.OnDiscovered",
+      "description": "Fired when entity is first discovered by a faction"
+    }
+  ],
+
+  "key_discoveries": [
+    {
+      "discovery": "Visibility State Caching",
+      "details": "AI visibility state is cached at actor+0x1a4 to avoid expensive LOS recalculation every frame. States: 0=Unknown (recalc needed), 1=Visible, 2=Hidden. ResetVisibilityToAI clears cache."
+    },
+    {
+      "discovery": "Revealed Flag Bypass",
+      "details": "Actor+0x1ac 'Revealed' flag completely bypasses concealment/cover penalties. When true, only vision range matters for detection."
+    },
+    {
+      "discovery": "Dual Discovery Systems",
+      "details": "Entity uses 0x50 bitmask for discovery flags, Actor adds 0x138 for per-faction tracking. Player (1) and Ally (2) factions are always discovered together (bits set as pair)."
+    },
+    {
+      "discovery": "Vision Property Change Detection",
+      "details": "ChangePropertyHandler checks PropertyType values 0 (Vision) and 0x14 (SightRangeMult) to set VisionDirty flag at 0x1ad, triggering map visibility recalculation."
+    },
+    {
+      "discovery": "Visibility Formula",
+      "details": "EffectiveVisionRange = BaseVision - max(0, (TargetConcealment - ObserverDetection) + TileElevationBonus + CoverBonus). Target visible if Distance <= EffectiveVisionRange."
+    },
+    {
+      "discovery": "Always Visible Flag",
+      "details": "Bit 11 of EntityProperties+0xec flags entity as always visible regardless of LOS/range calculations."
+    },
+    {
+      "discovery": "Faction-Based Visibility",
+      "details": "Visibility checks branch based on controller: Player-controlled actors check IsHiddenToAI, AI actors check IsHiddenToPlayer. System iterates through opposing faction actor lists for LOS checks."
+    },
+    {
+      "discovery": "Hidden Indicator Icons",
+      "details": "When actor becomes hidden from player, a world-space icon is spawned at actor position (stored at 0xe8). Removed when actor becomes visible again."
+    }
+  ],
+
+  "comments_added": [
+    "DisallowInvisibleHandler.OnVerifyTarget @ 0x180704df0",
+    "HideByConditionHandler.IsHidden @ 0x1807073e0",
+    "Actor.get_VisibilityState @ 0x1805e95a0",
+    "Actor.IsHiddenToAI @ 0x1805e01a0",
+    "Actor.IsHiddenToPlayerAtTile @ 0x1805e0430",
+    "Actor.SetVisibility @ 0x1805e7cf0",
+    "Actor.ResetVisibilityToAI @ 0x1805e5d30",
+    "Actor_HasLineOfSightTo @ 0x1805dfa10",
+    "LineOfSight_HasLineOfSight @ 0x18051df40",
+    "IsHiddenCondition.IsTrue @ 0x1806d36f0",
+    "Actor.OnHiddenToPlayer @ 0x1805e3190",
+    "Actor.OnVisibleToPlayer @ 0x1805e50b0",
+    "EntityProperties.GetConcealment @ 0x18060bc90",
+    "EntityProperties.GetDetection @ 0x18060bd90",
+    "EntityProperties.GetVision @ 0x18060c7b0",
+    "VisibilityCheckAction.GetVisibilityReport @ 0x18064f0b0",
+    "Actor.get_Revealed @ 0x1805e9590",
+    "Entity.IsDiscovered @ 0x180612c90",
+    "Entity.OnDiscovered @ 0x180614110",
+    "Actor.OnDiscovered @ 0x1805e2bc0",
+    "Element.ChangeVisibilityToPlayer @ 0x1805f6530",
+    "TacticalManager.RecalculateVisibilityBasedOnVision @ 0x1806747f0",
+    "Map.SetUseFogOfWar @ 0x18062eda0",
+    "ChangePropertyHandler.CheckForDirtyVision @ 0x1806ff1b0"
+  ]
+}

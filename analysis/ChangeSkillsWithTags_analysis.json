@@ -1,0 +1,195 @@
+{
+  "handler_name": "ChangeSkillsWithTags",
+  "namespace": "Menace.Tactical.Skills.Effects",
+  "summary": "Event handler that modifies skill properties when skills with specific tags are used. The effect triggers OnBeforeAnySkillUsed, checks if the skill being used contains all required tags, and if so, applies a property modification (either additive or multiplicative based on the PropertyType).",
+  "classes": {
+    "effect_class": "ChangeSkillsWithTags",
+    "handler_class": "ChangeSkillsWithTagsHandler",
+    "base_class": "BaseEffect (inherits from ScriptableObject/TileBase)"
+  },
+  "functions_analyzed": [
+    {
+      "name": "ChangeSkillsWithTags.ctor",
+      "address": "0x1807002d0",
+      "purpose": "Constructor that initializes the effect with an empty TagType array at offset 0x58 and sets ValueMult to 1.0 (0x3f800000) at offset 0x68"
+    },
+    {
+      "name": "ChangeSkillsWithTags.Create",
+      "address": "0x180700270",
+      "purpose": "Factory method that creates a ChangeSkillsWithTagsHandler instance and stores the effect definition at handler offset 0x18"
+    },
+    {
+      "name": "ChangeSkillsWithTagsHandler.OnBeforeAnySkillUsed",
+      "address": "0x180700160",
+      "purpose": "Main event handler that executes when any skill is about to be used. Checks tag matching and applies property modifications"
+    }
+  ],
+  "fields_analyzed": [
+    {
+      "name": "TargetTags",
+      "offset": "0x58",
+      "type": "TagType[]",
+      "size": 8,
+      "description": "Array of TagType enum values specifying which skill tags must ALL be present on the skill for this effect to apply. Uses ContainsAllTags for matching against skill.Template.Tags (offset 0xa8 on skill template).",
+      "confidence": "high",
+      "initialized_in_ctor": true,
+      "default_value": "empty array"
+    },
+    {
+      "name": "PropertyType",
+      "offset": "0x60",
+      "type": "EntityPropertyType (int enum)",
+      "size": 4,
+      "description": "Enum value determining which entity property to modify. Values 9-28, 35-36, 41, 43-44, 46-47, 49, 52, 55, 57, 60, 64, 67, 71 are multiplicative properties; all others are additive. The property type determines whether UpdateProperty or UpdateMultProperty is called.",
+      "confidence": "high",
+      "initialized_in_ctor": false,
+      "default_value": "0 (implicitly)"
+    },
+    {
+      "name": "Value",
+      "offset": "0x64",
+      "type": "int",
+      "size": 4,
+      "description": "Integer value used for ADDITIVE property modifications. Only used when PropertyType indicates a non-multiplicative property. Added directly to the target entity's property value via UpdateProperty.",
+      "confidence": "high",
+      "initialized_in_ctor": false,
+      "default_value": "0 (implicitly)"
+    },
+    {
+      "name": "ValueMult",
+      "offset": "0x68",
+      "type": "float",
+      "size": 4,
+      "description": "Float multiplier used for MULTIPLICATIVE property modifications. Only used when PropertyType indicates a multiplicative property. Applied via UpdateMultProperty using AddMult formula: (mult-1.0)+currentValue, allowing multipliers to stack additively as percentages.",
+      "confidence": "high",
+      "initialized_in_ctor": true,
+      "default_value": "1.0f (0x3f800000)"
+    },
+    {
+      "name": "HideInTooltip (inferred)",
+      "offset": "0x6C",
+      "type": "bool (possibly int)",
+      "size": 4,
+      "description": "Likely boolean flag controlling whether this effect is displayed in skill tooltips. Inferred from similar effect classes (ChangePropertyConditional has this field). Not accessed in OnBeforeAnySkillUsed but may be used by tooltip generation code.",
+      "confidence": "medium",
+      "initialized_in_ctor": false,
+      "default_value": "false (0, implicitly)"
+    }
+  ],
+  "handler_fields": [
+    {
+      "name": "Skill",
+      "offset": "0x10",
+      "type": "BaseSkill",
+      "description": "Reference to the skill that owns this handler, used to get the actor via GetActor()"
+    },
+    {
+      "name": "Effect",
+      "offset": "0x18",
+      "type": "ChangeSkillsWithTags",
+      "description": "Reference to the effect definition containing the configuration fields"
+    }
+  ],
+  "key_discoveries": [
+    {
+      "discovery": "Tag Matching Logic",
+      "details": "Uses ContainsAllTags (0x180525200) to check if skill.Template.Tags (offset 0xa8) contains ALL tags from TargetTags. This is an AND operation - all specified tags must be present for the effect to apply."
+    },
+    {
+      "discovery": "Dual Property System",
+      "details": "The effect supports both additive (Value at 0x64) and multiplicative (ValueMult at 0x68) modifications. The PropertyType enum determines which is used via IsMultProperty check. Both fields exist but only one is used per effect instance."
+    },
+    {
+      "discovery": "Multiplicative Stacking",
+      "details": "Multiplicative properties use AddMult formula which converts multipliers to percentage bonuses that stack additively: newValue = (mult - 1.0) + currentValue. A 1.5x multiplier adds 0.5 (50%) rather than true multiplication."
+    },
+    {
+      "discovery": "EntityProperties Target",
+      "details": "Modifications are applied to the 5th parameter (param_5/EntityProperties) passed to OnBeforeAnySkillUsed, which represents the skill's calculated properties during use."
+    },
+    {
+      "discovery": "Skill Validation",
+      "details": "The handler checks if skill parameter (param_2) has a valid template (offset 0x10) using UnityEngine.Object equality check before proceeding with tag matching."
+    }
+  ],
+  "related_functions": [
+    {
+      "name": "IsMultProperty",
+      "address": "0x180633050",
+      "purpose": "Determines if PropertyType enum is multiplicative or additive"
+    },
+    {
+      "name": "UpdateProperty",
+      "address": "0x18060d320",
+      "purpose": "Applies additive value to entity property"
+    },
+    {
+      "name": "UpdateMultProperty",
+      "address": "0x18060cc80",
+      "purpose": "Applies multiplicative value using AddMult formula"
+    },
+    {
+      "name": "ContainsAllTags",
+      "address": "0x180525200",
+      "purpose": "Checks if first tag list contains all tags from second list"
+    }
+  ],
+  "ghidra_comments_added": [
+    {
+      "address": "0x1807002d0",
+      "type": "decompiler",
+      "comment": "Field documentation for ChangeSkillsWithTags effect structure"
+    },
+    {
+      "address": "0x180700270",
+      "type": "decompiler",
+      "comment": "Factory method documentation"
+    },
+    {
+      "address": "0x180700160",
+      "type": "decompiler",
+      "comment": "Handler behavior and field usage documentation"
+    },
+    {
+      "address": "0x1807001e3",
+      "type": "disassembly",
+      "comment": "TargetTags field access (0x58)"
+    },
+    {
+      "address": "0x1807001ea",
+      "type": "disassembly",
+      "comment": "Skill template tags access (0xa8)"
+    },
+    {
+      "address": "0x180700203",
+      "type": "disassembly",
+      "comment": "PropertyType field access (0x60)"
+    },
+    {
+      "address": "0x180700208",
+      "type": "disassembly",
+      "comment": "IsMultProperty check"
+    },
+    {
+      "address": "0x180700224",
+      "type": "disassembly",
+      "comment": "Value field access (0x64)"
+    },
+    {
+      "address": "0x18070024d",
+      "type": "disassembly",
+      "comment": "ValueMult field access (0x68)"
+    },
+    {
+      "address": "0x180700262",
+      "type": "disassembly",
+      "comment": "UpdateMultProperty call"
+    }
+  ],
+  "memory_layout": {
+    "base_class_size": "0x58 (88 bytes - Unity/IL2CPP object header)",
+    "effect_fields_start": "0x58",
+    "effect_fields_end": "0x70 (estimated)",
+    "total_estimated_size": "0x70 (112 bytes)"
+  }
+}

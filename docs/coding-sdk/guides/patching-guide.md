@@ -1,8 +1,100 @@
 # Harmony Patching Guide
 
-This guide covers applying Harmony patches via the Menace SDK. The SDK provides `GamePatch` as a simplified wrapper for common cases, while still allowing direct Harmony usage for advanced scenarios.
+This guide covers applying Harmony patches via the Menace SDK. The SDK provides multiple approaches depending on your needs:
+
+| Approach | Use When |
+|----------|----------|
+| **Intercept** | You want to observe/modify common game properties (damage, accuracy, etc.) |
+| **PatchSet** | You need to patch multiple methods with minimal boilerplate |
+| **GamePatch** | You need a single simple patch |
+| **Raw Harmony** | You need transpilers, specific overloads, or complex signatures |
 
 All SDK types live in the `Menace.SDK` namespace. Your mod receives a `HarmonyLib.Harmony` instance via `IModpackPlugin.OnInitialize`.
+
+---
+
+## Intercept (Recommended for Common Patterns)
+
+For common game method interceptions, use the `Intercept` class. It provides pre-wired events for 100+ game methods:
+
+```csharp
+public void OnInitialize(MelonLogger.Instance logger, HarmonyLib.Harmony harmony)
+{
+    // Subscribe to damage calculations
+    Intercept.OnGetDamage += (IntPtr ptr, ref int result) =>
+    {
+        result *= 2;  // Double all damage
+    };
+
+    // Subscribe to skill AP costs
+    Intercept.OnSkillApCost += (IntPtr skill, IntPtr actor, ref int result) =>
+    {
+        if (result > 1) result--;  // Reduce all AP costs by 1
+    };
+}
+```
+
+Benefits:
+- No manual Harmony setup
+- Automatic Lua event firing
+- Type-safe delegate signatures
+- Clean unsubscription
+
+See [Intercept API Reference](../api/intercept.md) for the full event list.
+
+---
+
+## PatchSet (Recommended for Multiple Patches)
+
+For multiple patches, use `PatchSet` to reduce boilerplate:
+
+```csharp
+public void OnInitialize(MelonLogger.Instance logger, HarmonyLib.Harmony harmony)
+{
+    new PatchSet(harmony, "MyMod")
+        .Postfix("ActorComponent", "ApplyDamage", AfterDamage)
+        .Postfix("ActorComponent", "ApplyHealing", AfterHealing)
+        .Prefix("SkillHandler", "ExecuteSkill", BeforeSkill)
+        .Apply();
+}
+
+private static void AfterDamage(object __instance, int damage)
+{
+    DevConsole.Log($"Damage: {damage}");
+}
+
+private static void AfterHealing(object __instance, int amount)
+{
+    DevConsole.Log($"Healing: {amount}");
+}
+
+private static bool BeforeSkill(object __instance)
+{
+    return true;  // Return false to skip original
+}
+```
+
+### Scene-Deferred Patching with PatchSet
+
+```csharp
+// Patches apply when "Tactical" scene loads
+new PatchSet(harmony, "MyMod")
+    .Postfix("TacticalActor", "OnTurnStart", OnTurnStart)
+    .Postfix("TacticalActor", "OnTurnEnd", OnTurnEnd)
+    .ApplyOnScene("Tactical");
+```
+
+### Checking Results
+
+```csharp
+var result = new PatchSet(harmony, "MyMod")
+    .Postfix("ActorComponent", "ApplyDamage", AfterDamage)
+    .Apply();
+
+_log.Msg($"Applied {result.Applied}/{result.Applied + result.Failed} patches");
+```
+
+See [PatchSet API Reference](../api/patchset.md) for full documentation.
 
 ---
 

@@ -980,10 +980,20 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
     }
 
     // Top-level folders to exclude — Scripts are handled by the Code screen,
-    // and Assemblies are core Unity binaries not suitable for replacement.
+    // Assemblies are core Unity binaries, and Unity manager/settings files are internal.
     private static readonly HashSet<string> ExcludedTopLevelFolders = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Assemblies", "Scripts"
+        "Assemblies", "Scripts",
+        // Unity internal managers and settings (not moddable)
+        "129",  // Mysterious Unity internal folder
+        "UnityConnectSettings",
+        "TimeManager",
+        "RuntimeInitializeOnLoadManager",
+        "MonoManager",
+        "PhysicsManager",
+        "BuildSettings",
+        "EditorSettings",
+        "EditorBuildSettings"
     };
 
     private void LoadAssetFolders(string rootPath)

@@ -150,6 +150,16 @@ The REPL is initialized on startup. If Roslyn packages are not available
 (e.g., stripped deploy), unknown non-command input in the Console will not be
 evaluated as C#.
 
+### Tier 10 -- Developer Utilities
+
+High-productivity utilities for common modding patterns.
+
+| Type | Purpose |
+|------|---------|
+| `Intercept` | Central event registry for intercepting 100+ game methods. Subscribe to events like `Intercept.OnGetDamage` or `Intercept.OnSkillApCost` to observe or modify game behavior without writing Harmony patches. Fires Lua events automatically. |
+| `PatchSet` | Fluent builder for Harmony patching. Reduces 12-15 lines per patch to a single chainable call. Includes safety checks, validation, and built-in scene awareness. |
+| `PointerCache` | Thread-safe IL2CPP IntPtr caching and lookup. Simplifies working with IL2CPP object references across frames. Provides null-safe access patterns. |
+
 ---
 
 ## Quick Start
@@ -435,3 +445,12 @@ Detailed documentation for each SDK type:
 ### Social & Dialogue (Tier 7)
 - [Conversation](api/conversation.md) -- Dialogue system
 - [Emotions](api/emotions.md) -- Squaddie emotional states
+
+### AI System (Tier 8)
+- [AI](api/ai.md) -- AI decision system access
+- [AICoordination](api/ai-coordination.md) -- Coordinated AI behavior
+
+### Developer Utilities (Tier 10)
+- [Intercept](api/intercept.md) -- Central event registry for 100+ game methods
+- [PatchSet](api/patchset.md) -- Fluent builder for Harmony patching
+- [PointerCache](api/pointer-cache.md) -- Thread-safe IL2CPP pointer caching

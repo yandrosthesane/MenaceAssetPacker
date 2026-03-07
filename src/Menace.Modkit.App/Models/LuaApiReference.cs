@@ -24,6 +24,11 @@ public class LuaApiItem
     /// True if this is a category node (not insertable).
     /// </summary>
     public bool IsCategory => Children.Count > 0;
+
+    /// <summary>
+    /// True if this item is an interceptor (for icon styling).
+    /// </summary>
+    public bool IsInterceptor { get; set; }
 }
 
 public enum LuaApiItemType
@@ -54,7 +59,486 @@ public static class LuaApiReference
             GetBlackMarketApi(),
             GetTacticalEvents(),
             GetStrategyEvents(),
-            GetGeneralEvents()
+            GetGeneralEvents(),
+            // Interceptors - modify game values in real-time
+            GetPropertyInterceptors(),
+            GetSkillInterceptors(),
+            GetTileInterceptors(),
+            GetMovementInterceptors(),
+            GetStrategyInterceptors(),
+            GetAIInterceptors()
+        };
+    }
+
+    /// <summary>
+    /// Get the C# API reference tree with C# syntax - mirrors Lua structure.
+    /// </summary>
+    public static List<LuaApiItem> GetCSharpApiTree()
+    {
+        return new List<LuaApiItem>
+        {
+            // Core SDK - equivalent to Lua core functions
+            GetCSharpSdkClasses(),
+            GetCSharpActorQuery(),
+            GetCSharpMovement(),
+            GetCSharpCombat(),
+            GetCSharpTacticalState(),
+            GetCSharpTileMap(),
+            GetCSharpSpawn(),
+            GetCSharpTileEffects(),
+            GetCSharpInventory(),
+            // Events
+            GetCSharpTacticalEvents(),
+            GetCSharpStrategyEvents(),
+            // Interceptors
+            GetCSharpPropertyInterceptors(),
+            GetCSharpSkillInterceptors(),
+            GetCSharpTileInterceptors(),
+            GetCSharpMovementInterceptors(),
+            GetCSharpStrategyInterceptors(),
+            GetCSharpAIInterceptors(),
+            // Utilities
+            GetCSharpPatchSet(),
+            GetCSharpPointerCache()
+        };
+    }
+
+    private static LuaApiItem GetCSharpActorQuery()
+    {
+        return new LuaApiItem
+        {
+            Name = "Actor Query",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "GameQuery.FindAll", Description = "Find all instances of a type", Signature = "GameQuery.FindAll(typeName)", InsertText = "var actors = GameQuery.FindAll(\"TacticalActor\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "GameQuery.FindByName", Description = "Find object by name", Signature = "GameQuery.FindByName(typeName, name)", InsertText = "var actor = GameQuery.FindByName(\"TacticalActor\", \"Leader1\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.GetActiveActor", Description = "Get currently selected actor", Signature = "EntityCombat.GetActiveActor()", InsertText = "var actor = EntityCombat.GetActiveActor();", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpMovement()
+    {
+        return new LuaApiItem
+        {
+            Name = "Movement",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntityMovement.MoveTo", Description = "Move actor to tile", Signature = "EntityMovement.MoveTo(actor, x, y)", InsertText = "EntityMovement.MoveTo(actor, x, y);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityMovement.Teleport", Description = "Teleport actor instantly", Signature = "EntityMovement.Teleport(actor, x, y)", InsertText = "EntityMovement.Teleport(actor, x, y);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityMovement.GetPosition", Description = "Get actor position", Signature = "EntityMovement.GetPosition(actor)", InsertText = "var (x, y) = EntityMovement.GetPosition(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityMovement.GetActionPoints", Description = "Get remaining AP", Signature = "EntityMovement.GetActionPoints(actor)", InsertText = "int ap = EntityMovement.GetActionPoints(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityMovement.SetActionPoints", Description = "Set action points", Signature = "EntityMovement.SetActionPoints(actor, ap)", InsertText = "EntityMovement.SetActionPoints(actor, 100);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpCombat()
+    {
+        return new LuaApiItem
+        {
+            Name = "Combat",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntityCombat.Attack", Description = "Attack a target", Signature = "EntityCombat.Attack(attacker, target)", InsertText = "EntityCombat.Attack(attacker, target);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.UseAbility", Description = "Use a skill on target", Signature = "EntityCombat.UseAbility(actor, skill, target)", InsertText = "EntityCombat.UseAbility(actor, \"Overwatch\", target);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.GetSkills", Description = "Get all actor skills", Signature = "EntityCombat.GetSkills(actor)", InsertText = "var skills = EntityCombat.GetSkills(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.GetHealth", Description = "Get actor HP info", Signature = "EntityCombat.GetHealth(actor)", InsertText = "var (current, max) = EntityCombat.GetHealth(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.SetHealth", Description = "Set actor HP", Signature = "EntityCombat.SetHealth(actor, hp)", InsertText = "EntityCombat.SetHealth(actor, 100);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.ApplyDamage", Description = "Apply damage", Signature = "EntityCombat.ApplyDamage(actor, amount)", InsertText = "EntityCombat.ApplyDamage(actor, 25);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityCombat.Heal", Description = "Heal actor", Signature = "EntityCombat.Heal(actor, amount)", InsertText = "EntityCombat.Heal(actor, 50);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTacticalState()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tactical State",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "TacticalController.GetCurrentRound", Description = "Get current round", Signature = "TacticalController.GetCurrentRound()", InsertText = "int round = TacticalController.GetCurrentRound();", ItemType = LuaApiItemType.Function },
+                new() { Name = "TacticalController.GetCurrentFaction", Description = "Get active faction", Signature = "TacticalController.GetCurrentFaction()", InsertText = "int faction = TacticalController.GetCurrentFaction();", ItemType = LuaApiItemType.Function },
+                new() { Name = "TacticalController.IsPlayerTurn", Description = "Check if player's turn", Signature = "TacticalController.IsPlayerTurn()", InsertText = "if (TacticalController.IsPlayerTurn())\n{\n    // Player's turn\n}", ItemType = LuaApiItemType.Function },
+                new() { Name = "TacticalController.EndTurn", Description = "End current turn", Signature = "TacticalController.EndTurn()", InsertText = "TacticalController.EndTurn();", ItemType = LuaApiItemType.Function },
+                new() { Name = "TacticalController.SetPaused", Description = "Pause/unpause", Signature = "TacticalController.SetPaused(paused)", InsertText = "TacticalController.SetPaused(true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TacticalController.SetTimeScale", Description = "Set game speed", Signature = "TacticalController.SetTimeScale(scale)", InsertText = "TacticalController.SetTimeScale(2.0f);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTileMap()
+    {
+        return new LuaApiItem
+        {
+            Name = "TileMap",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "TileMap.GetTile", Description = "Get tile at position", Signature = "TileMap.GetTile(x, z)", InsertText = "var tile = TileMap.GetTile(x, z);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileMap.GetCover", Description = "Get cover in direction", Signature = "TileMap.GetCover(x, z, direction)", InsertText = "int cover = TileMap.GetCover(x, z, 0);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileMap.IsBlocked", Description = "Check if impassable", Signature = "TileMap.IsBlocked(x, z)", InsertText = "if (!TileMap.IsBlocked(x, z))\n{\n    // Can move here\n}", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileMap.GetMapInfo", Description = "Get map dimensions", Signature = "TileMap.GetMapInfo()", InsertText = "var info = TileMap.GetMapInfo();", ItemType = LuaApiItemType.Function },
+                new() { Name = "LineOfSight.HasLOS", Description = "Check line of sight", Signature = "LineOfSight.HasLOS(from, to)", InsertText = "bool hasLos = LineOfSight.HasLOS(fromTile, toTile);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpSpawn()
+    {
+        return new LuaApiItem
+        {
+            Name = "Spawn",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntitySpawner.SpawnUnit", Description = "Spawn unit at position", Signature = "EntitySpawner.SpawnUnit(template, x, y, faction)", InsertText = "var entity = EntitySpawner.SpawnUnit(\"Grunt\", x, y, Faction.Enemy);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySpawner.DestroyEntity", Description = "Kill an entity", Signature = "EntitySpawner.DestroyEntity(actor, immediate)", InsertText = "EntitySpawner.DestroyEntity(actor, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySpawner.ClearEnemies", Description = "Remove all enemies", Signature = "EntitySpawner.ClearEnemies(immediate)", InsertText = "int cleared = EntitySpawner.ClearEnemies(true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySpawner.ListEntities", Description = "List entities by faction", Signature = "EntitySpawner.ListEntities(faction)", InsertText = "var enemies = EntitySpawner.ListEntities(Faction.Enemy);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTileEffects()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tile Effects",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "TileEffects.GetEffects", Description = "Get effects on tile", Signature = "TileEffects.GetEffects(x, z)", InsertText = "var effects = TileEffects.GetEffects(x, z);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileEffects.SpawnFire", Description = "Spawn fire effect", Signature = "TileEffects.SpawnFire(x, z)", InsertText = "TileEffects.SpawnFire(x, z);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileEffects.SpawnSmoke", Description = "Spawn smoke effect", Signature = "TileEffects.SpawnSmoke(x, z)", InsertText = "TileEffects.SpawnSmoke(x, z);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileEffects.ClearEffects", Description = "Clear all effects", Signature = "TileEffects.ClearEffects(x, z)", InsertText = "TileEffects.ClearEffects(x, z);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpInventory()
+    {
+        return new LuaApiItem
+        {
+            Name = "Inventory",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Inventory.GetContainer", Description = "Get actor's inventory", Signature = "Inventory.GetContainer(actor)", InsertText = "var container = Inventory.GetContainer(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.GetAllItems", Description = "Get all items", Signature = "Inventory.GetAllItems(container)", InsertText = "var items = Inventory.GetAllItems(container);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.GetEquippedWeapons", Description = "Get equipped weapons", Signature = "Inventory.GetEquippedWeapons(actor)", InsertText = "var weapons = Inventory.GetEquippedWeapons(actor);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTacticalEvents()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tactical Events",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "GameState.TacticalReady", Description = "Subscribe to tactical ready", Signature = "GameState.TacticalReady += handler", InsertText = "GameState.TacticalReady += () =>\n{\n    // Mission started\n};", ItemType = LuaApiItemType.Event },
+                new() { Name = "GameState.SceneLoaded", Description = "Subscribe to scene loads", Signature = "GameState.SceneLoaded += handler", InsertText = "GameState.SceneLoaded += (buildIndex, sceneName) =>\n{\n    DevConsole.Log($\"Scene: {sceneName}\");\n};", ItemType = LuaApiItemType.Event },
+                new() { Name = "GameState.RunDelayed", Description = "Run callback after N frames", Signature = "GameState.RunDelayed(frames, callback)", InsertText = "GameState.RunDelayed(30, () =>\n{\n    // Run after 30 frames\n});", ItemType = LuaApiItemType.Function },
+                new() { Name = "GameState.RunWhen", Description = "Run when condition is true", Signature = "GameState.RunWhen(predicate, callback)", InsertText = "GameState.RunWhen(\n    () => TacticalController.IsReady(),\n    () => { /* Ready */ }\n);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpStrategyEvents()
+    {
+        return new LuaApiItem
+        {
+            Name = "Strategy Events",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Roster.OnLeaderHired", Description = "Leader joins roster", Signature = "Roster.OnLeaderHired += handler", InsertText = "Roster.OnLeaderHired += (leader) =>\n{\n    DevConsole.Log($\"Hired: {leader.Name}\");\n};", ItemType = LuaApiItemType.Event },
+                new() { Name = "Roster.OnLeaderDismissed", Description = "Leader dismissed", Signature = "Roster.OnLeaderDismissed += handler", InsertText = "Roster.OnLeaderDismissed += (leader) =>\n{\n    DevConsole.Log($\"Dismissed: {leader.Name}\");\n};", ItemType = LuaApiItemType.Event }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpPropertyInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Property Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnGetDamage", Description = "Intercept damage calculations", Signature = "Intercept.OnGetDamage += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetDamage += (GameObj props, GameObj owner, ref float result) =>\n{\n    result *= 1.5f;  // +50% damage\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetAccuracy", Description = "Intercept accuracy calculations", Signature = "Intercept.OnGetAccuracy += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetAccuracy += (GameObj props, GameObj owner, ref float result) =>\n{\n    result += 10f;  // +10 accuracy\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetArmor", Description = "Intercept armor calculations", Signature = "Intercept.OnGetArmor += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetArmor += (GameObj props, GameObj owner, ref int result) =>\n{\n    result += 2;  // +2 armor\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetMaxHitpoints", Description = "Intercept max HP", Signature = "Intercept.OnGetMaxHitpoints += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetMaxHitpoints += (GameObj props, GameObj owner, ref int result) =>\n{\n    result = (int)(result * 1.25f);  // +25% HP\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpSkillInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Skill Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnGetHitChance", Description = "Intercept hit chance", Signature = "Intercept.OnGetHitChance += (skill, attacker, target, ref result) => { }", InsertText = "Intercept.OnGetHitChance += (GameObj skill, GameObj attacker, GameObj target, ref HitChanceResult result) =>\n{\n    result.FinalChance = Math.Min(result.FinalChance + 0.1f, 1.0f);  // +10% hit\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetActionPointCost", Description = "Intercept AP cost", Signature = "Intercept.OnGetActionPointCost += (skill, ref result) => { }", InsertText = "Intercept.OnGetActionPointCost += (GameObj skill, ref int result) =>\n{\n    result = Math.Max(1, result - 1);  // -1 AP (min 1)\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetExpectedDamage", Description = "Intercept damage preview", Signature = "Intercept.OnGetExpectedDamage += (skill, attacker, target, ref result) => { }", InsertText = "Intercept.OnGetExpectedDamage += (GameObj skill, GameObj attacker, GameObj target, ref ExpectedDamageResult result) =>\n{\n    result.Damage *= 1.5f;\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTileInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tile Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnGetCover", Description = "Intercept cover values", Signature = "Intercept.OnGetCover += (tile, dir, ref result) => { }", InsertText = "Intercept.OnGetCover += (GameObj tile, int dir, ref int result) =>\n{\n    result = 3;  // Force full cover\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnHasLineOfSight", Description = "Intercept LOS checks", Signature = "Intercept.OnHasLineOfSight += (from, to, ref result) => { }", InsertText = "Intercept.OnHasLineOfSight += (GameObj from, GameObj to, ref bool result) =>\n{\n    // result = true;  // Grant LoS\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpMovementInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Movement Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnGetMaxSpeed", Description = "Intercept movement speed", Signature = "Intercept.OnGetMaxSpeed += (instance, mode, ref result) => { }", InsertText = "Intercept.OnGetMaxSpeed += (GameObj instance, int mode, ref float result) =>\n{\n    result *= 1.5f;  // +50% speed\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnGetPathCost", Description = "Intercept path AP cost", Signature = "Intercept.OnGetPathCost += (actor, path, ref result) => { }", InsertText = "Intercept.OnGetPathCost += (GameObj actor, GameObj path, ref int result) =>\n{\n    result = (int)(result * 0.75f);  // -25% move cost\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpStrategyInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Strategy Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnStrategyGetActionPoints", Description = "Intercept strategy AP", Signature = "Intercept.OnStrategyGetActionPoints += (instance, ref result) => { }", InsertText = "Intercept.OnStrategyGetActionPoints += (GameObj instance, ref int result) =>\n{\n    result += 2;  // +2 strategy AP\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnCanBePromoted", Description = "Intercept promotion checks", Signature = "Intercept.OnCanBePromoted += (leader, ref result) => { }", InsertText = "Intercept.OnCanBePromoted += (GameObj leader, ref bool result) =>\n{\n    result = true;  // Always allow promotion\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpAIInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "AI Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnAIGetAttackScore", Description = "Intercept AI target scoring", Signature = "Intercept.OnAIGetAttackScore += (ai, target, ref result) => { }", InsertText = "Intercept.OnAIGetAttackScore += (GameObj ai, GameObj target, ref float result) =>\n{\n    result *= 0.5f;  // Make targets less attractive\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnAIShouldFlee", Description = "Intercept flee decisions", Signature = "Intercept.OnAIShouldFlee += (ai, context, ref result) => { }", InsertText = "Intercept.OnAIShouldFlee += (GameObj ai, GameObj context, ref bool result) =>\n{\n    result = false;  // Never flee\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpSdkClasses()
+    {
+        return new LuaApiItem
+        {
+            Name = "SDK Classes",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "GameObj",
+                    Description = "Wrapper for IL2CPP game objects with safe pointer handling.",
+                    Signature = "new GameObj(IntPtr pointer)",
+                    InsertText = "var obj = new GameObj(pointer);\nvar name = obj.GetName();\nvar typeName = obj.GetTypeName();",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "GameType.Find",
+                    Description = "Find a game type by full name.",
+                    Signature = "GameType.Find(string typeName)",
+                    InsertText = "var actorType = GameType.Find(\"Menace.Tactical.Actor\");",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "Templates.Find",
+                    Description = "Find a game template by type and name.",
+                    Signature = "Templates.Find(string typeName, string templateName)",
+                    InsertText = "var template = Templates.Find(\"Menace.Tactical.EntityTemplate\", \"Grunt\");",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "TileMap.GetTile",
+                    Description = "Get a tile at coordinates.",
+                    Signature = "TileMap.GetTile(int x, int z)",
+                    InsertText = "var tile = TileMap.GetTile(5, 10);",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "DevConsole.RegisterCommand",
+                    Description = "Register a console command.",
+                    Signature = "DevConsole.RegisterCommand(name, args, description, callback)",
+                    InsertText = "DevConsole.RegisterCommand(\"mycommand\", \"<arg>\", \"Description\", args =>\n{\n    return \"Result\";\n});",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "ModError.Info/Warn/Report",
+                    Description = "Log messages with mod attribution.",
+                    Signature = "ModError.Info(modName, message)",
+                    InsertText = "ModError.Info(\"MyMod\", \"Something happened\");\nModError.Warn(\"MyMod\", \"Warning!\");\nModError.Report(\"MyMod\", \"Error details\", exception);",
+                    ItemType = LuaApiItemType.Function
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpPatchSet()
+    {
+        return new LuaApiItem
+        {
+            Name = "PatchSet (Fluent Harmony)",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "PatchSet basics",
+                    Description = "Fluent builder for Harmony patches. Reduces boilerplate.",
+                    Signature = "new PatchSet(harmony, modName).Postfix<T>(method, patch).Apply()",
+                    InsertText = "var result = new PatchSet(harmony, \"MyMod\")\n    .Postfix<EntityProperties>(\"GetDamage\", GetDamage_Postfix)\n    .Postfix<EntityProperties>(\"GetAccuracy\", GetAccuracy_Postfix)\n    .Apply();\n\nif (!result.AllSucceeded)\n    ModError.Warn(\"MyMod\", $\"Failed patches: {string.Join(\", \", result.FailedPatches)}\");",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PatchSet.Prefix",
+                    Description = "Add a prefix patch (runs before original method).",
+                    Signature = ".Prefix<T>(methodName, patchDelegate)",
+                    InsertText = ".Prefix<Actor>(\"TakeDamage\", TakeDamage_Prefix)",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PatchSet.Postfix",
+                    Description = "Add a postfix patch (runs after original method).",
+                    Signature = ".Postfix<T>(methodName, patchDelegate)",
+                    InsertText = ".Postfix<EntityProperties>(\"GetDamage\", GetDamage_Postfix)",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PatchSet.PrefixPostfix",
+                    Description = "Add both prefix and postfix to the same method.",
+                    Signature = ".PrefixPostfix<T>(methodName, paramTypes, prefix, postfix)",
+                    InsertText = ".PrefixPostfix<UnitPanel>(\"Update\",\n    new[] { typeof(BaseUnitLeader) },\n    MyPrefix, MyPostfix,\n    optional: true)",
+                    ItemType = LuaApiItemType.Function
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpPointerCache()
+    {
+        return new LuaApiItem
+        {
+            Name = "PointerCache (IL2CPP Tracking)",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "PointerCache<T>",
+                    Description = "Dictionary mapping IL2CPP pointers to values. Safe null handling.",
+                    Signature = "new PointerCache<T>(concurrent: false)",
+                    InsertText = "private static readonly PointerCache<float> s_BaseMult = new();\n\n// Usage:\ns_BaseMult.Set(props.Pointer, 1.5f);\nvar val = s_BaseMult.Get(props.Pointer, defaultValue: 1.0f);",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PointerCache.Set",
+                    Description = "Store a value for a pointer. Safe for IntPtr.Zero.",
+                    Signature = "cache.Set(IntPtr pointer, TValue value)",
+                    InsertText = "cache.Set(actor.Pointer, myValue);",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PointerCache.Get",
+                    Description = "Get a value for a pointer with default fallback.",
+                    Signature = "cache.Get(IntPtr pointer, TValue defaultValue = default)",
+                    InsertText = "var value = cache.Get(actor.Pointer, defaultValue: 1.0f);",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PointerCache.TryGet",
+                    Description = "Try to get a value, returns false if not found.",
+                    Signature = "cache.TryGet(IntPtr pointer, out TValue value)",
+                    InsertText = "if (cache.TryGet(actor.Pointer, out var value))\n{\n    // Use value\n}",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "PointerCache.GetOrSet",
+                    Description = "Get existing or create new value atomically.",
+                    Signature = "cache.GetOrSet(IntPtr pointer, Func<TValue> factory)",
+                    InsertText = "var value = cache.GetOrSet(actor.Pointer, () => ComputeDefault());",
+                    ItemType = LuaApiItemType.Function
+                },
+                new()
+                {
+                    Name = "GameObjCache<T>",
+                    Description = "Specialized cache that works with GameObj directly.",
+                    Signature = "new GameObjCache<T>()",
+                    InsertText = "private static readonly GameObjCache<MyData> s_Data = new();\n\ns_Data.Set(gameObj, myData);\nvar data = s_Data.Get(gameObj);",
+                    ItemType = LuaApiItemType.Function
+                }
+            }
         };
     }
 
@@ -949,6 +1433,382 @@ public static class LuaApiReference
                     Description = "Fired when a scene loads. Data: sceneName (string)",
                     Signature = "on(\"scene_loaded\", function(sceneName) ... end)",
                     InsertText = "on(\"scene_loaded\", function(sceneName)\n    log(\"Scene loaded: \" .. tostring(sceneName))\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    //  INTERCEPTORS - Modify game values in real-time
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    private static LuaApiItem GetPropertyInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Property Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "property_damage",
+                    Description = "Intercept damage calculations. Modify data.result to change damage.",
+                    Signature = "on(\"property_damage\", function(data) data.result = data.result * 1.5 end)",
+                    InsertText = "on(\"property_damage\", function(data)\n    -- data.props_ptr, data.owner_ptr, data.result\n    data.result = data.result * 1.5  -- +50% damage\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_accuracy",
+                    Description = "Intercept accuracy calculations.",
+                    Signature = "on(\"property_accuracy\", function(data) ... end)",
+                    InsertText = "on(\"property_accuracy\", function(data)\n    data.result = data.result + 10  -- +10 accuracy\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_armor",
+                    Description = "Intercept armor value calculations.",
+                    Signature = "on(\"property_armor\", function(data) ... end)",
+                    InsertText = "on(\"property_armor\", function(data)\n    data.result = data.result + 2  -- +2 armor\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_concealment",
+                    Description = "Intercept concealment calculations.",
+                    Signature = "on(\"property_concealment\", function(data) ... end)",
+                    InsertText = "on(\"property_concealment\", function(data)\n    data.result = data.result + 5  -- +5 concealment\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_detection",
+                    Description = "Intercept detection range calculations.",
+                    Signature = "on(\"property_detection\", function(data) ... end)",
+                    InsertText = "on(\"property_detection\", function(data)\n    data.result = data.result * 1.2  -- +20% detection\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_vision",
+                    Description = "Intercept vision range calculations.",
+                    Signature = "on(\"property_vision\", function(data) ... end)",
+                    InsertText = "on(\"property_vision\", function(data)\n    data.result = data.result + 2  -- +2 vision tiles\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_armor_penetration",
+                    Description = "Intercept armor penetration calculations.",
+                    Signature = "on(\"property_armor_penetration\", function(data) ... end)",
+                    InsertText = "on(\"property_armor_penetration\", function(data)\n    data.result = data.result + 1  -- +1 AP\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_suppression",
+                    Description = "Intercept suppression value calculations.",
+                    Signature = "on(\"property_suppression\", function(data) ... end)",
+                    InsertText = "on(\"property_suppression\", function(data)\n    data.result = data.result * 0.5  -- -50% suppression taken\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_action_points",
+                    Description = "Intercept action point calculations.",
+                    Signature = "on(\"property_action_points\", function(data) ... end)",
+                    InsertText = "on(\"property_action_points\", function(data)\n    data.result = data.result + 2  -- +2 AP\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "property_max_hitpoints",
+                    Description = "Intercept max hitpoints calculations.",
+                    Signature = "on(\"property_max_hitpoints\", function(data) ... end)",
+                    InsertText = "on(\"property_max_hitpoints\", function(data)\n    data.result = data.result * 1.25  -- +25% HP\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetSkillInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Skill Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "skill_hitchance",
+                    Description = "Intercept hit chance calculations. Modify final_chance, base_accuracy, cover_mult.",
+                    Signature = "on(\"skill_hitchance\", function(data) ... end)",
+                    InsertText = "on(\"skill_hitchance\", function(data)\n    -- data.skill_ptr, data.attacker_ptr, data.target_ptr\n    -- data.final_chance, data.base_accuracy, data.cover_mult\n    data.final_chance = math.min(data.final_chance + 0.1, 1.0)  -- +10% hit\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_expected_damage",
+                    Description = "Intercept expected damage preview calculations.",
+                    Signature = "on(\"skill_expected_damage\", function(data) ... end)",
+                    InsertText = "on(\"skill_expected_damage\", function(data)\n    data.damage = data.damage * 1.5  -- +50% preview damage\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_covermult",
+                    Description = "Intercept cover effectiveness calculations.",
+                    Signature = "on(\"skill_covermult\", function(data) ... end)",
+                    InsertText = "on(\"skill_covermult\", function(data)\n    data.result = data.result * 0.5  -- Halve cover effectiveness\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_ap_cost",
+                    Description = "Intercept skill AP cost calculations.",
+                    Signature = "on(\"skill_ap_cost\", function(data) ... end)",
+                    InsertText = "on(\"skill_ap_cost\", function(data)\n    data.result = math.max(1, data.result - 1)  -- -1 AP cost (min 1)\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_max_range",
+                    Description = "Intercept maximum range calculations.",
+                    Signature = "on(\"skill_max_range\", function(data) ... end)",
+                    InsertText = "on(\"skill_max_range\", function(data)\n    data.result = data.result + 3  -- +3 range\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_min_range",
+                    Description = "Intercept minimum range calculations.",
+                    Signature = "on(\"skill_min_range\", function(data) ... end)",
+                    InsertText = "on(\"skill_min_range\", function(data)\n    data.result = math.max(0, data.result - 1)  -- -1 min range\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "skill_is_in_range",
+                    Description = "Intercept range validity checks. Set result to true/false.",
+                    Signature = "on(\"skill_is_in_range\", function(data) ... end)",
+                    InsertText = "on(\"skill_is_in_range\", function(data)\n    -- data.result = true  -- Force always in range\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetTileInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tile Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "actor_los",
+                    Description = "Intercept line of sight checks between actors.",
+                    Signature = "on(\"actor_los\", function(data) ... end)",
+                    InsertText = "on(\"actor_los\", function(data)\n    -- data.observer_ptr, data.target_ptr, data.result (bool)\n    -- data.result = true  -- Grant LoS\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "tile_has_los",
+                    Description = "Intercept tile-to-tile LoS checks.",
+                    Signature = "on(\"tile_has_los\", function(data) ... end)",
+                    InsertText = "on(\"tile_has_los\", function(data)\n    -- data.from_ptr, data.to_ptr, data.result\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "tile_get_cover",
+                    Description = "Intercept cover value queries (0-3).",
+                    Signature = "on(\"tile_get_cover\", function(data) ... end)",
+                    InsertText = "on(\"tile_get_cover\", function(data)\n    -- data.tile_ptr, data.direction (0-7), data.result (0-3)\n    data.result = 3  -- Force full cover\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "tile_can_enter",
+                    Description = "Intercept tile entry permission checks.",
+                    Signature = "on(\"tile_can_enter\", function(data) ... end)",
+                    InsertText = "on(\"tile_can_enter\", function(data)\n    -- data.tile_ptr, data.result (bool)\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "los_raytrace",
+                    Description = "Intercept core LoS raycast algorithm.",
+                    Signature = "on(\"los_raytrace\", function(data) ... end)",
+                    InsertText = "on(\"los_raytrace\", function(data)\n    -- data.from_ptr, data.to_ptr, data.flags, data.result\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetMovementInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Movement Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "movement_max_speed",
+                    Description = "Intercept movement speed calculations.",
+                    Signature = "on(\"movement_max_speed\", function(data) ... end)",
+                    InsertText = "on(\"movement_max_speed\", function(data)\n    -- data.instance_ptr, data.movement_mode (0=Walk,1=Run,2=Sprint)\n    data.result = data.result * 1.5  -- +50% speed\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "movement_path_cost",
+                    Description = "Intercept path AP cost calculations.",
+                    Signature = "on(\"movement_path_cost\", function(data) ... end)",
+                    InsertText = "on(\"movement_path_cost\", function(data)\n    data.result = math.floor(data.result * 0.75)  -- -25% movement cost\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "movement_turn_speed",
+                    Description = "Intercept turn animation speed.",
+                    Signature = "on(\"movement_turn_speed\", function(data) ... end)",
+                    InsertText = "on(\"movement_turn_speed\", function(data)\n    data.result = data.result * 2  -- 2x turn speed\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "movement_clip_path",
+                    Description = "Intercept path clipping by AP budget.",
+                    Signature = "on(\"movement_clip_path\", function(data) ... end)",
+                    InsertText = "on(\"movement_clip_path\", function(data)\n    -- data.actual_cost, data.max_cost, data.clip_index\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetStrategyInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Strategy Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "strategy_action_points",
+                    Description = "Intercept strategy layer AP calculations.",
+                    Signature = "on(\"strategy_action_points\", function(data) ... end)",
+                    InsertText = "on(\"strategy_action_points\", function(data)\n    data.result = data.result + 2  -- +2 strategy AP\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "strategy_hitpoints_per_element",
+                    Description = "Intercept HP per squad element.",
+                    Signature = "on(\"strategy_hitpoints_per_element\", function(data) ... end)",
+                    InsertText = "on(\"strategy_hitpoints_per_element\", function(data)\n    data.result = data.result + 5  -- +5 HP per element\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "strategy_damage_sustained_mult",
+                    Description = "Intercept damage resistance multiplier.",
+                    Signature = "on(\"strategy_damage_sustained_mult\", function(data) ... end)",
+                    InsertText = "on(\"strategy_damage_sustained_mult\", function(data)\n    data.result = data.result * 0.8  -- -20% damage taken\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "strategy_can_be_promoted",
+                    Description = "Intercept promotion eligibility checks.",
+                    Signature = "on(\"strategy_can_be_promoted\", function(data) ... end)",
+                    InsertText = "on(\"strategy_can_be_promoted\", function(data)\n    data.result = true  -- Always allow promotion\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "strategy_can_be_demoted",
+                    Description = "Intercept demotion eligibility checks.",
+                    Signature = "on(\"strategy_can_be_demoted\", function(data) ... end)",
+                    InsertText = "on(\"strategy_can_be_demoted\", function(data)\n    data.result = false  -- Prevent demotion\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "strategy_vehicle_armor",
+                    Description = "Intercept vehicle armor calculations.",
+                    Signature = "on(\"strategy_vehicle_armor\", function(data) ... end)",
+                    InsertText = "on(\"strategy_vehicle_armor\", function(data)\n    data.result = data.result + 3  -- +3 vehicle armor\nend)",
+                    ItemType = LuaApiItemType.Event
+                }
+            }
+        };
+    }
+
+    private static LuaApiItem GetAIInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "AI Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new()
+                {
+                    Name = "ai_attack_score",
+                    Description = "Intercept AI target scoring. Higher = more attractive target.",
+                    Signature = "on(\"ai_attack_score\", function(data) ... end)",
+                    InsertText = "on(\"ai_attack_score\", function(data)\n    -- data.ai_ptr, data.target_ptr, data.result\n    data.result = data.result * 0.5  -- Make targets less attractive\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "ai_threat_value",
+                    Description = "Intercept AI threat evaluation. Higher = more dangerous.",
+                    Signature = "on(\"ai_threat_value\", function(data) ... end)",
+                    InsertText = "on(\"ai_threat_value\", function(data)\n    data.result = data.result * 2  -- Double perceived threat\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "ai_action_priority",
+                    Description = "Intercept AI action priority scoring.",
+                    Signature = "on(\"ai_action_priority\", function(data) ... end)",
+                    InsertText = "on(\"ai_action_priority\", function(data)\n    -- Modify action priority\nend)",
+                    ItemType = LuaApiItemType.Event
+                },
+                new()
+                {
+                    Name = "ai_should_flee",
+                    Description = "Intercept AI flee decision. Set result to true/false.",
+                    Signature = "on(\"ai_should_flee\", function(data) ... end)",
+                    InsertText = "on(\"ai_should_flee\", function(data)\n    data.result = false  -- Never flee\nend)",
                     ItemType = LuaApiItemType.Event
                 }
             }

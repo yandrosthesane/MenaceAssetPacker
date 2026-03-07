@@ -21,6 +21,39 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
 {
     public const string CreateNewModOption = "+ Create New Mod...";
 
+    /// <summary>
+    /// Welcome greeting shown when no script is selected.
+    /// Dark teal ASCII art with white instruction text.
+    /// </summary>
+    private const string WelcomeGreeting = @"--[[
+    ╔═══════════════════════════════════════════════════════════════════════════╗
+    ║                                                                           ║
+    ║   ███╗   ███╗███████╗███╗   ██╗ █████╗  ██████╗███████╗                   ║
+    ║   ████╗ ████║██╔════╝████╗  ██║██╔══██╗██╔════╝██╔════╝                   ║
+    ║   ██╔████╔██║█████╗  ██╔██╗ ██║███████║██║     █████╗                     ║
+    ║   ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██╔══██║██║     ██╔══╝                     ║
+    ║   ██║ ╚═╝ ██║███████╗██║ ╚████║██║  ██║╚██████╗███████╗                   ║
+    ║   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝╚══════╝                   ║
+    ║                                                                           ║
+    ║   ███╗   ███╗ ██████╗ ██████╗ ██╗  ██╗██╗████████╗                        ║
+    ║   ████╗ ████║██╔═══██╗██╔══██╗██║ ██╔╝██║╚══██╔══╝                        ║
+    ║   ██╔████╔██║██║   ██║██║  ██║█████╔╝ ██║   ██║                           ║
+    ║   ██║╚██╔╝██║██║   ██║██║  ██║██╔═██╗ ██║   ██║                           ║
+    ║   ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║  ██╗██║   ██║                           ║
+    ║   ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝                           ║
+    ║                                                                           ║
+    ║═══════════════════════════════════════════════════════════════════════════║
+    ║                                                                           ║
+    ║              Select a script file or create a new script                  ║
+    ║                                                                           ║
+    ║   • Use the Scripts panel on the left to select an existing file          ║
+    ║   • Click '+ Add' to create a new Lua or C# script                        ║
+    ║   • Double-click any API item to insert example code                      ║
+    ║                                                                           ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
+]]
+";
+
     private readonly ModpackManager _modpackManager;
 
     private List<LuaApiItem> _allLuaApiNodes = new();
@@ -35,7 +68,7 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
         SearchResults = new ObservableCollection<SearchResultItem>();
         ScriptTemplates = new ObservableCollection<string>();
 
-        FileContent = "-- Select a script file (.lua or .cs) from the Scripts panel to edit\n-- Or double-click an API item to insert code";
+        FileContent = WelcomeGreeting;
         IsReadOnly = true;
 
         LoadModpacks();
@@ -111,6 +144,23 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
     {
         get => _selectedApiItem;
         set => this.RaiseAndSetIfChanged(ref _selectedApiItem, value);
+    }
+
+    private bool _showCSharpApi;
+    /// <summary>
+    /// When true, show C# API reference. When false, show Lua API reference.
+    /// </summary>
+    public bool ShowCSharpApi
+    {
+        get => _showCSharpApi;
+        set
+        {
+            if (_showCSharpApi != value)
+            {
+                this.RaiseAndSetIfChanged(ref _showCSharpApi, value);
+                LoadApiTree();
+            }
+        }
     }
 
     private CodeTreeNode? _selectedFile;
@@ -390,12 +440,17 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
             SelectedModpack = AvailableModpacks[1];
     }
 
-    private void LoadLuaApiTree()
+    private void LoadLuaApiTree() => LoadApiTree();
+
+    private void LoadApiTree()
     {
         LuaApiTree.Clear();
         _allLuaApiNodes.Clear();
 
-        var apiTree = LuaApiReference.GetApiTree();
+        var apiTree = _showCSharpApi
+            ? LuaApiReference.GetCSharpApiTree()
+            : LuaApiReference.GetApiTree();
+
         foreach (var item in apiTree)
         {
             LuaApiTree.Add(item);
@@ -500,7 +555,7 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
     {
         if (_selectedFile == null || !_selectedFile.IsFile)
         {
-            FileContent = "-- Select a script file (.lua or .cs) from the Scripts panel to edit\n-- Or double-click an API item to insert code";
+            FileContent = WelcomeGreeting;
             IsReadOnly = true;
             CurrentFilePath = string.Empty;
             return;
@@ -613,7 +668,7 @@ public sealed class CodeEditorViewModel : ViewModelBase, ISearchableViewModel
             if (File.Exists(_selectedFile.FullPath))
                 File.Delete(_selectedFile.FullPath);
 
-            FileContent = "-- Select a script file (.lua or .cs) from the Scripts panel to edit";
+            FileContent = WelcomeGreeting;
             SelectedFile = null;
             LoadScriptsTree();
             BuildStatus = "File removed";

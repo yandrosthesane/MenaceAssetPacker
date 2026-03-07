@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Extract EventHandler class definitions from IL2CPP dump.cs and add to schema.json
+
+This script parses EventHandler classes from the IL2CPP dump and properly categorizes
+their fields using the existing enum/struct/template definitions from schema.json.
 """
 
 import json
@@ -8,7 +11,142 @@ import re
 import sys
 from pathlib import Path
 
-def parse_eventhandler_classes(dump_path):
+# Type classification constants (same as generate_schema.py)
+PRIMITIVE_TYPES = {
+    "int", "Int32", "float", "Single", "bool", "Boolean",
+    "byte", "Byte", "short", "Int16", "long", "Int64",
+    "double", "Double",
+}
+
+UNITY_ASSET_TYPES = {
+    "Sprite", "Texture2D", "Material", "Mesh", "AudioClip",
+    "AnimationClip", "GameObject", "RuntimeAnimatorController",
+    "VolumeProfile",
+}
+
+LOCALIZATION_TYPES = {"LocalizedLine", "LocalizedMultiLine"}
+
+def infer_reference_from_name(field_name, field_type):
+    """
+    Infer reference type from field naming patterns.
+    Returns (inferred_reference_type, confidence) or (None, 0)
+    """
+    field_lower = field_name.lower()
+
+    # Skill references
+    if any(pattern in field_lower for pattern in ['skill', 'ability']):
+        if 'template' not in field_lower:  # Avoid SkillTemplate type (already correct)
+            return ("SkillTemplate", 0.8)
+
+    # Entity/Actor references
+    if any(pattern in field_lower for pattern in ['entity', 'actor', 'unit']):
+        if 'tospawn' in field_lower or 'spawn' in field_lower:
+            return ("EntityTemplate", 0.9)
+
+    # Effect/TileEffect references
+    if 'tospawn' in field_lower or 'effecttospawn' in field_lower:
+        if 'tile' in field_lower or field_type in ('String', 'ID'):
+            return ("TileEffectTemplate", 0.9)
+
+    # Sound references
+    if any(pattern in field_lower for pattern in ['sound', 'audio']):
+        # Fields like SoundToPlay, SoundWhenSuppressed, etc.
+        return ("SoundReference", 0.9)
+
+    # Perk references
+    if 'perk' in field_lower and 'template' not in field_lower:
+        return ("PerkTemplate", 0.8)
+
+    # Tag references (if it's a string/ID and has 'tag' in name)
+    if 'tag' in field_lower and field_type in ('String', 'ID'):
+        if 'list' not in field_lower:  # Collections handled elsewhere
+            return ("TagTemplate", 0.7)
+
+    # Item references
+    if 'item' in field_lower and any(x in field_lower for x in ['tospawn', 'give', 'grant']):
+        return ("ItemTemplate", 0.8)
+
+    # Animation references
+    if 'animation' in field_lower or 'anim' in field_lower:
+        if field_type in ('String', 'ID'):
+            return ("AnimationTemplate", 0.7)
+
+    return (None, 0)
+
+
+def classify_field(field_name, field_type, known_enums, known_structs, known_templates):
+    """
+    Classify a field type into a category.
+    Uses actual type definitions and field naming patterns.
+    """
+    # Handle array types - extract base type first
+    is_array = field_type.endswith("[]")
+    base = field_type.rstrip("[]")
+
+    # Check for List<T>
+    list_match = re.match(r"List<(\w+)>", field_type)
+    if list_match:
+        element_type = list_match.group(1)
+        return "collection", element_type
+
+    # Array of something
+    if is_array:
+        return "collection", base
+
+    # Primitives
+    if base in PRIMITIVE_TYPES:
+        return "primitive", None
+
+    # String - check if it might be a reference based on field name
+    if base in ("string", "String"):
+        inferred_ref, confidence = infer_reference_from_name(field_name, base)
+        if inferred_ref and confidence >= 0.7:
+            return "reference", inferred_ref
+        return "primitive", None
+
+    # ID struct - check this BEFORE checking enums since ID is both enum and struct
+    # The struct version (FMOD sound ID) is more commonly used in EventHandlers
+    if base == "ID" and base in known_structs:
+        inferred_ref, confidence = infer_reference_from_name(field_name, base)
+        if inferred_ref and confidence >= 0.8:
+            return "reference", inferred_ref
+        # ID struct is a special type for sound/asset references
+        return "sound_id", None
+
+    # Enums (actual enum types from schema)
+    if base in known_enums:
+        return "enum", None
+
+    # Structs
+    if base in known_structs:
+        return "struct", None
+
+    # Localization
+    if base in LOCALIZATION_TYPES:
+        return "localization", None
+
+    # Unity assets
+    if base in UNITY_ASSET_TYPES:
+        return "unity_asset", None
+
+    # Template references
+    if base.endswith("Template") and base in known_templates:
+        return "reference", None
+
+    # Interfaces and other reference types
+    if base.startswith("I") and len(base) > 1 and base[1].isupper():
+        # Likely an interface (ITacticalCondition, IItemFilter, etc.)
+        return "interface", None
+
+    # Unknown uppercase types - treat as reference
+    if base[0:1].isupper():
+        return "reference", None
+
+    # Fallback
+    return "unknown", None
+
+
+def parse_eventhandler_classes(dump_path, known_enums, known_structs, known_templates):
     """Parse dump.cs to extract EventHandler classes and their fields"""
     handlers = {}
 
@@ -17,7 +155,7 @@ def parse_eventhandler_classes(dump_path):
 
     # Find all classes that inherit from SkillEventHandlerTemplate or PerkEventHandlerTemplate
     # Pattern: public class ClassName : BaseClass
-    class_pattern = r'public class (\w+)\s*:\s*(?:SkillEventHandlerTemplate|PerkEventHandlerTemplate|(\w*EventHandler\w*))'
+    class_pattern = r'public class (\w+)\s*:\s*(?:SkillEventHandlerTemplate|PerkEventHandlerTemplate)'
 
     classes = re.finditer(class_pattern, content)
 
@@ -53,7 +191,7 @@ def parse_eventhandler_classes(dump_path):
         class_body = content[class_body_start:class_body_end]
 
         # Extract fields (public fields only, non-static)
-        field_pattern = r'public\s+(\w+(?:<[^>]+>)?)\s+(\w+);\s*//\s*0x([0-9A-Fa-f]+)'
+        field_pattern = r'public\s+([\w<>\[\]\.]+)\s+(\w+);\s*//\s*0x([0-9A-Fa-f]+)'
         fields = []
 
         for field_match in re.finditer(field_pattern, class_body):
@@ -62,24 +200,24 @@ def parse_eventhandler_classes(dump_path):
             offset = field_match.group(3)
 
             # Skip certain fields
-            if field_name in ['k__BackingField', 'NativeFieldInfoPtr', 'NativeClassPtr']:
+            if field_name in ['k__BackingField', 'NativeFieldInfoPtr', 'NativeClassPtr', 'Il2CppClass']:
                 continue
 
-            # Determine field category
-            category = categorize_field(field_type)
+            # Determine field category using proper classification
+            category, element_type = classify_field(
+                field_name, field_type, known_enums, known_structs, known_templates)
 
             field_info = {
                 "name": field_name,
+                "type": field_type,
+                "category": category,
                 "offset": f"0x{offset}",
-                "type": simplify_type(field_type),
-                "category": category
+                "description": ""  # To be filled in manually over time
             }
 
-            # Add element_type for collections
-            if category == "collection":
-                element_type = extract_element_type(field_type)
-                if element_type:
-                    field_info["element_type"] = element_type
+            # Add element_type for collections or inferred references
+            if element_type:
+                field_info["element_type"] = element_type
 
             fields.append(field_info)
 
@@ -90,40 +228,6 @@ def parse_eventhandler_classes(dump_path):
 
     return handlers
 
-def categorize_field(field_type):
-    """Determine the category of a field"""
-    field_type_lower = field_type.lower()
-
-    if 'list<' in field_type_lower or 'array<' in field_type_lower or field_type.endswith('[]'):
-        return "collection"
-    elif field_type in ['int', 'Int32', 'float', 'Single', 'double', 'Double', 'bool', 'Boolean', 'string', 'String']:
-        return "primitive"
-    elif 'template' in field_type_lower:
-        return "reference"
-    elif field_type.endswith('Type') or field_type.endswith('Kind') or field_type.endswith('Mode'):
-        return "enum"
-    else:
-        return "primitive"
-
-def simplify_type(type_str):
-    """Simplify type names"""
-    # Remove Il2Cpp prefixes
-    type_str = type_str.replace('Il2Cpp', '')
-    type_str = type_str.replace('Il2CppSystem.', '')
-
-    # Simplify generic types
-    if '<' in type_str:
-        base_type = type_str.split('<')[0]
-        return base_type
-
-    return type_str
-
-def extract_element_type(type_str):
-    """Extract element type from collection types"""
-    match = re.search(r'<([^>]+)>', type_str)
-    if match:
-        return simplify_type(match.group(1))
-    return None
 
 def update_schema(schema_path, handlers):
     """Update schema.json with extracted handlers"""
@@ -139,9 +243,16 @@ def update_schema(schema_path, handlers):
 
     print(f"✓ Updated schema.json with {len(handlers)} EventHandler types")
 
+
 def main():
-    dump_path = Path('/home/poss/Documents/Code/Menace/MenaceAssetPacker/il2cpp_dump/dump.cs')
-    schema_path = Path('/home/poss/Documents/Code/Menace/MenaceAssetPacker/dist/gui-linux-x64/schema.json')
+    dump_path = Path('il2cpp_dump/dump.cs')
+    schema_path = Path('src/Menace.Modkit.App/bin/Debug/net10.0/schema.json')
+
+    # Allow override from command line
+    if len(sys.argv) > 1:
+        dump_path = Path(sys.argv[1])
+    if len(sys.argv) > 2:
+        schema_path = Path(sys.argv[2])
 
     if not dump_path.exists():
         print(f"Error: dump.cs not found at {dump_path}")
@@ -151,21 +262,61 @@ def main():
         print(f"Error: schema.json not found at {schema_path}")
         sys.exit(1)
 
-    print(f"Parsing EventHandlers from {dump_path}...")
-    handlers = parse_eventhandler_classes(str(dump_path))
+    # Load existing schema to get known types
+    print(f"Loading existing schema from {schema_path}...")
+    with open(schema_path, 'r') as f:
+        schema = json.load(f)
+
+    known_enums = set(schema.get('enums', {}).keys())
+    known_structs = set(schema.get('structs', {}).keys())
+    known_templates = set(schema.get('templates', {}).keys())
+
+    print(f"  Loaded {len(known_enums)} enums, {len(known_structs)} structs, {len(known_templates)} templates")
+
+    print(f"\nParsing EventHandlers from {dump_path}...")
+    handlers = parse_eventhandler_classes(
+        str(dump_path), known_enums, known_structs, known_templates)
 
     print(f"Found {len(handlers)} EventHandler types")
-    print(f"Sample handlers: {list(handlers.keys())[:10]}")
+
+    # Count field categories
+    category_counts = {}
+    total_fields = 0
+    for handler_name, handler_data in handlers.items():
+        for field in handler_data['fields']:
+            category = field['category']
+            category_counts[category] = category_counts.get(category, 0) + 1
+            total_fields += 1
+
+    print(f"Total fields: {total_fields}")
+    print(f"Field categories:")
+    for category, count in sorted(category_counts.items(), key=lambda x: x[1], reverse=True):
+        pct = (count / total_fields) * 100
+        print(f"  {category:15s}: {count:4d} ({pct:5.1f}%)")
 
     print(f"\nUpdating {schema_path}...")
     update_schema(str(schema_path), handlers)
 
     print("\n✓ Schema updated successfully!")
-    print(f"\nNext steps:")
-    print(f"1. Copy updated schema to other locations:")
-    print(f"   cp {schema_path} dist/gui-win-x64/schema.json")
-    print(f"   cp {schema_path} src/Menace.Modkit.App/bin/Debug/net10.0/schema.json")
-    print(f"2. Restart the Modkit app")
+
+    # List other locations that might need updating
+    other_paths = [
+        'dist/gui-linux-x64/schema.json',
+        'dist/gui-win-x64/schema.json',
+        'dist/mcp-linux-x64/schema.json',
+        'dist/mcp-win-x64/schema.json',
+        'src/Menace.Modkit.App/bin/Release/net10.0/schema.json',
+    ]
+
+    existing_other = [p for p in other_paths if Path(p).exists()]
+    if existing_other:
+        print(f"\nNote: The following schema files may also need updating:")
+        for path in existing_other:
+            print(f"  - {path}")
+        print(f"\nTo update all, run:")
+        for path in existing_other:
+            print(f"  python extract_eventhandlers.py il2cpp_dump/dump.cs {path}")
+
 
 if __name__ == '__main__':
     main()

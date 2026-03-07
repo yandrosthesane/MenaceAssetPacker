@@ -1,0 +1,252 @@
+{
+  "handler_name": "ApplySkillTileEffectHandler",
+  "analysis_summary": "The game implements overwatch mechanics through a tile-based effect system. The ApplySkillTileEffectHandler is a TileEffectHandler that triggers skill usage when entities interact with tiles. Combined with SpawnTileEffectHandler and CounterAttackHandler, these form the overwatch/reaction shot system.",
+  "primary_handlers": [
+    {
+      "name": "ApplySkillTileEffectHandler",
+      "namespace": "Menace.Tactical.TileEffects",
+      "purpose": "Core overwatch tile effect - applies skills when entities enter/leave/move through tiles",
+      "base_address": "0x1806848a0"
+    },
+    {
+      "name": "SpawnTileEffectHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "purpose": "Deploys tile effects (including overwatch zones) when skills are used",
+      "base_address": "0x18071dbe0"
+    },
+    {
+      "name": "CounterAttackHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "purpose": "Reaction shot when targeted by enemy attacks",
+      "base_address": "0x180702420"
+    }
+  ],
+  "fields_analyzed": [
+    {
+      "name": "TriggerFlags",
+      "offset": "Template+0xB8",
+      "type": "byte (bitmask)",
+      "description": "Controls when the tile effect triggers. Each bit enables a different trigger condition.",
+      "confidence": "high",
+      "values": {
+        "0x01": "TriggerOnAdded - Trigger immediately when effect is placed",
+        "0x02": "TriggerOnTurnStart - Trigger at start of entity's turn",
+        "0x04": "TriggerOnTurnEnd - Trigger at end of entity's turn",
+        "0x08": "TriggerOnRoundStart - Trigger at start of each round",
+        "0x20": "TriggerOnEnter - Trigger when entity enters tile (OVERWATCH PRIMARY)",
+        "0x40": "TriggerOnLeave - Trigger when entity leaves tile",
+        "0x80": "TriggerOnMovementFinished - Trigger when movement action completes"
+      }
+    },
+    {
+      "name": "SkillTemplate",
+      "offset": "Template+0xC0",
+      "type": "SkillTemplate*",
+      "description": "Reference to skill template that gets instantiated and used when effect triggers. For overwatch, this is typically an attack skill.",
+      "confidence": "high"
+    },
+    {
+      "name": "SoundID",
+      "offset": "Template+0xC8",
+      "type": "Stem.ID",
+      "description": "Sound effect to play when the tile effect triggers",
+      "confidence": "high"
+    },
+    {
+      "name": "RemoveOnTrigger",
+      "offset": "Template+0xD0",
+      "type": "bool",
+      "description": "If true, remove this effect after it triggers once. Enables one-shot overwatch behavior.",
+      "confidence": "high"
+    },
+    {
+      "name": "Condition",
+      "offset": "Template+0xD8",
+      "type": "ITacticalCondition*",
+      "description": "Optional condition interface to validate targets. Can filter by faction, visibility, etc.",
+      "confidence": "high"
+    },
+    {
+      "name": "OwningTile",
+      "offset": "Handler+0x10",
+      "type": "Tile*",
+      "description": "Reference to the tile this effect is attached to",
+      "confidence": "high"
+    },
+    {
+      "name": "Template",
+      "offset": "Handler+0x28",
+      "type": "ApplySkillTileEffect*",
+      "description": "Configuration template containing all effect parameters",
+      "confidence": "high"
+    },
+    {
+      "name": "SkillInstance",
+      "offset": "Handler+0x30",
+      "type": "Skill*",
+      "description": "Instantiated skill object created from SkillTemplate",
+      "confidence": "high"
+    },
+    {
+      "name": "Delay",
+      "offset": "Handler+0x1C",
+      "type": "int",
+      "description": "Frames to delay before effect triggers (visual timing)",
+      "confidence": "medium"
+    }
+  ],
+  "spawn_tile_effect_fields": [
+    {
+      "name": "Event",
+      "offset": "Template+0x58",
+      "type": "int",
+      "description": "Trigger timing enum: 0=OnUse, 1=OnEnter, etc.",
+      "confidence": "high"
+    },
+    {
+      "name": "EffectToSpawn",
+      "offset": "Template+0x60",
+      "type": "TileEffectTemplate*",
+      "description": "Template for the tile effect to spawn",
+      "confidence": "high"
+    },
+    {
+      "name": "ChanceAtCenter",
+      "offset": "Template+0x68",
+      "type": "int",
+      "description": "Base % chance (0-100) at center tile for effect application",
+      "confidence": "high"
+    },
+    {
+      "name": "ChancePerTileFromCenter",
+      "offset": "Template+0x6C",
+      "type": "int",
+      "description": "% chance modifier per tile distance from center",
+      "confidence": "high"
+    },
+    {
+      "name": "DelayWithDistance",
+      "offset": "Template+0x70",
+      "type": "float",
+      "description": "Visual delay multiplier based on distance for cascade effect",
+      "confidence": "high"
+    }
+  ],
+  "counter_attack_fields": [
+    {
+      "name": "CannotBeCountered",
+      "offset": "Skill+0xDD",
+      "type": "bool",
+      "description": "Flag set to prevent counter-counter infinite loops",
+      "confidence": "high"
+    },
+    {
+      "name": "MoraleState",
+      "offset": "Actor+0xD0",
+      "type": "int",
+      "description": "Actor morale state - value 2 means panicked and cannot counter",
+      "confidence": "medium"
+    },
+    {
+      "name": "IsActive",
+      "offset": "Actor+0x48",
+      "type": "bool",
+      "description": "Whether actor is active and can perform reactions",
+      "confidence": "medium"
+    },
+    {
+      "name": "IsAttack",
+      "offset": "Target+0xF1",
+      "type": "bool",
+      "description": "Flag on attacking skill indicating it's an attack (enables counter)",
+      "confidence": "high"
+    }
+  ],
+  "key_discoveries": [
+    {
+      "title": "Tile-Based Overwatch System",
+      "description": "Overwatch in this game is implemented through tile effects rather than unit states. When a unit enters 'overwatch mode', it spawns ApplySkillTileEffect instances on watched tiles."
+    },
+    {
+      "title": "TriggerOnEnter Flag (0x20) is Primary Overwatch Trigger",
+      "description": "The main overwatch trigger is the TriggerOnEnter flag (0x20) in TriggerFlags. When an enemy enters a tile with this effect, it triggers the associated attack skill."
+    },
+    {
+      "title": "Configurable Trigger Conditions",
+      "description": "The system supports multiple trigger conditions via bitmask flags, allowing flexible overwatch variants (on enter, on leave, on movement finish, per turn, per round)."
+    },
+    {
+      "title": "Condition-Based Filtering",
+      "description": "The ITacticalCondition interface at Template+0xD8 allows target filtering. This enables faction-based overwatch (only trigger on enemies) and other conditions."
+    },
+    {
+      "title": "One-Shot Mechanics via RemoveOnTrigger",
+      "description": "Setting RemoveOnTrigger (Template+0xD0) to true creates one-shot overwatch that removes itself after firing once."
+    },
+    {
+      "title": "Counter-Attack is Separate System",
+      "description": "The CounterAttackHandler handles reaction shots when targeted by enemy attacks. This is distinct from movement-based overwatch and triggers on OnBeingTargetedByAttack event."
+    },
+    {
+      "title": "Probabilistic Tile Effect Spawning",
+      "description": "SpawnTileEffectHandler supports distance-based probability for spawning effects, enabling cone-shaped overwatch zones with decreasing effectiveness at range."
+    },
+    {
+      "title": "Effect Refresh Instead of Stack",
+      "description": "If a tile already has an effect of the same type, it refreshes the existing effect rather than stacking multiple instances."
+    }
+  ],
+  "event_flow": {
+    "overwatch_setup": [
+      "1. Player activates overwatch skill on unit",
+      "2. Skill uses SpawnTileEffectHandler to deploy ApplySkillTileEffect on target tiles",
+      "3. Each tile receives effect with TriggerFlags=0x20 (TriggerOnEnter)",
+      "4. Effect stores reference to attack skill to use"
+    ],
+    "overwatch_trigger": [
+      "1. Enemy unit moves into affected tile",
+      "2. Tile's OnEnter event fires, calling ApplySkillTileEffectHandler.OnEnter",
+      "3. Handler checks TriggerFlags & 0x20 (TriggerOnEnter)",
+      "4. If set, calls ApplySkill with entering entity as target",
+      "5. ApplySkill validates target via Condition, plays sound, executes skill",
+      "6. If RemoveOnTrigger is true, effect is removed from tile"
+    ],
+    "counter_attack_flow": [
+      "1. Enemy attack targets unit with CounterAttack skill",
+      "2. OnBeingTargetedByAttack event fires on defender",
+      "3. CounterAttackHandler validates defender can act (not stunned, not panicked)",
+      "4. Handler finds usable attack skill in defender's weapon",
+      "5. Sets CannotBeCountered flag to prevent infinite loop",
+      "6. Removes CounterAttack skill from defender",
+      "7. Uses attack skill against the attacker"
+    ]
+  },
+  "related_functions": {
+    "ApplySkillTileEffectHandler": {
+      "OnEnter": "0x180684dd0",
+      "OnLeave": "0x180684e00",
+      "OnMovementFinished": "0x180684e30",
+      "OnRoundStart": "0x180684e60",
+      "OnTurnEnd": "0x180684e90",
+      "OnTurnStart": "0x180684ec0",
+      "ApplySkill": "0x1806848a0",
+      "IsValidTarget": "0x180684bd0",
+      "Create": "0x180684fe0"
+    },
+    "SpawnTileEffectHandler": {
+      "Apply_WithProbability": "0x18071dbe0",
+      "OnAdded": "0x18071ddf0",
+      "OnApply": "0x18071de80"
+    },
+    "CounterAttackHandler": {
+      "OnBeingTargetedByAttack": "0x180702420",
+      "Create": "0x180702760"
+    },
+    "TacticalManager_Events": {
+      "add_OnMovement": "0x180677f30",
+      "add_OnMovementFinished": "0x180677e80",
+      "add_OnDiscovered": "0x180677900",
+      "InvokeOnMovement": "0x180671990"
+    }
+  }
+}

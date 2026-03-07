@@ -89,6 +89,28 @@
     <CornerRadius x:Key="RadiusSm">4</CornerRadius>
     <CornerRadius x:Key="RadiusMd">8</CornerRadius>
     <CornerRadius x:Key="RadiusLg">12</CornerRadius>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- ICONS (Fluent-style white icons for tree views)                     -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- Folder icon - 16x16 viewbox -->
+    <StreamGeometry x:Key="IconFolder">M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z</StreamGeometry>
+
+    <!-- Code function icon - 16x16 viewbox -->
+    <StreamGeometry x:Key="IconFunction">M4.708 5.578L2.061 8.224l2.647 2.647.708-.707L3.475 8.224l1.94-1.94-.707-.706zm6.584 0l-.707.706 1.94 1.94-1.94 1.94.707.707 2.647-2.647-2.647-2.646zM8.293 3.5l-1.586 9 .986.174 1.586-9-.986-.174z</StreamGeometry>
+
+    <!-- Event/lightning icon - 16x16 viewbox -->
+    <StreamGeometry x:Key="IconEvent">M9 2L4 9h4l-1 5 5-7H8l1-5z</StreamGeometry>
+
+    <!-- Target/crosshair icon - for interceptors - 16x16 viewbox -->
+    <StreamGeometry x:Key="IconTarget">M8 1a7 7 0 100 14A7 7 0 008 1zm0 12A5 5 0 118 3a5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6zm0 4a1 1 0 110-2 1 1 0 010 2z</StreamGeometry>
+
+    <!-- Brush colors for icons -->
+    <SolidColorBrush x:Key="BrushIconDefault" Color="#AAAAAA"/>
+    <SolidColorBrush x:Key="BrushIconFunction" Color="#3B7DD8"/>
+    <SolidColorBrush x:Key="BrushIconEvent" Color="#8B5CF6"/>
+    <SolidColorBrush x:Key="BrushIconInterceptor" Color="#004f43"/>
   </Styles.Resources>
 
 </Styles>

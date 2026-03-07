@@ -795,19 +795,7 @@ public static class Roster
     }
 
     private static object GetManagedProxy(GameObj obj, Type managedType)
-    {
-        if (obj.IsNull || managedType == null) return null;
-
-        try
-        {
-            var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
-            return ptrCtor?.Invoke(new object[] { obj.Pointer });
-        }
-        catch
-        {
-            return null;
-        }
-    }
+        => Il2CppUtils.GetManagedProxy(obj, managedType);
 
     /// <summary>
     /// Get a typed IL2CPP list from a pointer. Works around GameObj.ToManaged() failing for generic types.

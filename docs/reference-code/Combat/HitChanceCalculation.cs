@@ -3,6 +3,35 @@
 // =============================================================================
 // Reconstructed hit chance system showing how accuracy, cover, dodge, and
 // distance combine to determine if an attack hits.
+//
+// VERIFIED ACCURACY FORMULA (from Ghidra analysis):
+// =============================================================================
+//
+// STEP 1: Calculate base accuracy
+//   accuracy = floor(AccuracyBonus * AccuracyMult)
+//   - AccuracyBonus: float, 0-100 scale, ADDITIVE from all sources
+//   - AccuracyMult: float, 1.0 centered, uses AddMult stacking
+//
+// STEP 2: Calculate accuracy dropoff (if includeDropoff=true)
+//   dropoff = floor(AccuracyDropoff * AccuracyDropoffMult)
+//   distance_penalty = |distance - idealRange| * dropoff
+//   - AccuracyDropoff: float, per-tile penalty (negative reduces accuracy)
+//   - AccuracyDropoffMult: float, 1.0 centered, uses AddMult stacking
+//
+// STEP 3: Apply cover and defense
+//   coverMult = GetCoverMult() - 0.0 to 1.0 based on cover level
+//   defenseMult = 2.0 - evasion (Flipped function)
+//
+// STEP 4: Final formula
+//   hitChance = accuracy * Clamped(coverMult) * Clamped(defenseMult) + distance_penalty
+//   hitChance = clamp(hitChance, 0, 100)
+//   hitChance = max(hitChance, MinHitChance)
+//
+// ADDMULT STACKING FORMULA:
+//   Multipliers stack additively: result = 1.0 + (mult1-1) + (mult2-1) + ...
+//   Example: Two 1.5x multipliers = 1.0 + 0.5 + 0.5 = 2.0x total (not 2.25x)
+//   This prevents exponential scaling from stacking many multipliers.
+//
 // =============================================================================
 
 using Menace.Tools;

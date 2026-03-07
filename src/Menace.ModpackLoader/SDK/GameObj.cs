@@ -443,4 +443,33 @@ public static class Il2CppUtils
 
         return value.ToString();
     }
+
+    /// <summary>
+    /// Create a managed IL2CPP proxy object from a pointer and managed type.
+    /// Returns null if the pointer is invalid or construction fails.
+    /// </summary>
+    public static object GetManagedProxy(IntPtr pointer, Type managedType)
+    {
+        if (pointer == IntPtr.Zero || managedType == null) return null;
+
+        try
+        {
+            var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
+            return ptrCtor?.Invoke(new object[] { pointer });
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Create a managed IL2CPP proxy object from a GameObj and managed type.
+    /// Returns null if the pointer is invalid or construction fails.
+    /// </summary>
+    public static object GetManagedProxy(GameObj obj, Type managedType)
+    {
+        if (obj.IsNull || managedType == null) return null;
+        return GetManagedProxy(obj.Pointer, managedType);
+    }
 }

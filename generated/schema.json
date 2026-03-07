@@ -58945,423 +58945,67 @@
     ]
   },
   "effect_handlers": {
-    "DisplayText": {
+    "AccuracyStacks": {
       "fields": [
         {
-          "name": "Event",
-          "type": "DisplayText.DisplayEvent",
+          "name": "AccuracyPerStack",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Accuracy modifier per stack (0-100 scale). ADDITIVE to base accuracy. Positive = buff, negative = creates miss chance. Formula when used: accuracy += AccuracyPerStack * currentStacks. For negative values, miss chance = |AccuracyPerStack * stacks| / actor_accuracy."
+        },
+        {
+          "name": "MinStacks",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Minimum stack count (floor). Stacks cannot drop below this value."
+        },
+        {
+          "name": "MaxStacks",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Maximum stack count (cap). Stacks cannot exceed this value. Default: 1."
+        },
+        {
+          "name": "StacksOnRoundStart",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Number of stacks added at the start of each round. Added to currentStacks, then clamped to MinStacks/MaxStacks."
+        },
+        {
+          "name": "StacksOnUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "Number of stacks added when skill is used. Added to currentStacks, then clamped to MinStacks/MaxStacks. Triggers network sync."
+        },
+        {
+          "name": "IsSynchronizedWithOtherSkillsOfTheSameItem",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "When true, stacks are shared across all skills on the same item. Default: true."
+        }
+      ]
+    },
+    "AddItemSlot": {
+      "fields": [
+        {
+          "name": "SlotType",
+          "type": "ItemSlot",
           "category": "enum",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
         },
         {
-          "name": "LocaKey",
-          "type": "String",
+          "name": "Amount",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "DefaultText",
-          "type": "String",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "Icon",
-          "type": "Sprite",
-          "category": "reference",
-          "offset": "0x70"
-        }
-      ]
-    },
-    "RestoreArmorDurability": {
-      "fields": [
-        {
-          "name": "RestorePercent",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "SwitchBetweenSkills": {
-      "fields": [
-        {
-          "name": "IsVisibleAtStart",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "SwitchToAlternativeItemIcon",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x59"
-        },
-        {
-          "name": "DisplayAOEAreaOfAlternateSkill",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5A"
-        },
-        {
-          "name": "SwitchWithSkill",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "Mode",
-          "type": "SwitchBetweenSkills.DeactivateMode",
-          "category": "enum",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "SpawnTileEffect": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "SpawnTileEffect.ApplyOnEvent",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "EffectToSpawn",
-          "type": "TileEffectTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "ChanceAtCenter",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "ChancePerTileFromCenter",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "DelayWithDistance",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x70"
-        }
-      ]
-    },
-    "RecallTarget": {
-      "fields": [
-        {
-          "name": "UseLastTargetOfSkill",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "Attack": {
-      "fields": [
-        {
-          "name": "ApplyMode",
-          "type": "Attack.ApplicationMode",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "ElementsHit",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ElementsHitPercentage",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "FatalityType",
-          "type": "FatalityType",
-          "category": "reference",
-          "offset": "0x64"
-        },
-        {
-          "name": "DismemberChance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "DismemberArea",
-          "type": "RagdollHitArea",
-          "category": "reference",
-          "offset": "0x6C"
-        },
-        {
-          "name": "DamageVisualizationType",
-          "type": "DamageVisualizationType",
-          "category": "reference",
-          "offset": "0x70"
-        },
-        {
-          "name": "DestroyHalfCover",
-          "type": "HalfCoverClass",
-          "category": "reference",
-          "offset": "0x74"
-        },
-        {
-          "name": "DamageFilterCondition",
-          "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x78"
-        },
-        {
-          "name": "IsHalfCoverDestroyedOnAOECenterTileOnly",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x80"
-        },
-        {
-          "name": "Damage",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x84"
-        },
-        {
-          "name": "DamageMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x88"
-        },
-        {
-          "name": "DamageDropoff",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x8C"
-        },
-        {
-          "name": "DamageDropoffMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x90"
-        },
-        {
-          "name": "DamageDropoffAOE",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x94"
-        },
-        {
-          "name": "DamagePctCurrentHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x98"
-        },
-        {
-          "name": "DamagePctCurrentHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x9C"
-        },
-        {
-          "name": "DamagePctMaxHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xA0"
-        },
-        {
-          "name": "DamagePctMaxHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xA4"
-        },
-        {
-          "name": "ArmorPenetration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xA8"
-        },
-        {
-          "name": "ArmorPenetrationMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xAC"
-        },
-        {
-          "name": "ArmorPenetrationDropoff",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xB0"
-        },
-        {
-          "name": "ArmorPenetrationDropoffMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xB4"
-        },
-        {
-          "name": "ArmorPenetrationDropoffAOE",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xB8"
-        },
-        {
-          "name": "DamageToArmorDurability",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xBC"
-        },
-        {
-          "name": "DamageToArmorDurabilityMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xC0"
-        },
-        {
-          "name": "DamageToArmorDurabilityDropoff",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xC4"
-        },
-        {
-          "name": "DamageToArmorDurabilityDropoffMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xC8"
-        },
-        {
-          "name": "DamageToArmorDurabilityDropoffAOE",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xCC"
-        },
-        {
-          "name": "AccuracyBonus",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xD0"
-        },
-        {
-          "name": "AccuracyMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xD4"
-        },
-        {
-          "name": "AccuracyDropoff",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xD8"
-        },
-        {
-          "name": "AccuracyDropoffMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xDC"
-        },
-        {
-          "name": "Suppression",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xE0"
-        },
-        {
-          "name": "SuppressionDealtMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xE4"
-        },
-        {
-          "name": "SuppressionDropoffAOE",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0xE8"
-        },
-        {
-          "name": "EntityFlagsRequired",
-          "type": "EntityFlags",
-          "category": "reference",
-          "offset": "0xEC"
-        },
-        {
-          "name": "TargetRequiresOneOfTheseTags",
-          "type": "List",
-          "category": "collection",
-          "offset": "0xF0",
-          "element_type": "TagTemplate"
-        },
-        {
-          "name": "TargetCannotHaveOneOfTheseTags",
-          "type": "List",
-          "category": "collection",
-          "offset": "0xF8",
-          "element_type": "TagTemplate"
-        }
-      ]
-    },
-    "ClearTileEffect": {
-      "fields": [
-        {
-          "name": "EffectToClear",
-          "type": "TileEffectTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "ChanceAtCenter",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "ChanceDropoffWithDistance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "ClearTileEffectGroup": {
-      "fields": [
-        {
-          "name": "EffectsToClear",
-          "type": "TileEffectGroup",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "TriggerEffect",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "DestroyProps": {
-      "fields": [
-        {
-          "name": "Radius",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "RemoveSkill": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "RemoveSkill.RemoveTrigger",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "SkillsToRemove",
-          "type": "SkillTemplate[]",
-          "category": "reference",
-          "offset": "0x60"
+          "offset": "0x5C",
+          "description": "Quantity or count value"
         }
       ]
     },
@@ -59371,1837 +59015,89 @@
           "name": "Event",
           "type": "AddSkill.AddEvent",
           "category": "enum",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "Trigger type: 0=OnApply, 1=WhenAdded, 2=OnHit, 3=WhenRemoved, 4=OnCrit, 5=OnMissionStarted, 6=OnRoundStart. Determines when SkillToAdd gets applied."
         },
         {
           "name": "SkillToAdd",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x60"
+          "offset": "0x60",
+          "description": "Reference: The Skill to add when effect triggers"
         },
         {
           "name": "OnlyApplyOnHit",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x68"
+          "offset": "0x68",
+          "description": "Condition: Only applies when ApplyOnHit"
         },
         {
           "name": "OnlyUsableOnTargetsWithoutSkill",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x69"
+          "offset": "0x69",
+          "description": "Condition: Only applies when UsableOnTargetsWithoutSkill"
         },
         {
           "name": "OnlyApplyWhenNoElementWasDestroyed",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x6A"
+          "offset": "0x6A",
+          "description": "Condition: Only applies when ApplyWhenNoElementWasDestroyed"
         },
         {
           "name": "OnlyApplyOnHitpointDamage",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x6B"
+          "offset": "0x6B",
+          "description": "Condition: Only applies when ApplyOnHitpointDamage"
         },
         {
           "name": "OnlyWhenSkillNotPresent",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x6C"
+          "offset": "0x6C",
+          "description": "Condition: Only applies when WhenSkillNotPresent"
         },
         {
           "name": "Condition",
           "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x70"
+          "category": "interface",
+          "offset": "0x70",
+          "description": "Condition: Determines if effect applies based on game state"
         },
         {
           "name": "ShowHUDText",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x78"
+          "offset": "0x78",
+          "description": "UI: Controls whether to show HUDText"
         },
         {
           "name": "TargetRequiresOneOfTheseTags",
-          "type": "List",
+          "type": "List<TagTemplate>",
           "category": "collection",
           "offset": "0x80",
+          "description": "Filter: Must have at least one of these",
           "element_type": "TagTemplate"
         },
         {
           "name": "TargetCannotHaveOneOfTheseTags",
-          "type": "List",
+          "type": "List<TagTemplate>",
           "category": "collection",
           "offset": "0x88",
+          "description": "Filter: Must not have any of these",
           "element_type": "TagTemplate"
         },
         {
           "name": "TagsCanPreventSkillUse",
-          "type": "Boolean",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x90"
+          "offset": "0x90",
+          "description": ""
         }
       ]
-    },
-    "AttackProc": {
-      "fields": [
-        {
-          "name": "SkillToAdd",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "OnlyApplyWhenNoElementWasDestroyed",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "OnlyApplyOnHitpointDamage",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x61"
-        },
-        {
-          "name": "CanBeTriggeredByAnySkill",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x62"
-        },
-        {
-          "name": "Chance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "Condition",
-          "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x68"
-        },
-        {
-          "name": "ShowHUDText",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x70"
-        }
-      ]
-    },
-    "SetAnimatorTrigger": {
-      "fields": [
-        {
-          "name": "Parameter",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Delay",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ModularVehicleSkill": {
-      "fields": [
-        {
-          "name": "RequiredWeaponCount",
-          "type": "ModularVehicleSkill.WeaponCount",
-          "category": "enum",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "Cooldown": {
-      "fields": [
-        {
-          "name": "RoundsToCoolDown",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "AIOnly",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "AttachTemporaryPrefab": {
-      "fields": [
-        {
-          "name": "Prefab",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "AttachmentSlot",
-          "type": "VisualAlterationSlot",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "LocalOffset",
-          "type": "Vector3",
-          "category": "struct",
-          "offset": "0x64"
-        },
-        {
-          "name": "LocalRotation",
-          "type": "Vector3",
-          "category": "struct",
-          "offset": "0x70"
-        },
-        {
-          "name": "LocalScale",
-          "type": "Vector3",
-          "category": "struct",
-          "offset": "0x7C"
-        },
-        {
-          "name": "CancelDelay",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x88"
-        }
-      ]
-    },
-    "Hitchance": {
-      "fields": [
-        {
-          "name": "AccuracyBonus",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "AccuracyMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "AccuracyDropoff",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "AccuracyDropoffMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "AttackMorale": {
-      "fields": [
-        {
-          "name": "MoraleDamage",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MoraleStateReduction",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "Regeneration": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "Regeneration.ApplyOnEvent",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "HitpointsHealedPctMax",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "Sound",
-          "type": "ID",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "Effect",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "ChangeSuppression": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "ChangeSuppression.EventType",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "SuppressionChange",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "Scanner": {
-      "fields": [
-        {
-          "name": "Range",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "Blip",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "Scanline",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x68"
-        },
-        {
-          "name": "ScanSpeed",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x70"
-        },
-        {
-          "name": "DetectsInfantry",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x74"
-        },
-        {
-          "name": "DetectsVehicles",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x75"
-        }
-      ]
-    },
-    "ChangeMorale": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "ChangeMorale.EventType",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "ChangeMoraleTo",
-          "type": "MoraleState",
-          "category": "reference",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ChangeIf",
-          "type": "ChangeMorale.ChangeCondition",
-          "category": "enum",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "LimitUsability": {
-      "fields": [
-        {
-          "name": "OnlyUsableIfActorHasSkill",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x58",
-          "element_type": "SkillTemplate"
-        },
-        {
-          "name": "NotUsableIfActorHasSkill",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x60",
-          "element_type": "SkillTemplate"
-        },
-        {
-          "name": "HiddenIfActorHasSkill",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x68",
-          "element_type": "SkillTemplate"
-        },
-        {
-          "name": "NotHiddenIfActorHasSkill",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x70",
-          "element_type": "SkillTemplate"
-        }
-      ]
-    },
-    "DisallowInvisible": {
-      "fields": []
-    },
-    "MoveAndSelfDestroy": {
-      "fields": [
-        {
-          "name": "StartMoveTrigger",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "AfterMoveTrigger",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "AdditionalDelay",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "SpawnGore": {
-      "fields": [
-        {
-          "name": "Prefabs",
-          "type": "PrefabListTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "Distance",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "MinMaxScale",
-          "type": "Vector2",
-          "category": "struct",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "SetUsesPerElement": {
-      "fields": [
-        {
-          "name": "UsesPerElement",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "SpawnEntity": {
-      "fields": [
-        {
-          "name": "Trigger",
-          "type": "SpawnEntity.SpawnTrigger",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "EntityToSpawn",
-          "type": "EntityTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "SpawnAsMinion",
-          "type": "MinionType",
-          "category": "reference",
-          "offset": "0x68"
-        },
-        {
-          "name": "SkipFirstTurnForSpawnedEntity",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "SetParameterOnSpawn",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x70"
-        },
-        {
-          "name": "AlignSpawnDirection",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x78"
-        },
-        {
-          "name": "SpawnLimit",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x7C"
-        },
-        {
-          "name": "HideIfSpawnLimitReached",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x80"
-        }
-      ]
-    },
-    "CommandMove": {
-      "fields": [
-        {
-          "name": "Minion",
-          "type": "MinionType",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "CommandUseSkill": {
-      "fields": [
-        {
-          "name": "Minion",
-          "type": "MinionType",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "SkillToUse",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "SuicideDrone": {
-      "fields": []
-    },
-    "SynchronizeItemUses": {
-      "fields": []
-    },
-    "ChangePropertyConditional": {
-      "fields": [
-        {
-          "name": "Condition",
-          "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Properties",
-          "type": "PropertyChange[]",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "Event",
-          "type": "ChangePropertyConditional.EventType",
-          "category": "enum",
-          "offset": "0x68"
-        },
-        {
-          "name": "HideIfNotActive",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x6C"
-        }
-      ]
-    },
-    "ReportAmmoToAnimator": {
-      "fields": [
-        {
-          "name": "Parameter",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "Jamming": {
-      "fields": [
-        {
-          "name": "BaseChance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ChancePerUse",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "JammingSound",
-          "type": "ID",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "JetPack": {
-      "fields": [
-        {
-          "name": "Duration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "DelayBeforeJump",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ForwardCurve",
-          "type": "AnimationCurve",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "HeightPerUnitOfDistance",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "MaxHeight",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "HeightCurve",
-          "type": "AnimationCurve",
-          "category": "reference",
-          "offset": "0x70"
-        },
-        {
-          "name": "StartTrigger",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x78"
-        }
-      ]
-    },
-    "HeatCapacity": {
-      "fields": [
-        {
-          "name": "HeatPerUse",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MaxHeat",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "HeatDissipationPerTurn",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "IsSynchronizedWithOtherSkillsOfTheSameItem",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "OverheatingSound",
-          "type": "ID",
-          "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "VentHeat": {
-      "fields": [
-        {
-          "name": "VentForSkill",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "PlayAnimationSequence": {
-      "fields": [
-        {
-          "name": "Animation",
-          "type": "AnimationSequenceTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "CameraShake": {
-      "fields": [
-        {
-          "name": "CameraEffect",
-          "type": "CameraEffectType",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Duration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "Intensity",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "RecoverTime",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "Rescue": {
-      "fields": []
-    },
-    "DelayTurn": {
-      "fields": []
-    },
-    "JumpIntoMelee": {
-      "fields": [
-        {
-          "name": "DistanceFromTarget",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "DurationPerUnitOfDistance",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "MaxDuration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "DelayBeforeJump",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "HeightPerUnitOfDistance",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "MaxHeight",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "HeightCurve",
-          "type": "AnimationCurve",
-          "category": "reference",
-          "offset": "0x70"
-        },
-        {
-          "name": "CameraEffectOnTakeoff",
-          "type": "CameraEffectType",
-          "category": "reference",
-          "offset": "0x78"
-        },
-        {
-          "name": "ForwardCurve",
-          "type": "AnimationCurve",
-          "category": "reference",
-          "offset": "0x80"
-        },
-        {
-          "name": "Animation",
-          "type": "AnimationType",
-          "category": "reference",
-          "offset": "0x88"
-        }
-      ]
-    },
-    "DeployHeavyWeapon": {
-      "fields": []
-    },
-    "RefillAmmo": {
-      "fields": [
-        {
-          "name": "RestorePct",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "RestoreMinimum",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "DropRecoverableObject": {
-      "fields": [
-        {
-          "name": "ObjectTileEffect",
-          "type": "RecoverableObjectTileEffect",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "ObjectUnitHUDIcon",
-          "type": "Sprite",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeProperty": {
-      "fields": [
-        {
-          "name": "Trigger",
-          "type": "ChangeProperty.UpdateEvent",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "PropertyType",
-          "type": "EntityPropertyType",
-          "category": "reference",
-          "offset": "0x5C"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "AmountMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "ValueProvider",
-          "type": "IValueProvider",
-          "category": "reference",
-          "offset": "0x68"
-        },
-        {
-          "name": "TooltipPlaceholderIndex",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x70"
-        },
-        {
-          "name": "IncludePlusSign",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x74"
-        }
-      ]
-    },
-    "ToggleSkills": {
-      "fields": [
-        {
-          "name": "ActiveSkills",
-          "type": "SkillTemplate[]",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "SpawnPrefab": {
-      "fields": [
-        {
-          "name": "Prefab",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "UseSkill": {
-      "fields": [
-        {
-          "name": "SkillToUse",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Event",
-          "type": "UseSkill.ApplyOnEvent",
-          "category": "enum",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "LifetimeLimit": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "LifetimeLimit.LifetimeType",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "Lifetime",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ResetLifetimeOnRefresh",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "DamageArmorDurability": {
-      "fields": [
-        {
-          "name": "DamageFlatAmount",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "DamagePercentageOfMaxDurability",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "DamagePercentageOfCurrentDurability",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeAttackCost": {
-      "fields": [
-        {
-          "name": "CostPerAttack",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "CostPerAttackMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "DisableSkills": {
-      "fields": [
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "HideDisabledSkills",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "PlaySound": {
-      "fields": [
-        {
-          "name": "Event",
-          "type": "PlaySound.PlaySoundEventType",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "SoundToPlay",
-          "type": "ID",
-          "category": "reference",
-          "offset": "0x5C"
-        },
-        {
-          "name": "Volume",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "AttachObject": {
-      "fields": [
-        {
-          "name": "ObjectToAttach",
-          "type": "GameObject",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "AttachAtInfantry",
-          "type": "AttachObject.AttachmentPoint",
-          "category": "enum",
-          "offset": "0x60"
-        },
-        {
-          "name": "AttachAt",
-          "type": "AttachObject.AttachmentPoint",
-          "category": "enum",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "DamageOverTime": {
-      "fields": [
-        {
-          "name": "ElementsHit",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ElementsHitPercentage",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "DamagePerTurn",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "DamagePctCurrentHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "DamagePctCurrentHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "DamagePctMaxHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "DamagePctMaxHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x70"
-        },
-        {
-          "name": "DamagesArmorFirst",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x74"
-        },
-        {
-          "name": "DamageArmorFlatAmount",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x78"
-        },
-        {
-          "name": "DamageArmorPctOfMax",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x7C"
-        },
-        {
-          "name": "DamageArmorPctOfCurrent",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x80"
-        },
-        {
-          "name": "ArmorPenetration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x84"
-        },
-        {
-          "name": "DamageToArmorDurability",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x88"
-        },
-        {
-          "name": "FatalityType",
-          "type": "FatalityType",
-          "category": "reference",
-          "offset": "0x8C"
-        },
-        {
-          "name": "DamageVisualizationType",
-          "type": "DamageVisualizationType",
-          "category": "reference",
-          "offset": "0x90"
-        },
-        {
-          "name": "InflictDefects",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x94"
-        }
-      ]
-    },
-    "ChangeHeatCapacity": {
-      "fields": [
-        {
-          "name": "HeatPerUse",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MaxHeat",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "HeatDissipationPerTurn",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeActionPoints": {
-      "fields": [
-        {
-          "name": "ActionPoints",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ForceTurnToEnd",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "Damage": {
-      "fields": [
-        {
-          "name": "IsAppliedOnlyToPassengers",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ElementsHit",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ElementsHitPercentage",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "DamageFlatAmount",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "DamagePctCurrentHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "DamagePctCurrentHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "DamagePctMaxHitpoints",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x70"
-        },
-        {
-          "name": "DamagePctMaxHitpointsMin",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x74"
-        },
-        {
-          "name": "ArmorPenetration",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x78"
-        },
-        {
-          "name": "DamageToArmorDurability",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x7C"
-        },
-        {
-          "name": "FatalityType",
-          "type": "FatalityType",
-          "category": "reference",
-          "offset": "0x80"
-        },
-        {
-          "name": "DismemberChance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x84"
-        },
-        {
-          "name": "DismemberArea",
-          "type": "RagdollHitArea",
-          "category": "reference",
-          "offset": "0x88"
-        },
-        {
-          "name": "DamageVisualizationType",
-          "type": "DamageVisualizationType",
-          "category": "reference",
-          "offset": "0x8C"
-        },
-        {
-          "name": "InflictDefects",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x90"
-        }
-      ]
-    },
-    "ApplySkillToSelf": {
-      "fields": [
-        {
-          "name": "SkillToApply",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Event",
-          "type": "ApplySkillToSelf.ApplyOnEvent",
-          "category": "enum",
-          "offset": "0x60"
-        },
-        {
-          "name": "RequiredTags",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x68",
-          "element_type": "TagTemplate"
-        },
-        {
-          "name": "RequiredLogic",
-          "type": "ApplySkillToSelf.LogicType",
-          "category": "enum",
-          "offset": "0x70"
-        },
-        {
-          "name": "ChanceToApply",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x74"
-        }
-      ]
-    },
-    "ChangeMovementCost": {
-      "fields": [
-        {
-          "name": "CostPerTile",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "CostForTurning",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "CostPerSurface",
-          "type": "int[]",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "IsRooted",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "SetEntityFlag": {
-      "fields": [
-        {
-          "name": "Flag",
-          "type": "EntityFlags",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ChangeMalfunctionChance": {
-      "fields": [
-        {
-          "name": "BaseMalfunctionChance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MalfunctionChancePerUse",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ResetMalfunctionChance",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "ApplyTo",
-          "type": "ChangeMalfunctionChance.ApplyType",
-          "category": "enum",
-          "offset": "0x64"
-        },
-        {
-          "name": "ApplyOnlyToSkill",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "DisableItem": {
-      "fields": [
-        {
-          "name": "RequiredTags",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x58",
-          "element_type": "TagTemplate"
-        },
-        {
-          "name": "RequiredLogic",
-          "type": "DisableItem.LogicType",
-          "category": "enum",
-          "offset": "0x60"
-        },
-        {
-          "name": "ForbiddenTags",
-          "type": "List",
-          "category": "collection",
-          "offset": "0x68",
-          "element_type": "TagTemplate"
-        },
-        {
-          "name": "ForbiddenLogic",
-          "type": "DisableItem.LogicType",
-          "category": "enum",
-          "offset": "0x70"
-        }
-      ]
-    },
-    "ReduceArmor": {
-      "fields": [
-        {
-          "name": "ReductionPerStack",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MaxReduction",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "GainActionPoints": {
-      "fields": [
-        {
-          "name": "ActionPoints",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "AlwaysIncreaseMaxActionPoints",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "MoraleOverMaxEffect": {
-      "fields": [
-        {
-          "name": "Effect",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ChangePropertyAura": {
-      "fields": [
-        {
-          "name": "Properties",
-          "type": "PropertyChange[]",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Radius",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "ReducesWithDistance",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "Berserk": {
-      "fields": [
-        {
-          "name": "ActionPoints",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ConsumedOnTrigger",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "ShowUnitHUDIcon": {
-      "fields": [
-        {
-          "name": "Icon",
-          "type": "Sprite",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Target",
-          "type": "ShowUnitHUDIcon.TargetUnit",
-          "category": "enum",
-          "offset": "0x60"
-        },
-        {
-          "name": "Conditions",
-          "type": "ITacticalCondition[]",
-          "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "CounterAttack": {
-      "fields": []
-    },
-    "ShowHUDIcon": {
-      "fields": [
-        {
-          "name": "IconToShow",
-          "type": "ShowHUDIcon.Icon",
-          "category": "enum",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "HideByCondition": {
-      "fields": [
-        {
-          "name": "Condition",
-          "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "SetAnimatorBool": {
-      "fields": [
-        {
-          "name": "Parameter",
-          "type": "AnimatorParameterNameTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "DivineIntervention": {
-      "fields": []
-    },
-    "ChangeActionPointCost": {
-      "fields": [
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "CostDelta",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "CostMin",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "ConsumeOnSkillUse": {
-      "fields": [
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ChangeRangesOfSkillsWithTags": {
-      "fields": [
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "MinRangeChange",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "MinRangeMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x64"
-        },
-        {
-          "name": "MaxRangeChange",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x68"
-        },
-        {
-          "name": "MaxRangeMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x6C"
-        },
-        {
-          "name": "IdealRangeChange",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x70"
-        },
-        {
-          "name": "IdealRangeMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x74"
-        }
-      ]
-    },
-    "ChangeSkillUseAmount": {
-      "fields": [
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "UsesAmount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "GrantBonusTurn": {
-      "fields": [
-        {
-          "name": "ActionPointsAvailable",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "FilterByStance": {
-      "fields": [
-        {
-          "name": "AppliesOnlyToStance",
-          "type": "ActorStance",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ReturnOfServe": {
-      "fields": [
-        {
-          "name": "ConsumedOnTrigger",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ChangePropertyConsecutive": {
-      "fields": [
-        {
-          "name": "PropertyType",
-          "type": "EntityPropertyType",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "AmountMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        },
-        {
-          "name": "MaxStacks",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x64"
-        }
-      ]
-    },
-    "AmmoPouch": {
-      "fields": [
-        {
-          "name": "BonusPercentage",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MinimumBonus",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "ApplyToType",
-          "type": "ItemType",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "DisableByFlag": {
-      "fields": [
-        {
-          "name": "Flag",
-          "type": "EntityFlags",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "FilterByCondition": {
-      "fields": [
-        {
-          "name": "Condition",
-          "type": "ITacticalCondition",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "OverrideVolumeProfile": {
-      "fields": [
-        {
-          "name": "TemperateProfile",
-          "type": "VolumeProfile",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "DesertProfile",
-          "type": "VolumeProfile",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "SnowProfile",
-          "type": "VolumeProfile",
-          "category": "reference",
-          "offset": "0x68"
-        },
-        {
-          "name": "FallbackProfile",
-          "type": "VolumeProfile",
-          "category": "reference",
-          "offset": "0x70"
-        }
-      ]
-    },
-    "IgnoreDamage": {
-      "fields": [
-        {
-          "name": "ChanceToApply",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "AbsorbDamagePct",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "RequiredTags",
-          "type": "TagType[]",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "LimitedPassiveUses": {
-      "fields": [
-        {
-          "name": "MaxUses",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "AddItemSlot": {
-      "fields": [
-        {
-          "name": "SlotType",
-          "type": "ItemSlot",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        }
-      ]
-    },
-    "ChangeSupplyCosts": {
-      "fields": [
-        {
-          "name": "CostMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "Filter",
-          "type": "IItemFilter",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "Rally": {
-      "fields": []
     },
     "AddSkillAfterMovement": {
       "fields": [
@@ -61209,207 +59105,8 @@
           "name": "Effect",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "GainEffectOnSkillUse": {
-      "fields": [
-        {
-          "name": "Effect",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "RemoveOnUse",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "EmitAura": {
-      "fields": [
-        {
-          "name": "SkillToAdd",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "ExcludeSelf",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChargeInfantry": {
-      "fields": [
-        {
-          "name": "EffectToApply",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "HideIfNotUsable",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeGrowthPotential": {
-      "fields": [
-        {
-          "name": "Delta",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "OnElementKilled": {
-      "fields": [
-        {
-          "name": "ApplyEffect",
-          "type": "OnElementKilled.Effect",
-          "category": "enum",
-          "offset": "0x58"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "DisplayText",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "RefillSquaddies": {
-      "fields": [
-        {
-          "name": "Animation",
-          "type": "AnimationSequenceTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "EnemiesDropPickupOnDeath": {
-      "fields": [
-        {
-          "name": "Pickup",
-          "type": "TileEffectTemplate",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "SpawnDelay",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeUsesPerSquaddie": {
-      "fields": [
-        {
-          "name": "AmountPerElement",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "MaxIncreasePct",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "SkillFilter",
-          "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangePropertyTarget": {
-      "fields": [
-        {
-          "name": "Properties",
-          "type": "PropertyChange[]",
-          "category": "reference",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "LimitMaxHpLoss": {
-      "fields": [
-        {
-          "name": "MaxHpPct",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "ChangeAPBasedOnHP": {
-      "fields": [
-        {
-          "name": "Thresholds",
-          "type": "ChangeAPBasedOnHP.HpThreshold[]",
-          "category": "enum",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "AttackOrder": {
-      "fields": [
-        {
-          "name": "ActionPoints",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "Effect",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x60"
-        }
-      ]
-    },
-    "ChangeDropChance": {
-      "fields": [
-        {
-          "name": "AdditionalDropChance",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x58"
-        }
-      ]
-    },
-    "RemoveDefect": {
-      "fields": [
-        {
-          "name": "RequiredType",
-          "type": "SkillType",
-          "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
         }
       ]
     },
@@ -61419,45 +59116,519 @@
           "name": "SkillToAdd",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "Reference: The Skill to add when effect triggers"
         },
         {
           "name": "SkillFilter",
           "type": "ISkillFilter",
-          "category": "reference",
-          "offset": "0x60"
+          "category": "interface",
+          "offset": "0x60",
+          "description": "Filter: Specifies which targets/items are affected"
         }
       ]
     },
-    "ThrivingUnderPressure": {
+    "ApplyAuthorityDisciplineMod": {
       "fields": [
         {
-          "name": "RequiredStacksForUse",
-          "type": "Int32",
+          "name": "DisciplineModMult",
+          "type": "float",
           "category": "primitive",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
         }
       ]
     },
-    "InterceptAPChange": {
+    "ApplySkillToSelf": {
       "fields": [
         {
-          "name": "AppliesTo",
+          "name": "SkillToApply",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
         },
         {
-          "name": "ActionPointPercentage",
-          "type": "Int32",
-          "category": "primitive",
-          "offset": "0x60"
+          "name": "Event",
+          "type": "ApplySkillToSelf.ApplyOnEvent",
+          "category": "enum",
+          "offset": "0x60",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
         },
         {
-          "name": "TriggerOnlyOncePerRound",
-          "type": "Boolean",
+          "name": "RequiredTags",
+          "type": "List<TagTemplate>",
+          "category": "collection",
+          "offset": "0x68",
+          "description": "",
+          "element_type": "TagTemplate"
+        },
+        {
+          "name": "RequiredLogic",
+          "type": "ApplySkillToSelf.LogicType",
+          "category": "enum",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "ChanceToApply",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x64"
+          "offset": "0x74",
+          "description": "Probability (0-100)"
+        }
+      ]
+    },
+    "AttachObject": {
+      "fields": [
+        {
+          "name": "ObjectToAttach",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "AttachAtInfantry",
+          "type": "AttachObject.AttachmentPoint",
+          "category": "enum",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "AttachAt",
+          "type": "AttachObject.AttachmentPoint",
+          "category": "enum",
+          "offset": "0x64",
+          "description": ""
+        }
+      ]
+    },
+    "AttachTemporaryPrefab": {
+      "fields": [
+        {
+          "name": "Prefab",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "AttachmentSlot",
+          "type": "VisualAlterationSlot",
+          "category": "enum",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "LocalOffset",
+          "type": "Vector3",
+          "category": "struct",
+          "offset": "0x64",
+          "description": ""
+        },
+        {
+          "name": "LocalRotation",
+          "type": "Vector3",
+          "category": "struct",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "LocalScale",
+          "type": "Vector3",
+          "category": "struct",
+          "offset": "0x7C",
+          "description": ""
+        },
+        {
+          "name": "CancelDelay",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x88",
+          "description": ""
+        }
+      ]
+    },
+    "Attack": {
+      "fields": [
+        {
+          "name": "ApplyMode",
+          "type": "Attack.ApplicationMode",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Controls when attack applies. 0 = instant apply, non-zero = deferred application."
+        },
+        {
+          "name": "ElementsHit",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Number of elements/targets hit. Default 1. Displayed in tooltip for multi-hit attacks."
+        },
+        {
+          "name": "ElementsHitPercentage",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Percentage multiplier for elements hit calculation. Maps to EntityProperties 0x170."
+        },
+        {
+          "name": "FatalityType",
+          "type": "FatalityType",
+          "category": "enum",
+          "offset": "0x64",
+          "description": "Controls fatality/dismemberment. Value 0 allows dismemberment."
+        },
+        {
+          "name": "DismemberChance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "Additive bonus to dismember chance."
+        },
+        {
+          "name": "DismemberArea",
+          "type": "RagdollHitArea",
+          "category": "enum",
+          "offset": "0x6C",
+          "description": "Minimum elements to hit. Copied to EntityProperties 0x168."
+        },
+        {
+          "name": "DamageVisualizationType",
+          "type": "DamageVisualizationType",
+          "category": "enum",
+          "offset": "0x70",
+          "description": "Suppression value to apply on hit. Copied to EntityProperties 0x180."
+        },
+        {
+          "name": "DestroyHalfCover",
+          "type": "HalfCoverClass",
+          "category": "enum",
+          "offset": "0x74",
+          "description": "Cover class level this attack destroys. Destroys cover where coverClass <= this value."
+        },
+        {
+          "name": "DamageFilterCondition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x78",
+          "description": "Optional condition. If fails, damage values are zeroed (offsets 0x2C, 0x3C, 0x34 in hit info)."
+        },
+        {
+          "name": "IsHalfCoverDestroyedOnAOECenterTileOnly",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x80",
+          "description": "State: True if HalfCoverDestroyedOnAOECenterTileOnly"
+        },
+        {
+          "name": "Damage",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x84",
+          "description": "Base damage value. Additive - adds to EntityProperties.Damage at 0x118."
+        },
+        {
+          "name": "DamageMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x88",
+          "description": "Damage multiplier. Uses AddMult formula for stacking."
+        },
+        {
+          "name": "DamageDropoff",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x8C",
+          "description": "Damage reduction per tile beyond ideal range. Additive to EntityProperties 0x120."
+        },
+        {
+          "name": "DamageDropoffMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x90",
+          "description": "Multiplier for damage dropoff calculation."
+        },
+        {
+          "name": "DamageDropoffAOE",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x94",
+          "description": "Damage dropoff for AOE/splash damage per tile from center."
+        },
+        {
+          "name": "DamagePctCurrentHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x98",
+          "description": "Percentage of target's CURRENT HP as bonus damage."
+        },
+        {
+          "name": "DamagePctCurrentHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x9C",
+          "description": "Minimum damage from percentage current HP calculation."
+        },
+        {
+          "name": "DamagePctMaxHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xA0",
+          "description": "Percentage of target's MAX HP as bonus damage."
+        },
+        {
+          "name": "DamagePctMaxHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xA4",
+          "description": "Minimum damage from percentage max HP calculation."
+        },
+        {
+          "name": "ArmorPenetration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xA8",
+          "description": "Armor penetration value. Additive to EntityProperties 0x100."
+        },
+        {
+          "name": "ArmorPenetrationMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xAC",
+          "description": "Armor penetration multiplier. Uses AddMult formula."
+        },
+        {
+          "name": "ArmorPenetrationDropoff",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xB0",
+          "description": "Armor pen reduction per tile from ideal range."
+        },
+        {
+          "name": "ArmorPenetrationDropoffMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xB4",
+          "description": "Multiplier for armor pen dropoff."
+        },
+        {
+          "name": "ArmorPenetrationDropoffAOE",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xB8",
+          "description": "Armor pen dropoff for AOE attacks."
+        },
+        {
+          "name": "DamageToArmorDurability",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xBC",
+          "description": "Direct damage to armor durability (destroys armor over time)."
+        },
+        {
+          "name": "DamageToArmorDurabilityMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xC0",
+          "description": "Multiplier for armor durability damage."
+        },
+        {
+          "name": "DamageToArmorDurabilityDropoff",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xC4",
+          "description": "Armor durability damage dropoff per tile."
+        },
+        {
+          "name": "DamageToArmorDurabilityDropoffMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xC8",
+          "description": "Multiplier for armor durability dropoff."
+        },
+        {
+          "name": "DamageToArmorDurabilityDropoffAOE",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xCC",
+          "description": "AOE armor durability damage dropoff."
+        },
+        {
+          "name": "AccuracyBonus",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xD0",
+          "description": "Base accuracy value (0-100 scale). ADDITIVE - multiple sources add together. Final accuracy = floor(AccuracyBonus * AccuracyMult). Example: 70 = 70% base hit chance."
+        },
+        {
+          "name": "AccuracyMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xD4",
+          "description": "Accuracy multiplier (1.0 = 100%). MULTIPLICATIVE with AddMult stacking: multiple mults combine as 1.0 + (mult1-1) + (mult2-1). Example: Two 1.5x = 2.0x total (not 2.25x). Clamped to 0+."
+        },
+        {
+          "name": "AccuracyDropoff",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xD8",
+          "description": "Per-tile accuracy change beyond ideal range (negative reduces accuracy). ADDITIVE. Formula: hitChance += |distance - idealRange| * AccuracyDropoff. Example: -5.0 = lose 5% accuracy per tile away from ideal range."
+        },
+        {
+          "name": "AccuracyDropoffMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xDC",
+          "description": "Dropoff multiplier (1.0 = 100%). MULTIPLICATIVE with AddMult stacking. Final dropoff = floor(AccuracyDropoff * AccuracyDropoffMult). Clamped to 0+."
+        },
+        {
+          "name": "Suppression",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xE0",
+          "description": "Suppression value to apply on hit. Copied to EntityProperties 0x180."
+        },
+        {
+          "name": "SuppressionDealtMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xE4",
+          "description": "Suppression multiplier. Uses AddMult formula."
+        },
+        {
+          "name": "SuppressionDropoffAOE",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0xE8",
+          "description": "AOE suppression value."
+        },
+        {
+          "name": "EntityFlagsRequired",
+          "type": "EntityFlags",
+          "category": "enum",
+          "offset": "0xEC",
+          "description": ""
+        },
+        {
+          "name": "TargetRequiresOneOfTheseTags",
+          "type": "List<TagTemplate>",
+          "category": "collection",
+          "offset": "0xF0",
+          "description": "Target must have at least one of these tags for attack to apply.",
+          "element_type": "TagTemplate"
+        },
+        {
+          "name": "TargetCannotHaveOneOfTheseTags",
+          "type": "List<TagTemplate>",
+          "category": "collection",
+          "offset": "0xF8",
+          "description": "Target must NOT have any of these tags.",
+          "element_type": "TagTemplate"
+        }
+      ]
+    },
+    "AttackMorale": {
+      "fields": [
+        {
+          "name": "MoraleDamage",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "MoraleStateReduction",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        }
+      ]
+    },
+    "AttackProc": {
+      "fields": [
+        {
+          "name": "SkillToAdd",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Reference: The Skill to add when effect triggers"
+        },
+        {
+          "name": "OnlyApplyWhenNoElementWasDestroyed",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "If true, only triggers on misses (IsCritical != 0 means hit)"
+        },
+        {
+          "name": "OnlyApplyOnHitpointDamage",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x61",
+          "description": "Condition: Only applies when ApplyOnHitpointDamage"
+        },
+        {
+          "name": "CanBeTriggeredByAnySkill",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x62",
+          "description": "If true, any skill can trigger; if false, only handler's owner skill"
+        },
+        {
+          "name": "Chance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Probability (0-100)"
+        },
+        {
+          "name": "Condition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x68",
+          "description": "Condition: Determines if effect applies based on game state"
+        },
+        {
+          "name": "ShowHUDText",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": "If true, shows HUD text/icon when skill first added"
+        }
+      ]
+    },
+    "CameraShake": {
+      "fields": [
+        {
+          "name": "CameraEffect",
+          "type": "CameraEffectType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Duration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Duration or time value"
+        },
+        {
+          "name": "Intensity",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "RecoverTime",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Duration or time value"
         }
       ]
     },
@@ -61466,8 +59637,911 @@
         {
           "name": "Severity",
           "type": "DefectSeverity",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Flags passed to Actor.ApplyRandomDamageEffect to control which damage effects can be applied"
+        }
+      ]
+    },
+    "ChangeActionPointCost": {
+      "fields": [
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Filter interface determining which skills are affected"
+        },
+        {
+          "name": "CostDelta",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Amount to change skill AP cost (negative reduces cost)"
+        },
+        {
+          "name": "CostMin",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Minimum AP cost threshold - skills with BaseCost < this are not affected"
+        }
+      ]
+    },
+    "ChangeActionPoints": {
+      "fields": [
+        {
+          "name": "ActionPoints",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Amount to change action points (positive to add, negative to remove)"
+        },
+        {
+          "name": "ForceTurnToEnd",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "If true, forces skip turn when AP reaches 0 regardless of usable skills"
+        }
+      ]
+    },
+    "ChangeAttackCost": {
+      "fields": [
+        {
+          "name": "CostPerAttack",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "CostPerAttackMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeDropChance": {
+      "fields": [
+        {
+          "name": "AdditionalDropChance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Probability (0-100)"
+        }
+      ]
+    },
+    "ChangeGrowthPotential": {
+      "fields": [
+        {
+          "name": "Delta",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeHeatCapacity": {
+      "fields": [
+        {
+          "name": "HeatPerUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "MaxHeat",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        },
+        {
+          "name": "HeatDissipationPerTurn",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeMalfunctionChance": {
+      "fields": [
+        {
+          "name": "BaseMalfunctionChance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Probability (0-100)"
+        },
+        {
+          "name": "MalfunctionChancePerUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Probability (0-100)"
+        },
+        {
+          "name": "ResetMalfunctionChance",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "ApplyTo",
+          "type": "ChangeMalfunctionChance.ApplyType",
+          "category": "enum",
+          "offset": "0x64",
+          "description": ""
+        },
+        {
+          "name": "ApplyOnlyToSkill",
+          "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x68",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeMorale": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "ChangeMorale.EventType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        },
+        {
+          "name": "ChangeMoraleTo",
+          "type": "MoraleState",
+          "category": "enum",
+          "offset": "0x5C",
+          "description": ""
+        },
+        {
+          "name": "ChangeIf",
+          "type": "ChangeMorale.ChangeCondition",
+          "category": "enum",
+          "offset": "0x60",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeMovementCost": {
+      "fields": [
+        {
+          "name": "CostPerTile",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "CostForTurning",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        },
+        {
+          "name": "CostPerSurface",
+          "type": "int[]",
+          "category": "collection",
+          "offset": "0x60",
+          "description": "",
+          "element_type": "int"
+        },
+        {
+          "name": "IsRooted",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "State: True if Rooted"
+        }
+      ]
+    },
+    "ChangeProperty": {
+      "fields": [
+        {
+          "name": "Trigger",
+          "type": "ChangeProperty.UpdateEvent",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "When property change applies: 0=OnUpdate (continuous), 1=OnBeingAttacked, 2=OnSkillUse."
+        },
+        {
+          "name": "PropertyType",
+          "type": "EntityPropertyType",
+          "category": "enum",
+          "offset": "0x5C",
+          "description": "Which entity property to modify. Properties 0-8, 29-42, 45-70 are additive; others use multiplicative stacking."
+        },
+        {
+          "name": "Amount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Additive value for non-multiplicative properties. Formula: property += Amount * (ValueProvider ?? 1)"
+        },
+        {
+          "name": "AmountMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Multiplier value (default 1.0). Uses AddMult stacking: property += (AmountMult - 1.0). Multiple 50% bonuses stack as 1.0+0.5+0.5=2.0x"
+        },
+        {
+          "name": "ValueProvider",
+          "type": "IValueProvider",
+          "category": "interface",
+          "offset": "0x68",
+          "description": "Optional dynamic value scaler. For additive: Amount * result. For multiplicative: (AmountMult-1.0)*result+1.0"
+        },
+        {
+          "name": "TooltipPlaceholderIndex",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": "Index into skill's string array for UI display. Default -1 (no display)."
+        },
+        {
+          "name": "IncludePlusSign",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x74",
+          "description": "If true, prepends '+' to positive values in UI display."
+        }
+      ]
+    },
+    "ChangePropertyAura": {
+      "fields": [
+        {
+          "name": "Properties",
+          "type": "PropertyChange[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "Array of property modifications to apply (PropertyType + value pairs)",
+          "element_type": "PropertyChange"
+        },
+        {
+          "name": "Radius",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Maximum tile distance for aura effect (default: 5)"
+        },
+        {
+          "name": "ReducesWithDistance",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "If true, property values scale linearly with distance: value * (1 - distance/range)"
+        }
+      ]
+    },
+    "ChangePropertyConditional": {
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Condition: Determines if effect applies based on game state"
+        },
+        {
+          "name": "Properties",
+          "type": "PropertyChange[]",
+          "category": "collection",
+          "offset": "0x60",
+          "description": "",
+          "element_type": "PropertyChange"
+        },
+        {
+          "name": "Event",
+          "type": "ChangePropertyConditional.EventType",
+          "category": "enum",
+          "offset": "0x68",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        },
+        {
+          "name": "HideIfNotActive",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "UI: Controls whether to hide IfNotActive"
+        }
+      ]
+    },
+    "ChangePropertyConsecutive": {
+      "fields": [
+        {
+          "name": "PropertyType",
+          "type": "EntityPropertyType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Amount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Quantity or count value"
+        },
+        {
+          "name": "AmountMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Quantity or count value"
+        },
+        {
+          "name": "MaxStacks",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": ""
+        }
+      ]
+    },
+    "ChangePropertyTarget": {
+      "fields": [
+        {
+          "name": "Properties",
+          "type": "PropertyChange[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "Array of property modifications to apply",
+          "element_type": "PropertyChange"
+        }
+      ]
+    },
+    "ChangeRangesOfSkillsWithTags": {
+      "fields": [
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Filter: Specifies which targets/items are affected"
+        },
+        {
+          "name": "MinRangeChange",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "MinRangeMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": ""
+        },
+        {
+          "name": "MaxRangeChange",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        },
+        {
+          "name": "MaxRangeMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": ""
+        },
+        {
+          "name": "IdealRangeChange",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "IdealRangeMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x74",
+          "description": ""
+        }
+      ]
+    },
+    "ChangeSkillsWithTags": {
+      "fields": [
+        {
+          "name": "RequiredTags",
+          "type": "TagType[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "",
+          "element_type": "TagType"
+        },
+        {
+          "name": "PropertyType",
+          "type": "EntityPropertyType",
+          "category": "enum",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "Amount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Quantity or count value"
+        },
+        {
+          "name": "AmountMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "Quantity or count value"
+        }
+      ]
+    },
+    "ChangeSkillUseAmount": {
+      "fields": [
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Filters which skills are affected by the use amount change. If null, affects all skills."
+        },
+        {
+          "name": "UsesAmount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "The amount to add (positive) or subtract (negative) from skill uses consumed. Passed to Skill.ChangeUsesConsumed()."
+        }
+      ]
+    },
+    "ChangeStance": {
+      "fields": [
+        {
+          "name": "ChangeStanceTo",
+          "type": "ActorStance",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Stance required for skills with this filter to be enabled/visible."
+        },
+        {
+          "name": "IsStanceRequiredToUse",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "If true, the skill is only visible/usable when actor is in a specific stance."
+        },
+        {
+          "name": "RequiredStance",
+          "type": "ActorStance",
+          "category": "enum",
+          "offset": "0x60",
+          "description": "Sound played when actor enters pinned down state (state 2)."
+        }
+      ]
+    },
+    "ChangeSupplyCosts": {
+      "fields": [
+        {
+          "name": "CostMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Filter",
+          "type": "IItemFilter",
+          "category": "interface",
+          "offset": "0x60",
+          "description": "Filter: Specifies which targets/items are affected"
+        }
+      ]
+    },
+    "ChangeSuppression": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "ChangeSuppression.EventType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "TriggerType - When to apply effect: 0=OnApply (skill hits tile), 1=OnAdded (effect attached)"
+        },
+        {
+          "name": "SuppressionChange",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "SuppressionAmount - Value passed to Actor.ChangeSuppressionAndUpdateAP"
+        }
+      ]
+    },
+    "ChangeUsesPerSquaddie": {
+      "fields": [
+        {
+          "name": "AmountPerElement",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Flat bonus uses granted per additional squaddie member. Formula: baseUses + (UsesPerSquaddie * (squaddieCount - 1))"
+        },
+        {
+          "name": "MaxIncreasePct",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Percentage bonus uses per squaddie. Calculated as: baseUses + (baseUses * UsesPerSquaddiePercent / 100.0). The lower of flat or percentage bonus is used."
+        },
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x60",
+          "description": "Filters which skills receive per-squaddie use bonuses. If null, affects all skills with limited uses."
+        }
+      ]
+    },
+    "Charge": {
+      "fields": [
+        {
+          "name": "HideIfNotUsable",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "If true, hides the charge ability from player UI when it cannot be used (no valid targets)."
+        }
+      ]
+    },
+    "ChargeInfantry": {
+      "fields": [
+        {
+          "name": "EffectToApply",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Skill template applied to enemies hit during the charge. Created via SkillTemplate.CreateSkill and added to enemy."
+        },
+        {
+          "name": "HideIfNotUsable",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "If true, hides the charge ability from player UI when it cannot be used."
+        }
+      ]
+    },
+    "ClearTileEffect": {
+      "fields": [
+        {
+          "name": "EffectToClear",
+          "type": "TileEffectTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Type of tile effect to remove"
+        },
+        {
+          "name": "ChanceAtCenter",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Base percentage chance (0-100) at target tile"
+        },
+        {
+          "name": "ChanceDropoffWithDistance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Percentage reduction per tile of distance from center"
+        }
+      ]
+    },
+    "ClearTileEffectGroup": {
+      "fields": [
+        {
+          "name": "EffectsToClear",
+          "type": "TileEffectGroup",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Collection of TileEffectTemplate references to clear"
+        },
+        {
+          "name": "TriggerEffect",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "If true, removes ALL instances of each effect type; if false, removes one per type"
+        }
+      ]
+    },
+    "ConsumeOnSkillUse": {
+      "fields": [
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Filter: Specifies which targets/items are affected"
+        }
+      ]
+    },
+    "Cooldown": {
+      "fields": [
+        {
+          "name": "RoundsToCoolDown",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "AIOnly",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        }
+      ]
+    },
+    "Damage": {
+      "fields": [
+        {
+          "name": "IsAppliedOnlyToPassengers",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "State: True if AppliedOnlyToPassengers"
+        },
+        {
+          "name": "ElementsHit",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "FlatDamage (int)"
+        },
+        {
+          "name": "ElementsHitPercentage",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Percentage value (0-100)"
+        },
+        {
+          "name": "DamageFlatAmount",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "FlatDamageFromMaxHP (float)"
+        },
+        {
+          "name": "DamagePctCurrentHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "MinDamageFromMaxHP (float)"
+        },
+        {
+          "name": "DamagePctCurrentHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "PercentDamageFromElementCount (float)"
+        },
+        {
+          "name": "DamagePctMaxHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": "MinDamageFromElementCount (float)"
+        },
+        {
+          "name": "DamagePctMaxHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x74",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "ArmorPenetration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x78",
+          "description": "ArmorDmgFlat (float)"
+        },
+        {
+          "name": "DamageToArmorDurability",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x7C",
+          "description": "ArmorDmgPctCurrent (float)"
+        },
+        {
+          "name": "FatalityType",
+          "type": "FatalityType",
+          "category": "enum",
+          "offset": "0x80",
+          "description": "FatalityType (enum)"
+        },
+        {
+          "name": "DismemberChance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x84",
+          "description": "ArmorPenetration (float)"
+        },
+        {
+          "name": "DismemberArea",
+          "type": "RagdollHitArea",
+          "category": "enum",
+          "offset": "0x88",
+          "description": "ArmorDmgPctFromElementCount (float)"
+        },
+        {
+          "name": "DamageVisualizationType",
+          "type": "DamageVisualizationType",
+          "category": "enum",
+          "offset": "0x8C",
+          "description": "ElementHitMinIndex (int)"
+        },
+        {
+          "name": "InflictDefects",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x90",
+          "description": "CanCrit (bool)"
+        }
+      ]
+    },
+    "DamageArmorDurability": {
+      "fields": [
+        {
+          "name": "DamageFlatAmount",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "DamagePercentageOfMaxDurability",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "DamagePercentageOfCurrentDurability",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Damage value or modifier"
+        }
+      ]
+    },
+    "DamageOverTime": {
+      "fields": [
+        {
+          "name": "ElementsHit",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Base flat damage per tick"
+        },
+        {
+          "name": "ElementsHitPercentage",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Percentage of max HP per tick"
+        },
+        {
+          "name": "DamagePerTurn",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Flat bonus damage derived from max HP"
+        },
+        {
+          "name": "DamagePctCurrentHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Minimum HP-based damage floor"
+        },
+        {
+          "name": "DamagePctCurrentHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "Damage scaling per element in unit"
+        },
+        {
+          "name": "DamagePctMaxHitpoints",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "Minimum element-based damage floor"
+        },
+        {
+          "name": "DamagePctMaxHitpointsMin",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "DamagesArmorFirst",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x74",
+          "description": "If true, only damages armor durability (not HP)"
+        },
+        {
+          "name": "DamageArmorFlatAmount",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x78",
+          "description": "Flat armor damage when ArmorDamageOnly is true"
+        },
+        {
+          "name": "DamageArmorPctOfMax",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x7C",
+          "description": "Percentage of current armor as damage"
+        },
+        {
+          "name": "DamageArmorPctOfCurrent",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x80",
+          "description": "Armor damage per element scaling"
+        },
+        {
+          "name": "ArmorPenetration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x84",
+          "description": "Secondary flat armor damage / Armor penetration"
+        },
+        {
+          "name": "DamageToArmorDurability",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x88",
+          "description": "Secondary percentage armor damage"
+        },
+        {
+          "name": "FatalityType",
+          "type": "FatalityType",
+          "category": "enum",
+          "offset": "0x8C",
+          "description": "Death animation type when DoT kills"
+        },
+        {
+          "name": "DamageVisualizationType",
+          "type": "DamageVisualizationType",
+          "category": "enum",
+          "offset": "0x90",
+          "description": "Minimum element index to damage"
+        },
+        {
+          "name": "InflictDefects",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x94",
+          "description": "Whether DoT can critically hit"
         }
       ]
     },
@@ -61477,61 +60551,827 @@
           "name": "Skill",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "Reference to the parent skill that owns this handler. Used to get entity/owner information."
         },
         {
           "name": "Chance",
-          "type": "Int32",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x60"
+          "offset": "0x60",
+          "description": "Probability (0-100)"
         }
       ]
     },
-    "TriggerSkillOnHpLost": {
+    "DestroyProps": {
       "fields": [
         {
-          "name": "HpThreshold",
-          "type": "Int32",
+          "name": "Radius",
+          "type": "float",
           "category": "primitive",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "Radius for sphere overlap test to find props to destroy"
+        }
+      ]
+    },
+    "DisableItem": {
+      "fields": [
+        {
+          "name": "RequiredTags",
+          "type": "List<TagTemplate>",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "List of tags that an item MUST have to be considered for disabling. When includeTagFilterMode is 0 (Any), item needs at least one matching tag. When mode is 1 (All), item needs all tags.",
+          "element_type": "TagTemplate"
         },
         {
-          "name": "SkillToTrigger",
+          "name": "RequiredLogic",
+          "type": "DisableItem.LogicType",
+          "category": "enum",
+          "offset": "0x60",
+          "description": "Controls how includeTags are matched. 0=Any (item needs at least one tag), 1=All (item needs all tags to match)"
+        },
+        {
+          "name": "ForbiddenTags",
+          "type": "List<TagTemplate>",
+          "category": "collection",
+          "offset": "0x68",
+          "description": "List of tags that an item must NOT have. When excludeTagFilterMode is 0 (Any), item is excluded if it has any of these tags. When mode is 1 (All), item is excluded only if it has all these tags.",
+          "element_type": "TagTemplate"
+        },
+        {
+          "name": "ForbiddenLogic",
+          "type": "DisableItem.LogicType",
+          "category": "enum",
+          "offset": "0x70",
+          "description": "Controls how excludeTags are matched. 0=Any (exclude if item has any tag), 1=All (exclude only if item has all tags)"
+        }
+      ]
+    },
+    "DisableSkills": {
+      "fields": [
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Filter: Specifies which targets/items are affected"
+        },
+        {
+          "name": "HideDisabledSkills",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "UI: Controls whether to hide DisabledSkills"
+        }
+      ]
+    },
+    "DisplayText": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "DisplayText.DisplayEvent",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        },
+        {
+          "name": "LocaKey",
+          "type": "string",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "DefaultText",
+          "type": "string",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        },
+        {
+          "name": "Icon",
+          "type": "Sprite",
+          "category": "unity_asset",
+          "offset": "0x70",
+          "description": ""
+        }
+      ]
+    },
+    "EmitAura": {
+      "fields": [
+        {
+          "name": "SkillToAdd",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x60"
+          "offset": "0x58",
+          "description": "Template for the ChangePropertyAura skill applied to allies"
         },
         {
-          "name": "CanOnlyTriggerOncePerRound",
-          "type": "Boolean",
+          "name": "ExcludeSelf",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x68"
+          "offset": "0x60",
+          "description": "Flag indicating if aura should only be applied once per entity"
         }
       ]
     },
-    "ApplyAuthorityDisciplineMod": {
+    "DisableByFlag": {
       "fields": [
         {
-          "name": "DisciplineModMult",
-          "type": "Single",
-          "category": "primitive",
-          "offset": "0x58"
+          "name": "Flag",
+          "type": "EntityFlags",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
         }
       ]
     },
-    "Crawl": {
-      "fields": []
-    },
-    "HandleLeaderAttributes": {
-      "fields": []
+    "FilterByCondition": {
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "A tactical condition object that is evaluated with parameters (actor, null, owning_skill). The condition's boolean result determines whether the skill effect is enabled."
+        }
+      ]
     },
     "FilterByMorale": {
       "fields": [
         {
           "name": "AppliesOnlyToState",
           "type": "MoraleState",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "The morale state value that the actor must be in for the skill effect to be enabled. Compared against actor's current morale state retrieved via vtable call at offset 0x468."
+        }
+      ]
+    },
+    "FilterByOtherSkills": {
+      "fields": [
+        {
+          "name": "NotEnabledIfActorHasSkillWithTags",
+          "type": "TagType[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "A list of tags that, if found on any of the actor's other skills, will disable this skill effect. Initialized in .ctor using TagType reflection. Uses ContainsAllTags for matching.",
+          "element_type": "TagType"
+        }
+      ]
+    },
+    "FilterByStance": {
+      "fields": [
+        {
+          "name": "AppliesOnlyToStance",
+          "type": "ActorStance",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "The stance value that the actor must be in for the skill effect to be enabled. Compared against actor's current stance stored at actor+0xD0."
+        }
+      ]
+    },
+    "HideByCondition": {
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Condition: Determines if effect applies based on game state"
+        }
+      ]
+    },
+    "LimitedPassiveUses": {
+      "fields": [
+        {
+          "name": "MaxUses",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "LimitUsability": {
+      "fields": [
+        {
+          "name": "OnlyUsableIfActorHasSkill",
+          "type": "List<SkillTemplate>",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "",
+          "element_type": "SkillTemplate"
+        },
+        {
+          "name": "NotUsableIfActorHasSkill",
+          "type": "List<SkillTemplate>",
+          "category": "collection",
+          "offset": "0x60",
+          "description": "",
+          "element_type": "SkillTemplate"
+        },
+        {
+          "name": "HiddenIfActorHasSkill",
+          "type": "List<SkillTemplate>",
+          "category": "collection",
+          "offset": "0x68",
+          "description": "",
+          "element_type": "SkillTemplate"
+        },
+        {
+          "name": "NotHiddenIfActorHasSkill",
+          "type": "List<SkillTemplate>",
+          "category": "collection",
+          "offset": "0x70",
+          "description": "",
+          "element_type": "SkillTemplate"
+        }
+      ]
+    },
+    "GainActionPoints": {
+      "fields": [
+        {
+          "name": "ActionPoints",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "AlwaysIncreaseMaxActionPoints",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        }
+      ]
+    },
+    "GainEffectOnSkillUse": {
+      "fields": [
+        {
+          "name": "Effect",
+          "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x60",
+          "description": "Filter: Specifies which targets/items are affected"
+        },
+        {
+          "name": "RemoveOnUse",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        }
+      ]
+    },
+    "GrantBonusTurn": {
+      "fields": [
+        {
+          "name": "ActionPointsAvailable",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "HeatCapacity": {
+      "fields": [
+        {
+          "name": "HeatPerUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Heat added per weapon use. Copied from effect data offset 0x58."
+        },
+        {
+          "name": "MaxHeat",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Maximum heat capacity. When CurrentHeat >= MaxHeat, weapon overheats. Copied from effect data offset 0x5c."
+        },
+        {
+          "name": "HeatDissipationPerTurn",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "IsSynchronizedWithOtherSkillsOfTheSameItem",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "State: True if SynchronizedWithOtherSkillsOfTheSameItem"
+        },
+        {
+          "name": "OverheatingSound",
+          "type": "ID",
+          "category": "reference",
+          "offset": "0x68",
+          "description": "",
+          "element_type": "SoundReference"
+        }
+      ]
+    },
+    "Hitchance": {
+      "fields": [
+        {
+          "name": "AccuracyBonus",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Attack accuracy modifier (0-100 scale). ADDITIVE to base accuracy. Applied via OnBeforeAnySkillUsed when this effect is active."
+        },
+        {
+          "name": "AccuracyMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Attack accuracy multiplier (1.0 = 100%). Uses AddMult stacking formula: multiple mults combine as 1.0 + (mult1-1) + (mult2-1)."
+        },
+        {
+          "name": "AccuracyDropoff",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Defense evasion modifier. ADDITIVE to defender's evasion stat. Positive values increase dodge chance for the target."
+        },
+        {
+          "name": "AccuracyDropoffMult",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Defense evasion multiplier (1.0 = 100%). Uses AddMult stacking. Applied to defender's evasion calculation."
+        }
+      ]
+    },
+    "IgnoreDamage": {
+      "fields": [
+        {
+          "name": "ChanceToApply",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Probability (0-100)"
+        },
+        {
+          "name": "AbsorbDamagePct",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Damage value or modifier"
+        },
+        {
+          "name": "RequiredTags",
+          "type": "TagType[]",
+          "category": "collection",
+          "offset": "0x60",
+          "description": "",
+          "element_type": "TagType"
+        }
+      ]
+    },
+    "InterceptAPChange": {
+      "fields": [
+        {
+          "name": "AppliesTo",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Template to match against triggering skill (compared via UnityEngine.Object.op_Equality)"
+        },
+        {
+          "name": "ActionPointPercentage",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Percentage to modify AP (divided by 100.0 to get multiplier). Replaces the original delta."
+        },
+        {
+          "name": "TriggerOnlyOncePerRound",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "If true, handler can only intercept once per round"
+        }
+      ]
+    },
+    "AmmoPouch": {
+      "fields": [
+        {
+          "name": "BonusPercentage",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Multiplier applied to base max ammo (from item template 0xbc)"
+        },
+        {
+          "name": "MinimumBonus",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Minimum ammo bonus (used if multiplied value is lower)"
+        },
+        {
+          "name": "ApplyToType",
+          "type": "ItemType",
+          "category": "enum",
+          "offset": "0x60",
+          "description": "Ammo type ID to match against item template (offset 0xec)"
+        },
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x68",
+          "description": "Optional filter to restrict which skills receive the bonus"
+        }
+      ]
+    },
+    "Scanner": {
+      "fields": [
+        {
+          "name": "Range",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Blip",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "Scanline",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x68",
+          "description": ""
+        },
+        {
+          "name": "ScanSpeed",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "DetectsInfantry",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x74",
+          "description": ""
+        },
+        {
+          "name": "DetectsVehicles",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x75",
+          "description": ""
+        }
+      ]
+    },
+    "Jamming": {
+      "fields": [
+        {
+          "name": "BaseChance",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Base fail chance percentage at start of each round. Copied to handler.accumulatedFailChance on round start"
+        },
+        {
+          "name": "ChancePerUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Additional fail chance added per weapon use. Accumulated in handler.accumulatedFailChance"
+        },
+        {
+          "name": "JammingSound",
+          "type": "ID",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "Audio clip played when weapon jams. Used with Stem_ID.Play3D() for positional audio",
+          "element_type": "SoundReference"
+        }
+      ]
+    },
+    "JetPack": {
+      "fields": [
+        {
+          "name": "Duration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Duration or time value"
+        },
+        {
+          "name": "DelayBeforeJump",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        },
+        {
+          "name": "ForwardCurve",
+          "type": "AnimationCurve",
+          "category": "reference",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "HeightPerUnitOfDistance",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        },
+        {
+          "name": "MaxHeight",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": ""
+        },
+        {
+          "name": "HeightCurve",
+          "type": "AnimationCurve",
+          "category": "reference",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "StartTrigger",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x78",
+          "description": ""
+        }
+      ]
+    },
+    "JumpIntoMelee": {
+      "fields": [
+        {
+          "name": "DistanceFromTarget",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "DurationPerUnitOfDistance",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Duration or time value"
+        },
+        {
+          "name": "MaxDuration",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Duration or time value"
+        },
+        {
+          "name": "DelayBeforeJump",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": ""
+        },
+        {
+          "name": "HeightPerUnitOfDistance",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        },
+        {
+          "name": "MaxHeight",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": ""
+        },
+        {
+          "name": "HeightCurve",
+          "type": "AnimationCurve",
+          "category": "reference",
+          "offset": "0x70",
+          "description": ""
+        },
+        {
+          "name": "CameraEffectOnTakeoff",
+          "type": "CameraEffectType",
+          "category": "enum",
+          "offset": "0x78",
+          "description": ""
+        },
+        {
+          "name": "ForwardCurve",
+          "type": "AnimationCurve",
+          "category": "reference",
+          "offset": "0x80",
+          "description": ""
+        },
+        {
+          "name": "Animation",
+          "type": "AnimationType",
+          "category": "enum",
+          "offset": "0x88",
+          "description": ""
+        }
+      ]
+    },
+    "LifetimeLimit": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "LifetimeLimit.LifetimeType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Which event decrements counter: 0=Rounds (skip round 0), 1=TurnStart, 2=TurnEnd, 3=EffectApplied, 4=OnAdded (immediate), 5=OnUse. Effect removed when counter reaches 0."
+        },
+        {
+          "name": "Lifetime",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Initial charges/duration. How many times the trigger event can occur before effect is removed. Default 1."
+        },
+        {
+          "name": "ResetLifetimeOnRefresh",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "If true, reapplying the effect resets remaining counter to initial Lifetime value."
+        }
+      ]
+    },
+    "LimitMaxHpLoss": {
+      "fields": [
+        {
+          "name": "MaxHpPct",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Percentage value (0-100)"
+        }
+      ]
+    },
+    "ModularVehicleSkill": {
+      "fields": [
+        {
+          "name": "RequiredWeaponCount",
+          "type": "ModularVehicleSkill.WeaponCount",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "MoraleOverMaxEffect": {
+      "fields": [
+        {
+          "name": "Effect",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "MoveAndSelfDestroy": {
+      "fields": [
+        {
+          "name": "StartMoveTrigger",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "AfterMoveTrigger",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "AdditionalDelay",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
+        }
+      ]
+    },
+    "OnElementKilled": {
+      "fields": [
+        {
+          "name": "ApplyEffect",
+          "type": "OnElementKilled.Effect",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Type of suppression reduction behavior (0 = OnKill type)"
+        },
+        {
+          "name": "Amount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "Maximum suppression points to reduce on kill"
+        },
+        {
+          "name": "DisplayText",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "If true, displays text/icon when suppression is reduced"
+        }
+      ]
+    },
+    "OverrideVolumeProfile": {
+      "fields": [
+        {
+          "name": "TemperateProfile",
+          "type": "VolumeProfile",
+          "category": "unity_asset",
+          "offset": "0x58",
+          "description": "Volume profile used for sniper/scope mode (mode == 2)"
+        },
+        {
+          "name": "DesertProfile",
+          "type": "VolumeProfile",
+          "category": "unity_asset",
+          "offset": "0x60",
+          "description": "Volume profile used for default/aim modes (mode == 0 or 1)"
+        },
+        {
+          "name": "SnowProfile",
+          "type": "VolumeProfile",
+          "category": "unity_asset",
+          "offset": "0x68",
+          "description": "Volume profile used for overwatch mode (mode == 3)"
+        },
+        {
+          "name": "FallbackProfile",
+          "type": "VolumeProfile",
+          "category": "unity_asset",
+          "offset": "0x70",
+          "description": "Fallback profile used for unknown modes or when specific profile is null"
+        }
+      ]
+    },
+    "PlayAnimationSequence": {
+      "fields": [
+        {
+          "name": "Animation",
+          "type": "AnimationSequenceTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Reference to the AnimationSequence asset to play"
+        }
+      ]
+    },
+    "PlaySound": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "PlaySound.PlaySoundEventType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "When to play: 0=OnRoundStart, 1=OnTurnStart (default), 2=OnTurnEnd, 3=OnEffectApplied, 4=OnSkillAdded"
+        },
+        {
+          "name": "SoundToPlay",
+          "type": "ID",
+          "category": "reference",
+          "offset": "0x5C",
+          "description": "FMOD sound event ID (Stem.ID). Played via 3D positional audio at entity location.",
+          "element_type": "SoundReference"
+        },
+        {
+          "name": "Volume",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": "Sound playback volume multiplier. Default 1.0."
         }
       ]
     },
@@ -61541,18 +61381,457 @@
           "name": "SoundToPlay",
           "type": "ID",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "FMOD sound ID. Plays when effect transitions from disabled to enabled state.",
+          "element_type": "SoundReference"
         },
         {
           "name": "Volume",
-          "type": "Single",
+          "type": "float",
           "category": "primitive",
-          "offset": "0x60"
+          "offset": "0x60",
+          "description": "Sound playback volume. Default 1.0."
         }
       ]
     },
-    "StopBleedout": {
-      "fields": []
+    "RecallTarget": {
+      "fields": [
+        {
+          "name": "UseLastTargetOfSkill",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "ReduceArmor": {
+      "fields": [
+        {
+          "name": "ReductionPerStack",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "MaxReduction",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        }
+      ]
+    },
+    "RefillAmmo": {
+      "fields": [
+        {
+          "name": "RestorePct",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Percentage value (0-100)"
+        },
+        {
+          "name": "RestoreMinimum",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": ""
+        },
+        {
+          "name": "SkillFilter",
+          "type": "ISkillFilter",
+          "category": "interface",
+          "offset": "0x60",
+          "description": "Filter: Specifies which targets/items are affected"
+        }
+      ]
+    },
+    "RefillSquaddies": {
+      "fields": [
+        {
+          "name": "Animation",
+          "type": "AnimationSequenceTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "Regeneration": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "Regeneration.ApplyOnEvent",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        },
+        {
+          "name": "HitpointsHealedPctMax",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "HealPercentage (float) - percentage of max HP to heal"
+        },
+        {
+          "name": "Sound",
+          "type": "ID",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "EffectPrefab (UnityEngine.Object)",
+          "element_type": "SoundReference"
+        },
+        {
+          "name": "Effect",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x68",
+          "description": "HealSound (Stem.ID reference)"
+        }
+      ]
+    },
+    "RemoveDefect": {
+      "fields": [
+        {
+          "name": "RequiredType",
+          "type": "SkillType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "RemoveSkill": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "RemoveSkill.RemoveTrigger",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        },
+        {
+          "name": "SkillsToRemove",
+          "type": "SkillTemplate[]",
+          "category": "collection",
+          "offset": "0x60",
+          "description": "List of skill templates specifying which skills should be removed. Skills are matched by comparing DataTemplate.GetID with target skill IDs.",
+          "element_type": "SkillTemplate"
+        }
+      ]
+    },
+    "ReportAmmoToAnimator": {
+      "fields": [
+        {
+          "name": "Parameter",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "RestoreArmorDurability": {
+      "fields": [
+        {
+          "name": "RestorePercent",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Percentage value (0-100)"
+        }
+      ]
+    },
+    "SetAnimatorBool": {
+      "fields": [
+        {
+          "name": "Parameter",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Reference to template containing the bool parameter name to set"
+        }
+      ]
+    },
+    "SetAnimatorTrigger": {
+      "fields": [
+        {
+          "name": "Parameter",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Reference to template containing the trigger parameter name"
+        },
+        {
+          "name": "Delay",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Delay in seconds before triggering the animator parameter"
+        }
+      ]
+    },
+    "SetEntityFlag": {
+      "fields": [
+        {
+          "name": "Flag",
+          "type": "EntityFlags",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "SetUsesPerElement": {
+      "fields": [
+        {
+          "name": "UsesPerElement",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Number of uses granted per living element. Formula: elementCount * UsesPerElement"
+        }
+      ]
+    },
+    "ShowHUDIcon": {
+      "fields": [
+        {
+          "name": "IconToShow",
+          "type": "ShowHUDIcon.Icon",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "ShowIsolatedIcon": {
+      "fields": [
+        {
+          "name": "Radius",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "ShowUnitHUDIcon": {
+      "fields": [
+        {
+          "name": "Icon",
+          "type": "Sprite",
+          "category": "unity_asset",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Target",
+          "type": "ShowUnitHUDIcon.TargetUnit",
+          "category": "enum",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "Conditions",
+          "type": "ITacticalCondition[]",
+          "category": "collection",
+          "offset": "0x68",
+          "description": "",
+          "element_type": "ITacticalCondition"
+        }
+      ]
+    },
+    "SpawnEntity": {
+      "fields": [
+        {
+          "name": "Trigger",
+          "type": "SpawnEntity.SpawnTrigger",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "When spawning occurs. Value 1 = deferred (OnUse), other values = immediate spawn on skill activation."
+        },
+        {
+          "name": "EntityToSpawn",
+          "type": "EntityTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "Template to spawn. Entity type at offset 0x88: 2=TransientActor (mobile), 1=Structure (static)."
+        },
+        {
+          "name": "SpawnAsMinion",
+          "type": "MinionType",
+          "category": "enum",
+          "offset": "0x68",
+          "description": "Non-zero registers spawned entity as minion with unique MinionID, linked to ICommandMinionSkill handler."
+        },
+        {
+          "name": "SkipFirstTurnForSpawnedEntity",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "If true, spawned entity skips its first turn (can't act immediately)."
+        },
+        {
+          "name": "SetParameterOnSpawn",
+          "type": "AnimatorParameterNameTemplate",
+          "category": "reference",
+          "offset": "0x70",
+          "description": "Animation parameter to set on spawn for visual effects."
+        },
+        {
+          "name": "AlignSpawnDirection",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x78",
+          "description": "If true, spawned entity faces toward its owner entity on spawn."
+        },
+        {
+          "name": "SpawnLimit",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x7C",
+          "description": "Maximum entities that can be spawned. 0 = unlimited. Dead minions cleaned up in OnUpdate."
+        },
+        {
+          "name": "HideIfSpawnLimitReached",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x80",
+          "description": "If true, hides skill from UI when SpawnLimit is reached."
+        }
+      ]
+    },
+    "SpawnGore": {
+      "fields": [
+        {
+          "name": "Prefabs",
+          "type": "PrefabListTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Amount",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": "Quantity or count value"
+        },
+        {
+          "name": "Distance",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x64",
+          "description": ""
+        },
+        {
+          "name": "MinMaxScale",
+          "type": "Vector2",
+          "category": "struct",
+          "offset": "0x68",
+          "description": ""
+        }
+      ]
+    },
+    "SpawnPrefab": {
+      "fields": [
+        {
+          "name": "Prefab",
+          "type": "GameObject",
+          "category": "unity_asset",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "SpawnTileEffect": {
+      "fields": [
+        {
+          "name": "Event",
+          "type": "SpawnTileEffect.ApplyOnEvent",
+          "category": "enum",
+          "offset": "0x58",
+          "description": "Trigger type: 0=OnUse (skill activation), 1=OnTileChanged (movement), 2=OnDeath. Determines when tile effect spawns."
+        },
+        {
+          "name": "EffectToSpawn",
+          "type": "TileEffectTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "Reference to TileEffectTemplate to instantiate. Can be ApplySkillTileEffect for recursive skill effects. Spawned via Create method with calculated delay."
+        },
+        {
+          "name": "ChanceAtCenter",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": "Base probability (0-100%) for effect at center tile. Default 100 = guaranteed. Formula: finalChance = ChanceAtCenter + (distance * ChancePerTileFromCenter)"
+        },
+        {
+          "name": "ChancePerTileFromCenter",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x6C",
+          "description": "Probability modifier per tile distance. Typically negative for falloff (e.g., -10 = 10% less per tile). Zero = uniform probability across AOE."
+        },
+        {
+          "name": "DelayWithDistance",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x70",
+          "description": "Visual delay in seconds per tile distance. Creates spreading/ripple effect across AOE. Delay = distance * this value."
+        }
+      ]
+    },
+    "DropRecoverableObject": {
+      "fields": [
+        {
+          "name": "ObjectTileEffect",
+          "type": "RecoverableObjectTileEffect",
+          "category": "reference",
+          "offset": "0x58",
+          "description": "Template for creating the RecoverableObjectTileEffectHandler when object is dropped"
+        },
+        {
+          "name": "ObjectUnitHUDIcon",
+          "type": "Sprite",
+          "category": "unity_asset",
+          "offset": "0x60",
+          "description": "Icon displayed on unit HUD when carrying the object"
+        }
+      ]
+    },
+    "EjectEntity": {
+      "fields": [
+        {
+          "name": "IsSpecialAIVersion",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "If true, allows the ejected unit to re-enter vehicles. If false, validates target must be an entrance tile."
+        },
+        {
+          "name": "ConferSkillToEjectedEntity",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "Skill template granted to the ejected actor enabling remounting capability"
+        }
+      ]
+    },
+    "StanceDeployed": {
+      "fields": [
+        {
+          "name": "Properties",
+          "type": "PropertyChange[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "",
+          "element_type": "PropertyChange"
+        }
+      ]
     },
     "Suppression": {
       "fields": [
@@ -61560,19 +61839,24 @@
           "name": "SoundWhenSuppressed",
           "type": "ID",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "SuppressedSound - Audio ID played when entering Suppressed state",
+          "element_type": "SoundReference"
         },
         {
           "name": "SoundWhenPinnedDown",
           "type": "ID",
           "category": "reference",
-          "offset": "0x60"
+          "offset": "0x60",
+          "description": "PinnedDownSound - Audio ID played when entering PinnedDown state",
+          "element_type": "SoundReference"
         },
         {
           "name": "PinnedDownEffect",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x68"
+          "offset": "0x68",
+          "description": "PinnedSkillTemplate - Skill template added when pinned (e.g., break free skill), removed when not pinned"
         }
       ]
     },
@@ -61582,35 +61866,23 @@
           "name": "SoundWhenPinnedDown",
           "type": "ID",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "PinnedDownSound - Audio ID played when entering PinnedDown state",
+          "element_type": "SoundReference"
         },
         {
           "name": "PinnedDownText",
-          "type": "String",
+          "type": "string",
           "category": "primitive",
-          "offset": "0x60"
+          "offset": "0x60",
+          "description": "PinnedDropdownText - Text displayed in unit HUD when pinned"
         },
         {
           "name": "PinnedDownEffect",
           "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x68"
-        }
-      ]
-    },
-    "EjectEntity": {
-      "fields": [
-        {
-          "name": "IsSpecialAIVersion",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x58"
-        },
-        {
-          "name": "ConferSkillToEjectedEntity",
-          "type": "SkillTemplate",
-          "category": "reference",
-          "offset": "0x60"
+          "offset": "0x68",
+          "description": "PinnedSkillTemplate - Skill template added when pinned, removed when not pinned"
         }
       ]
     },
@@ -61618,82 +61890,231 @@
       "fields": [
         {
           "name": "Concealment",
-          "type": "Int32",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": ""
         }
       ]
     },
-    "Charge": {
+    "SwitchBetweenSkills": {
       "fields": [
         {
-          "name": "HideIfNotUsable",
-          "type": "Boolean",
+          "name": "IsVisibleAtStart",
+          "type": "bool",
           "category": "primitive",
-          "offset": "0x58"
+          "offset": "0x58",
+          "description": "State: True if VisibleAtStart"
+        },
+        {
+          "name": "SwitchToAlternativeItemIcon",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x59",
+          "description": ""
+        },
+        {
+          "name": "DisplayAOEAreaOfAlternateSkill",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5A",
+          "description": ""
+        },
+        {
+          "name": "SwitchWithSkill",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "Mode",
+          "type": "SwitchBetweenSkills.DeactivateMode",
+          "category": "enum",
+          "offset": "0x68",
+          "description": ""
         }
       ]
     },
-    "VehicleRotation": {
-      "fields": []
-    },
-    "ChangeStance": {
+    "ToggleSkills": {
       "fields": [
         {
-          "name": "ChangeStanceTo",
-          "type": "ActorStance",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "IsStanceRequiredToUse",
-          "type": "Boolean",
-          "category": "primitive",
-          "offset": "0x5C"
-        },
-        {
-          "name": "RequiredStance",
-          "type": "ActorStance",
-          "category": "reference",
-          "offset": "0x60"
+          "name": "ActiveSkills",
+          "type": "SkillTemplate[]",
+          "category": "collection",
+          "offset": "0x58",
+          "description": "",
+          "element_type": "SkillTemplate"
         }
       ]
     },
-    "StanceDeployed": {
+    "TriggerSkillOnHpLost": {
       "fields": [
         {
-          "name": "Properties",
-          "type": "PropertyChange[]",
+          "name": "HpThreshold",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "SkillToTrigger",
+          "type": "SkillTemplate",
           "category": "reference",
-          "offset": "0x58"
+          "offset": "0x60",
+          "description": ""
+        },
+        {
+          "name": "CanOnlyTriggerOncePerRound",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x68",
+          "description": ""
         }
       ]
     },
-    "ChangeSkillsWithTags": {
+    "AttackOrder": {
       "fields": [
         {
-          "name": "RequiredTags",
-          "type": "TagType[]",
-          "category": "reference",
-          "offset": "0x58"
-        },
-        {
-          "name": "PropertyType",
-          "type": "EntityPropertyType",
-          "category": "reference",
-          "offset": "0x60"
-        },
-        {
-          "name": "Amount",
-          "type": "Int32",
+          "name": "ActionPoints",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x64"
+          "offset": "0x58",
+          "description": ""
         },
         {
-          "name": "AmountMult",
-          "type": "Single",
+          "name": "Effect",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": ""
+        }
+      ]
+    },
+    "Berserk": {
+      "fields": [
+        {
+          "name": "ActionPoints",
+          "type": "int",
           "category": "primitive",
-          "offset": "0x68"
+          "offset": "0x58",
+          "description": "Number of bonus action points granted on kill"
+        },
+        {
+          "name": "ConsumedOnTrigger",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x5C",
+          "description": "If true, removes the skill after triggering (one-time use)"
+        }
+      ]
+    },
+    "EnemiesDropPickupOnDeath": {
+      "fields": [
+        {
+          "name": "Pickup",
+          "type": "TileEffectTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "SpawnDelay",
+          "type": "float",
+          "category": "primitive",
+          "offset": "0x60",
+          "description": ""
+        }
+      ]
+    },
+    "ReturnOfServe": {
+      "fields": [
+        {
+          "name": "ConsumedOnTrigger",
+          "type": "bool",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "ThrivingUnderPressure": {
+      "fields": [
+        {
+          "name": "RequiredStacksForUse",
+          "type": "int",
+          "category": "primitive",
+          "offset": "0x58",
+          "description": "Maximum number of stacks allowed (default 10)"
+        }
+      ]
+    },
+    "UseSkill": {
+      "fields": [
+        {
+          "name": "SkillToUse",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "Event",
+          "type": "UseSkill.ApplyOnEvent",
+          "category": "enum",
+          "offset": "0x60",
+          "description": "Timing: Specifies when this effect triggers (OnHit, OnKill, OnStart, etc.)"
+        }
+      ]
+    },
+    "VentHeat": {
+      "fields": [
+        {
+          "name": "VentForSkill",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "VerifyByCondition": {
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "ITacticalCondition",
+          "category": "interface",
+          "offset": "0x58",
+          "description": "Condition: Determines if effect applies based on game state"
+        }
+      ]
+    },
+    "CommandMove": {
+      "fields": [
+        {
+          "name": "Minion",
+          "type": "MinionType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        }
+      ]
+    },
+    "CommandUseSkill": {
+      "fields": [
+        {
+          "name": "Minion",
+          "type": "MinionType",
+          "category": "enum",
+          "offset": "0x58",
+          "description": ""
+        },
+        {
+          "name": "SkillToUse",
+          "type": "SkillTemplate",
+          "category": "reference",
+          "offset": "0x60",
+          "description": "Template for skill the minion will use"
         }
       ]
     }

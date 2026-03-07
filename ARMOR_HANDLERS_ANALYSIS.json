@@ -1,0 +1,250 @@
+{
+  "analysis_date": "2026-03-07",
+  "title": "Armor Handler Field Analysis",
+  "description": "Analysis of armor-related effect handlers in Menace.Tactical.Skills.Effects namespace",
+
+  "handlers": {
+    "ReduceArmorHandler": {
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "functions": {
+        "constructor": {
+          "name": "ReduceArmorHandler_Constructor",
+          "address": "0x1807186a0",
+          "description": "Initializes handler with effect data reference and default stack count"
+        },
+        "onUpdate": {
+          "name": "ReduceArmorHandler_OnUpdate_ApplyArmorReduction",
+          "address": "0x180718650",
+          "description": "Applies armor reduction debuff to target entity"
+        },
+        "create": {
+          "name": "Menace.Tactical.Skills.Effects.ReduceArmor$$Create",
+          "address": "0x1807186e0",
+          "description": "Factory method to create handler from effect data"
+        }
+      },
+      "handler_fields": {
+        "0x10": {
+          "name": "Skill",
+          "type": "BaseSkill*",
+          "description": "Reference to owning skill (inherited from SkillEventHandler)"
+        },
+        "0x18": {
+          "name": "EffectData",
+          "type": "ReduceArmor*",
+          "description": "Reference to the ReduceArmor effect data"
+        },
+        "0x20": {
+          "name": "StackCount",
+          "type": "int",
+          "description": "Current number of stacks applied (default: 1)"
+        }
+      },
+      "effect_data_fields": {
+        "0x58": {
+          "name": "PerStackReduction",
+          "type": "float",
+          "description": "Amount of armor reduction per stack"
+        },
+        "0x5c": {
+          "name": "MaxReduction",
+          "type": "float",
+          "description": "Maximum total armor reduction regardless of stacks"
+        }
+      },
+      "formula": "armorReduction = min(StackCount * PerStackReduction, MaxReduction)"
+    },
+
+    "DamageArmorDurabilityHandler": {
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "functions": {
+        "onAdded": {
+          "name": "Menace.Tactical.Skills.Effects.DamageArmorDurabilityHandler$$OnAdded",
+          "address": "0x1807027c0",
+          "description": "Damages armor durability when effect is applied to entity"
+        },
+        "create": {
+          "name": "Menace.Tactical.Skills.Effects.DamageArmorDurability$$Create",
+          "address": "0x180702910",
+          "description": "Factory method to create handler from effect data"
+        }
+      },
+      "handler_fields": {
+        "0x10": {
+          "name": "Skill",
+          "type": "BaseSkill*",
+          "description": "Reference to owning skill (inherited from SkillEventHandler)"
+        },
+        "0x18": {
+          "name": "EffectData",
+          "type": "DamageArmorDurability*",
+          "description": "Reference to the DamageArmorDurability effect data"
+        }
+      },
+      "effect_data_fields": {
+        "0x58": {
+          "name": "FlatDamage",
+          "type": "float",
+          "description": "Flat amount of durability damage to apply"
+        },
+        "0x5c": {
+          "name": "PerArmorTierDamage",
+          "type": "float",
+          "description": "Multiplier applied to current durability (percentage-based damage)"
+        },
+        "0x60": {
+          "name": "PerStackDamage",
+          "type": "float",
+          "description": "Damage per armor tier/stack count"
+        }
+      },
+      "target_entity_fields": {
+        "0x5c": {
+          "name": "ArmorDurability",
+          "type": "int",
+          "description": "Current armor durability value"
+        },
+        "0x60": {
+          "name": "ArmorTier",
+          "type": "long (ptr offset 0xc)",
+          "description": "Armor tier reference used for per-tier calculations"
+        }
+      },
+      "formula": "newDurability = ceil(currentDurability - FlatDamage - (currentDurability * PerArmorTierDamage) - (armorTier * PerStackDamage))"
+    },
+
+    "IgnoreDamageEffectHandler": {
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "functions": {
+        "onBeforeDamageReceived": {
+          "name": "Menace.Tactical.Skills.Effects.IgnoreDamageEffectHandler$$OnBeforeDamageReceived",
+          "address": "0x180707600",
+          "description": "Intercepts incoming damage and potentially reduces/ignores it"
+        },
+        "create": {
+          "name": "Menace.Tactical.Skills.Effects.IgnoreDamage$$Create",
+          "address": "0x180707870",
+          "description": "Factory method to create handler from effect data"
+        }
+      },
+      "handler_fields": {
+        "0x10": {
+          "name": "Skill",
+          "type": "BaseSkill*",
+          "description": "Reference to owning skill (inherited from SkillEventHandler)"
+        },
+        "0x18": {
+          "name": "EffectData",
+          "type": "IgnoreDamage*",
+          "description": "Reference to the IgnoreDamage effect data"
+        }
+      },
+      "effect_data_fields": {
+        "0x58": {
+          "name": "ChancePercent",
+          "type": "int",
+          "description": "Percentage chance (0-100) for the effect to trigger"
+        },
+        "0x5c": {
+          "name": "ReductionPercent",
+          "type": "int",
+          "description": "Percentage of damage to reduce when triggered"
+        },
+        "0x60": {
+          "name": "RequiredTags",
+          "type": "TagTemplateList*",
+          "description": "Tags that incoming skill must have for this effect to apply"
+        }
+      },
+      "damage_context_fields": {
+        "0x2c": {
+          "name": "Damage",
+          "type": "int",
+          "description": "Health damage amount being dealt"
+        },
+        "0x38": {
+          "name": "ArmorDamage",
+          "type": "int",
+          "description": "Armor durability damage amount being dealt"
+        }
+      },
+      "behavior": [
+        "1. Check if incoming skill tags contain all required tags at effect+0x60",
+        "2. Roll pseudo-random chance using ChancePercent at effect+0x58",
+        "3. If successful, calculate reduction factor = ReductionPercent / 100.0",
+        "4. Reduce damage at context+0x2c by (damage * reductionFactor)",
+        "5. Reduce armor damage at context+0x38 by (armorDamage * reductionFactor)",
+        "6. Consume one use from the skill"
+      ]
+    }
+  },
+
+  "base_class": {
+    "name": "SkillEventHandler",
+    "namespace": "Menace.Tactical.Skills",
+    "common_fields": {
+      "0x10": {
+        "name": "Skill",
+        "type": "BaseSkill*",
+        "description": "Reference to the skill that owns this handler"
+      },
+      "0x18": {
+        "name": "EffectData",
+        "type": "SkillEffect*",
+        "description": "Reference to the effect data (derived type varies by handler)"
+      }
+    },
+    "helper_functions": {
+      "GetEntity": {
+        "address": "0x1806eef40",
+        "description": "Returns Entity using the skill via Skill->GetEntity()"
+      },
+      "GetActor": {
+        "address": "0x1806eef20",
+        "description": "Returns Actor associated with the skill"
+      },
+      "GetOwner": {
+        "address": "0x1806eef60",
+        "description": "Returns owner of the skill"
+      }
+    }
+  },
+
+  "ghidra_comments_added": [
+    {
+      "address": "0x1807186a0",
+      "function": "ReduceArmorHandler_Constructor",
+      "comment": "Handler layout and effect data field documentation"
+    },
+    {
+      "address": "0x180718650",
+      "function": "ReduceArmorHandler_OnUpdate_ApplyArmorReduction",
+      "comment": "OnUpdate behavior and field access documentation"
+    },
+    {
+      "address": "0x1807186e0",
+      "function": "Menace.Tactical.Skills.Effects.ReduceArmor$$Create",
+      "comment": "Factory method and effect data structure"
+    },
+    {
+      "address": "0x1807027c0",
+      "function": "Menace.Tactical.Skills.Effects.DamageArmorDurabilityHandler$$OnAdded",
+      "comment": "OnAdded behavior, formula, and field mappings"
+    },
+    {
+      "address": "0x180702910",
+      "function": "Menace.Tactical.Skills.Effects.DamageArmorDurability$$Create",
+      "comment": "Factory method and effect data structure"
+    },
+    {
+      "address": "0x180707600",
+      "function": "Menace.Tactical.Skills.Effects.IgnoreDamageEffectHandler$$OnBeforeDamageReceived",
+      "comment": "Damage mitigation logic, chance rolling, and field mappings"
+    },
+    {
+      "address": "0x180707870",
+      "function": "Menace.Tactical.Skills.Effects.IgnoreDamage$$Create",
+      "comment": "Factory method and effect data structure"
+    }
+  ]
+}

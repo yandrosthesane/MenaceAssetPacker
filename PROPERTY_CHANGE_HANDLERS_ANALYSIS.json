@@ -1,0 +1,220 @@
+{
+  "title": "PropertyChange Variant Handlers Analysis",
+  "description": "Analysis of ChangePropertyTargetHandler, ChangePropertyPerTileMovedHandler, and HitchanceHandler from Ghidra MCP",
+  "analyzedHandlers": [
+    {
+      "name": "ChangePropertyTargetHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "baseClass": "SkillEventHandler",
+      "templateClass": "ChangePropertyTarget",
+      "functions": {
+        "OnModifyTargetProperties": {
+          "address": "0x1806ff750",
+          "signature": "ulonglong __fastcall (longlong handler, longlong targetProperties)",
+          "description": "Applies property changes from template's PropertyChange[] array to target entity properties"
+        }
+      },
+      "templateFields": {
+        "0x58": {
+          "name": "PropertyChanges",
+          "type": "PropertyChange[]",
+          "description": "Array of property modifications to apply to targets. Each entry is 12 bytes.",
+          "entryFormat": {
+            "0x00": { "name": "PropertyType", "type": "uint (EntityPropertyType enum)", "size": 4 },
+            "0x04": { "name": "Value", "type": "int", "size": 4, "description": "Additive value for non-mult properties" },
+            "0x08": { "name": "MultValue", "type": "float", "size": 4, "description": "Multiplicative value for mult properties" }
+          },
+          "entrySize": 12
+        }
+      },
+      "handlerFields": {
+        "0x10": { "name": "SourceEntity", "type": "Entity*" },
+        "0x18": { "name": "Template", "type": "ChangePropertyTarget*" }
+      },
+      "notes": "Iterates PropertyChange[] array, checking IsMultProperty for each entry. Additive properties use UpdateProperty(), multiplicative use UpdateMultProperty(). Used for debuffs/buffs applied to skill targets."
+    },
+    {
+      "name": "ChangePropertyPerTileMovedHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "baseClass": "ChangePropertyHandler (extends SkillEventHandler)",
+      "templateClass": "ChangePropertyPerTileMoved",
+      "functions": {
+        "OnUpdate": {
+          "address": "0x1806ff620",
+          "signature": "void __fastcall (longlong handler, longlong entityProperties)",
+          "description": "Called each update cycle, applies property change scaled by tiles moved"
+        }
+      },
+      "templateFields": {
+        "0x58": {
+          "name": "PropertyType",
+          "type": "uint (EntityPropertyType enum)",
+          "description": "The property type to modify"
+        },
+        "0x5c": {
+          "name": "ValuePerTile",
+          "type": "float",
+          "description": "Amount to add/multiply per tile moved"
+        }
+      },
+      "handlerFields": {
+        "0x10": { "name": "SourceEntity", "type": "Entity*" },
+        "0x18": { "name": "Template", "type": "ChangePropertyPerTileMoved*" }
+      },
+      "calculation": "FinalValue = TilesMoved (from actor+0x154) * ValuePerTile",
+      "notes": "Uses actor's TilesMoved counter at entity+0x154. For multiplicative properties, formula becomes: 1.0 + (TilesMoved * ValuePerTile). Common use case: movement-based buffs/debuffs."
+    },
+    {
+      "name": "HitchanceHandler",
+      "namespace": "Menace.Tactical.Skills.Effects",
+      "baseClass": "SkillEventHandler",
+      "templateClass": "Hitchance",
+      "functions": {
+        "OnBeforeAnySkillUsed": {
+          "address": "0x1807074c0",
+          "signature": "void __fastcall (longlong handler, longlong sourceEntity, undefined8 p3, undefined8 p4, undefined8 skillProperties)",
+          "description": "Applies hit chance modifiers before skill execution"
+        }
+      },
+      "templateFields": {
+        "0x58": {
+          "name": "HitChanceAttack",
+          "type": "float",
+          "description": "Additive hit chance bonus for attacks (default: 0.0)"
+        },
+        "0x5c": {
+          "name": "HitChanceAttackMult",
+          "type": "float",
+          "description": "Multiplicative hit chance modifier for attacks (default: 1.0)"
+        },
+        "0x60": {
+          "name": "HitChanceDefense",
+          "type": "float",
+          "description": "Additive evasion bonus when defending (default: 0.0)"
+        },
+        "0x64": {
+          "name": "HitChanceDefenseMult",
+          "type": "float",
+          "description": "Multiplicative evasion modifier when defending (default: 1.0)"
+        }
+      },
+      "handlerFields": {
+        "0x10": { "name": "SourceEntity", "type": "Entity*" },
+        "0x18": { "name": "Template", "type": "Hitchance*" }
+      },
+      "applyBehavior": {
+        "description": "Hitchance.ApplyToEntityProperties modifies skill properties",
+        "operations": [
+          "props+0x68 += HitChanceAttack",
+          "AddMult(props+0x6c, HitChanceAttackMult)",
+          "props+0x70 += HitChanceDefense",
+          "AddMult(props+0x74, HitChanceDefenseMult)"
+        ]
+      },
+      "notes": "Verifies source entity matches before applying. Uses virtual method dispatch for ApplyToEntityProperties. Affects both attack accuracy and defense evasion."
+    }
+  ],
+  "relatedBaseHandler": {
+    "name": "ChangePropertyHandler",
+    "description": "Base handler for simple property change effects",
+    "templateFields": {
+      "0x58": {
+        "name": "TriggerType",
+        "type": "int",
+        "values": {
+          "0": "OnUpdate - Apply every update cycle",
+          "1": "OnBeingAttacked - Apply when entity is attacked",
+          "2": "OnSkillUse - Apply when using skills"
+        }
+      },
+      "0x5c": {
+        "name": "PropertyType",
+        "type": "uint (EntityPropertyType enum)",
+        "description": "The property to modify"
+      },
+      "0x60": {
+        "name": "Value",
+        "type": "int",
+        "description": "Additive value for non-multiplicative properties"
+      },
+      "0x64": {
+        "name": "ValueMult",
+        "type": "float",
+        "default": "1.0f (0x3f800000)",
+        "description": "Multiplicative value for mult properties"
+      },
+      "0x68": {
+        "name": "ValueProvider",
+        "type": "IValueProvider*",
+        "description": "Optional interface for dynamic value scaling"
+      },
+      "0x70": {
+        "name": "StringValueIndex",
+        "type": "int",
+        "default": "-1 (0xffffffff)",
+        "description": "Index into string array for tooltip display"
+      },
+      "0x74": {
+        "name": "InvertSign",
+        "type": "bool",
+        "description": "If true, inverts sign for display purposes"
+      }
+    },
+    "handlerFields": {
+      "0x10": { "name": "SourceEntity/Skill", "type": "BaseSkill*" },
+      "0x18": { "name": "Template", "type": "ChangeProperty*" },
+      "0x20": { "name": "CalculatedAmount", "type": "float", "description": "Cached calculated value after provider scaling" },
+      "0x24": { "name": "LastProviderValue", "type": "int", "description": "Tracks provider value for change detection" }
+    }
+  },
+  "relatedAuraHandler": {
+    "name": "ChangePropertyAuraHandler",
+    "description": "Aura-based property changes affecting nearby entities",
+    "templateFields": {
+      "0x58": {
+        "name": "PropertyChanges",
+        "type": "PropertyChange[]",
+        "description": "Array of property modifications (12 bytes each)"
+      },
+      "0x60": {
+        "name": "Range",
+        "type": "int",
+        "default": 5,
+        "description": "Maximum tile range for aura effect"
+      },
+      "0x64": {
+        "name": "LinearFalloff",
+        "type": "bool",
+        "description": "If true, effect scales down with distance: value * (1 - dist/range)"
+      }
+    }
+  },
+  "propertyChangeStruct": {
+    "name": "PropertyChange",
+    "size": 12,
+    "fields": [
+      { "offset": "0x00", "name": "PropertyType", "type": "uint (EntityPropertyType)", "size": 4 },
+      { "offset": "0x04", "name": "Value", "type": "int", "size": 4 },
+      { "offset": "0x08", "name": "MultValue", "type": "float", "size": 4 }
+    ],
+    "usage": "Used in arrays by ChangePropertyTarget and ChangePropertyAura to specify multiple property modifications"
+  },
+  "entityPropertyTypeEnum": {
+    "description": "Multiplicative property types (IsMultProperty returns true)",
+    "multiplicativeValues": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 35, 36, 41, 43, 44, 46, 47, 49, 52, 55, 57, 60, 64, 67, 71],
+    "notes": "All other property types are additive"
+  },
+  "ghidraCommentsAdded": [
+    { "address": "0x1806ff750", "function": "ChangePropertyTargetHandler$$OnModifyTargetProperties" },
+    { "address": "0x1806ff620", "function": "ChangePropertyPerTileMovedHandler$$OnUpdate" },
+    { "address": "0x1807074c0", "function": "HitchanceHandler$$OnBeforeAnySkillUsed" },
+    { "address": "0x1806ff940", "function": "ChangeProperty$$.ctor" },
+    { "address": "0x1806ff880", "function": "ChangePropertyTarget$$.ctor" },
+    { "address": "0x1807075d0", "function": "Hitchance$$.ctor" },
+    { "address": "0x180707500", "function": "Hitchance$$ApplyToEntityProperties" },
+    { "address": "0x1806fee90", "function": "ChangePropertyHandler_Apply_ModifyEntityStat" },
+    { "address": "0x1806fe510", "function": "ChangePropertyAura$$.ctor" },
+    { "address": "0x1806fe1f0", "function": "ChangePropertyAuraHandler$$OnUpdate" }
+  ],
+  "analysisDate": "2026-03-07"
+}

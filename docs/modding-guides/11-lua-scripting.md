@@ -1130,6 +1130,107 @@ end)
 | `blackmarket_restocked` | - | Black market restocked (post) |
 | `blackmarket_item_added` | `{item, item_ptr}` | Item added to market |
 
+#### Property Interceptor Events
+
+These events fire when game properties are calculated. Use them to observe stat changes in real-time.
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `property_damage` | `{ptr, result}` | Damage value calculated |
+| `property_accuracy` | `{ptr, result}` | Accuracy calculated |
+| `property_armor` | `{ptr, result}` | Armor value calculated |
+| `property_max_health` | `{ptr, result}` | Max HP calculated |
+| `property_move_range` | `{ptr, result}` | Movement range calculated |
+| `property_sight_range` | `{ptr, result}` | Vision range calculated |
+| `property_initiative` | `{ptr, result}` | Initiative calculated |
+| `property_willpower` | `{ptr, result}` | Willpower calculated |
+| `property_strength` | `{ptr, result}` | Strength calculated |
+| `property_speed` | `{ptr, result}` | Speed calculated |
+| `property_endurance` | `{ptr, result}` | Endurance calculated |
+
+#### Skill Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `skill_ap_cost` | `{skill_ptr, actor_ptr, result}` | Skill AP cost calculated |
+| `skill_cooldown` | `{skill_ptr, actor_ptr, result}` | Skill cooldown calculated |
+| `skill_range` | `{skill_ptr, actor_ptr, result}` | Skill range calculated |
+| `skill_damage` | `{skill_ptr, actor_ptr, result}` | Skill damage calculated |
+| `skill_can_use` | `{skill_ptr, actor_ptr, result}` | Skill usability check |
+| `skill_execute` | `{skill_ptr, actor_ptr}` | Skill executed |
+
+#### Actor State Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `actor_take_damage` | `{actor_ptr, damage}` | Damage being applied |
+| `actor_heal` | `{actor_ptr, amount}` | Healing being applied |
+| `actor_suppression` | `{actor_ptr, amount}` | Suppression being applied |
+| `actor_morale_change` | `{actor_ptr, delta}` | Morale change |
+| `actor_ap_change` | `{actor_ptr, delta}` | AP change |
+
+#### Tile Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `tile_cover` | `{tile_ptr, direction, result}` | Cover value in direction |
+| `tile_blocked` | `{tile_ptr, result}` | Tile blocked check |
+| `tile_elevation` | `{tile_ptr, result}` | Tile elevation |
+| `basetile_move_cost` | `{tile_ptr, result}` | Base movement cost |
+| `los_check` | `{from_ptr, to_ptr, result}` | LOS check result |
+
+#### Movement Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `move_cost` | `{actor_ptr, tile_ptr, result}` | Movement cost to tile |
+| `move_range` | `{actor_ptr, result}` | Total movement range |
+| `can_move_to` | `{actor_ptr, tile_ptr, result}` | Movement validation |
+
+#### Strategy Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `mission_reward` | `{mission_ptr, result}` | Mission reward value |
+| `item_value` | `{item_ptr, result}` | Item trade value |
+| `leader_xp` | `{leader_ptr, result}` | XP gain amount |
+
+#### AI Interceptor Events
+
+| Event | Callback Args | Description |
+|-------|---------------|-------------|
+| `ai_attack_score` | `{agent_ptr, target_ptr, result}` | Attack evaluation score |
+| `ai_threat_value` | `{agent_ptr, threat_ptr, result}` | Threat evaluation |
+| `ai_action_priority` | `{agent_ptr, action_ptr, result}` | Action priority |
+| `ai_should_flee` | `{agent_ptr, result}` | Flee decision |
+
+### Example: Using Interceptor Events
+
+```lua
+-- Monitor damage calculations
+on("property_damage", function(data)
+    log("Damage calculated: " .. data.result)
+end)
+
+-- Track skill AP costs
+on("skill_ap_cost", function(data)
+    log("Skill AP cost: " .. data.result)
+end)
+
+-- Monitor movement costs
+on("move_cost", function(data)
+    log("Movement cost: " .. data.result)
+end)
+
+-- Track AI decisions
+on("ai_attack_score", function(data)
+    log("AI attack score: " .. data.result)
+end)
+
+-- Note: Lua interceptor events are read-only observers.
+-- Use C# Intercept class if you need to modify values.
+```
+
 ### Example: Reacting to Combat Events
 
 ```lua

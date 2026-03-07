@@ -303,7 +303,27 @@ public class DocsView : UserControl
         return new Avalonia.Controls.Templates.FuncTreeDataTemplate<DocTreeNode>(
             (node, _) =>
             {
-                // Just the name - TreeViewItem provides the expansion chevron
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 6
+                };
+
+                // Folder icon for non-file items (flat white Fluent style)
+                if (!node.IsFile)
+                {
+                    var iconPath = new Avalonia.Controls.Shapes.Path
+                    {
+                        Width = 14,
+                        Height = 14,
+                        Stretch = Stretch.Uniform,
+                        Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                        Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    panel.Children.Add(iconPath);
+                }
+
                 var nameBlock = new TextBlock
                 {
                     Text = node.Name,
@@ -314,7 +334,9 @@ public class DocsView : UserControl
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     Margin = new Thickness(0, 8)
                 };
-                return nameBlock;
+                panel.Children.Add(nameBlock);
+
+                return panel;
             },
             node => node.Children);
     }

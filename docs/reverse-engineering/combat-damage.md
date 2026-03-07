@@ -2,7 +2,12 @@
 
 ## Overview
 
-The damage system calculates damage dealt from attacks, considering weapon stats, armor, armor penetration, and various modifiers.
+The damage system calculates damage dealt from attacks, considering weapon stats, armor, armor penetration, and various modifiers. This document also covers debuff mechanics, damage reduction handlers, and status effect systems that modify combat outcomes.
+
+## Namespace Reference
+
+- **Effect Handlers**: `Menace.Tactical.Skills.Effects`
+- **Analysis Tool**: Ghidra MCP
 
 ## Core Damage Functions
 
@@ -318,3 +323,446 @@ void ApplyToEntityProperties(ArmorTemplate armor, EntityProperties props) {
    - Reduce damage based on armor effectiveness
    - Apply armor durability damage
 5. **Final damage** applied to target health
+
+---
+
+## Debuff Handler System
+
+### Base Classes
+
+All skill effect handlers inherit from common base classes:
+
+#### SkillEventHandler
+Base class for all skill effect handlers.
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x10 | Skill* | skill_ptr |
+| +0x18 | BaseEffect* | effect_data_ptr |
+
+Helper methods: `GetEntity()`, `GetActor()`, `GetOwner()`
+
+#### TileEffectHandler
+Base class for tile-based effects.
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x10 | Tile* | tile_ptr |
+
+### Event Lifecycle
+
+Common event hooks for debuff handlers:
+
+| Event | Description |
+|-------|-------------|
+| OnAdded | Called when effect first applied to entity |
+| OnRemoved | Called when effect removed from entity |
+| OnUpdate | Called each property update cycle |
+| OnRoundStart | Called at start of tactical round |
+| OnRoundEnd | Called at end of tactical round |
+| OnTurnStart | Called at start of affected entity's turn |
+| OnTurnEnd | Called at end of affected entity's turn |
+| OnApply | Called when skill applies to tile/target |
+| OnBeforeAnySkillUsed | Called before any skill is used |
+| OnTargetHit | Called when attack hits target |
+| OnBeingAttacked | Called when entity is being attacked |
+| OnMissionStarted | Called at mission start |
+| OnMissionFinished | Called at mission end |
+
+---
+
+## Damage Reduction Mechanics
+
+### ReduceArmorHandler (0x1807186a0)
+
+Reduces target armor effectiveness via stacking debuff.
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x18 | ReduceArmor* | effect_data_ptr |
+| +0x20 | int | stack_count (default: 1) |
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | float | armor_reduction_pct | Percentage of armor reduced per stack |
+| +0x5c | float | max_reduction | Maximum total armor reduction cap |
+
+**Formula:**
+```
+reduction = min(StackCount * ArmorReductionPct, MaxReduction)
+```
+
+Events: `OnUpdate`
+
+### ChangePropertyHandler (0x1806fee90)
+
+Generic stat modifier for any entity property. Supports both additive and multiplicative modes.
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x18 | ChangeProperty* | effect_data_ptr |
+| +0x20 | float | cached_value |
+| +0x24 | int | last_value_provider_result |
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | int | trigger_type | 0=OnUpdate, 1=OnAdded |
+| +0x5c | PropertyType | property_type | Enum for target property |
+| +0x60 | int | value_additive | Flat value change |
+| +0x64 | float | value_multiplicative | Multiplier value |
+| +0x68 | IValueProvider* | value_provider | Optional dynamic scaler |
+| +0x70 | int | tooltip_index | Display index (-1 = hidden) |
+| +0x74 | bool | show_as_positive | Display formatting |
+
+Uses `IsMultProperty()` to determine additive vs multiplicative mode.
+
+Events: `OnUpdate`, `OnBeforeAnySkillUsed`, `OnBeingAttacked`
+
+### ChangePropertyConditionalHandler (0x1806fe570)
+
+Conditional stat modifier with activation requirements. Inherits from ChangePropertyHandler.
+
+Events: `OnUpdate`, `OnBeforeAnySkillUsed`
+
+---
+
+## Armor Damage Formulas
+
+### DamageOverTimeHandler (0x180702dc0)
+
+Handles periodic damage (bleed, burn, poison effects).
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x10 | Skill* | skill_ptr |
+| +0x18 | DamageOverTime* | effect_data_ptr |
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | int | flat_damage | Base flat damage per tick |
+| +0x5c | float | percent_damage | Percentage of max HP per tick |
+| +0x60 | float | flat_from_max_hp | Flat bonus from max HP |
+| +0x64 | float | flat_from_max_hp_min | Minimum HP-based damage |
+| +0x68 | float | percent_from_element_count | Scaling per element |
+| +0x6c | float | min_from_element_count | Minimum element scaling |
+| +0x74 | bool | armor_damage_only | Only damages armor durability |
+| +0x78 | float | armor_dmg_flat | Flat armor damage |
+| +0x7c | float | armor_dmg_pct_current | % of current armor as damage |
+| +0x80 | float | armor_dmg_pct_from_element | Element-based armor damage |
+| +0x84 | float | armor_dmg_flat_2 | Secondary flat armor damage |
+| +0x88 | float | armor_dmg_pct_current_2 | Secondary current armor % |
+| +0x8c | enum | fatality_type | Death animation type |
+| +0x90 | int | element_hit_min_index | Minimum element index |
+| +0x94 | bool | can_crit | Whether damage can crit |
+
+**Damage Formula:**
+```
+damage = ceil(MaxHP * PercentDmg) + FlatDmg + ElementScaling
+```
+
+Events: `OnTurnEnd`
+
+---
+
+## Suppression System
+
+### Suppression States
+
+| State | Value | Effects |
+|-------|-------|---------|
+| Normal | 0 | No suppression effects |
+| Suppressed | 1 | AP reduced by 30, accuracy penalty |
+| Pinned | 2 | AP set to 0, cannot act unless has PinnedDown skill |
+
+### SuppressionHandler (0x18071f790)
+
+Core suppression state manager.
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x10 | Skill* | skill_ptr |
+| +0x18 | Suppression* | effect_data_ptr |
+| +0x20 | int | last_suppression_state |
+| +0x24 | int | pinned_round_counter |
+
+**Suppression Mechanics:**
+
+| Stat | Value |
+|------|-------|
+| Suppressed AP Penalty | -30 |
+| Pinned AP Value | 0 |
+| Suppressed Accuracy Penalty | -0.15 (15%) |
+| Pinned Mobility Penalty | Variable per round |
+
+Events: `OnRoundStart`, `OnUpdate`
+
+### ChangeSuppressionHandler (0x180700600)
+
+Applies suppression value changes.
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | int | trigger_type | 0=OnApply, 1=OnAdded |
+| +0x5c | int | suppression_value | Amount to change |
+| +0x60 | bool | apply_to_origin | Apply to user instead of target |
+
+Events: `OnAdded`, `OnApply`
+
+### OnElementKilledHandler.ReduceSuppression (0x180717980)
+
+Reduces suppression when killing enemies. Uses XOR to negate suppression value.
+
+**Actor Suppression Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x15c | float | current_suppression |
+
+### Actor Suppression Properties
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x15c | float | suppression_value |
+| entity_properties+0xEC bit 5 | flag | is_immune_flag |
+| entity_properties+0xEC bit 6 | flag | is_pinned_immune_flag |
+
+### Suppression Functions
+
+| Function | Address |
+|----------|---------|
+| Actor.ApplySuppression | 0x1805ddda0 |
+| Actor.ChangeSuppressionAndUpdateAP | 0x1805de3b0 |
+| Actor.SetSuppression | 0x1805e76d0 |
+| Actor.GetSuppressionState | 0x1805df730 |
+
+---
+
+## Action Point Debuffs
+
+### ChangeActionPointsHandler (0x1806fd120)
+
+Modifies available action points.
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | int | ap_delta | AP change amount (negative = reduction) |
+| +0x5c | bool | force_skip_turn | Skip turn even if skills available |
+
+Events: `OnAdded`, `OnRoundStart`, `OnUpdate`
+
+**Mechanics:**
+- Can be modified by `InterceptAPChangeHandler`
+- Triggers `SkipTurn` if AP=0 and no usable skills (unless force flag set)
+
+---
+
+## Morale Debuffs
+
+### ChangeMoraleHandler (0x1806fdd20)
+
+Sets or modifies morale value.
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x5c | int | morale_target | 2=50% of max, 3=100% of max |
+| +0x60 | int | condition_type | 1=only if above, 2=only if below |
+
+Events: `OnAdded`, `OnApply`
+
+### AttackMoraleHandler (0x1806fbb70)
+
+Morale damage from attacks.
+
+Events: `OnApply`
+
+---
+
+## Disable Effects
+
+### DisableSkillsHandler (0x180704860)
+
+Disables matching skills on target.
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x18 | DisableSkills* | effect_data_ptr |
+| +0x20 | List<Skill>* | disabled_skills_list (cached for re-enabling) |
+
+**Effect Data Fields:**
+
+| Offset | Type | Field | Description |
+|--------|------|-------|-------------|
+| +0x58 | ISkillFilter* | skill_filter | Filter to match skills |
+| +0x60 | bool | also_disable_usable_by_player | Additional disable flag |
+
+**Skill Fields Modified:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x38 | bool | enabled |
+| +0x98 | bool | usable_by_player |
+
+Events: `OnAdded`, `OnRemoved`, `OnRoundStart`
+
+### DisableItemHandler (0x1807042c0)
+
+Disables item's skills.
+
+**Item Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x30 | IEnumerable<BaseSkill> | skills_list |
+
+**Skill Fields Modified:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x38 | bool | disabled |
+
+Events: `OnAdded`, `OnRemoved`
+
+### DisableByFlagHandler (0x180704200)
+
+Conditional disable based on flags.
+
+Events: `IsEnabled` check
+
+---
+
+## Stun System
+
+### Actor Stun Fields
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x16c | bool | is_visually_stunned |
+| entity_properties+0xEC bit 0 | flag | is_stunned |
+
+### Actor.IsStunned (0x1805e0860)
+
+Returns true if visual stun flag OR property stun bit is set.
+
+### DisabledOrStunnedCondition (0x1806d1680)
+
+Skill condition checking stun state.
+
+---
+
+## Bleedout System
+
+### BleedOutTileEffectHandler (0x180685910)
+
+Manages unit bleedout countdown.
+
+**Handler Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x10 | Tile* | tile_ptr |
+| +0x18 | int | rounds_remaining |
+| +0x28 | BleedOutTileEffect* | effect_data_ptr |
+| +0x30 | BaseUnitLeader* | unit_leader_ptr |
+| +0x38 | BleedingWorldSpaceIcon* | world_space_icon |
+| +0x40 | bool | was_tile_passable |
+
+**Effect Data Fields:**
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0xB8 | int | total_bleedout_rounds |
+| +0xBC | Stem.ID | bleedout_tick_sound |
+| +0xCC | Stem.ID | death_sound |
+
+Events: `OnAdded`, `OnRoundStart`, `OnMissionPreFinished`, `OnRemoved`
+
+**Mechanics:**
+- OnAdded: Sets HealthStatus=1, creates UI icon, marks tile occupied
+- OnRoundStart: Decrements counter, kills if 0, updates UI
+- Revival: Via StopBleedoutHandler
+
+### StopBleedoutHandler (0x18071e720)
+
+Stabilizes bleeding out unit.
+
+Events: `OnUse`, `OnVerifyTarget`
+
+---
+
+## Key Actor Properties Summary
+
+| Offset | Type | Field |
+|--------|------|-------|
+| +0x5c | int | armor_durability |
+| +0x15c | float | suppression_value |
+| +0x160 | float | morale |
+| +0x16c | bool | is_stunned_visual |
+
+---
+
+## TacticalManager Events
+
+Events fired through TacticalManager for debuff notifications:
+
+| Event | Address |
+|-------|---------|
+| OnSuppressionApplied | 0x180678770 |
+| OnSuppressed | 0x1806786c0 |
+| OnBleedingOut | 0x1806776f0 |
+| OnArmorChanged | via InvokeOnArmorChanged |
+
+---
+
+## Related Function Addresses
+
+### Suppression Functions
+
+| Function | Address |
+|----------|---------|
+| Actor.ApplySuppression | 0x1805ddda0 |
+| Actor.ChangeSuppressionAndUpdateAP | 0x1805de3b0 |
+| Actor.SetSuppression | 0x1805e76d0 |
+| Actor.GetSuppressionState | 0x1805df730 |
+
+### Damage Functions
+
+| Function | Address/Notes |
+|----------|---------------|
+| Entity.TakeDamage | Virtual at *entity+0x5A8 |
+| Entity.SetArmorDurability | via decompilation |
+
+### Action Point Functions
+
+| Function | Address/Notes |
+|----------|---------------|
+| Actor.SetActionPoints | via decompilation |
+| Actor.SkipTurn | via decompilation |
+
+### Morale Functions
+
+| Function | Address/Notes |
+|----------|---------------|
+| Actor.SetMorale | via decompilation |
+| Actor.GetMoraleMax | via decompilation |

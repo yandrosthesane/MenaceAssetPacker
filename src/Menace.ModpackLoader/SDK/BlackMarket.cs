@@ -932,19 +932,7 @@ public static class BlackMarket
     }
 
     private static object GetManagedProxy(GameObj obj, Type managedType)
-    {
-        if (obj.IsNull || managedType == null) return null;
-
-        try
-        {
-            var ptrCtor = managedType.GetConstructor(new[] { typeof(IntPtr) });
-            return ptrCtor?.Invoke(new object[] { obj.Pointer });
-        }
-        catch
-        {
-            return null;
-        }
-    }
+        => Il2CppUtils.GetManagedProxy(obj, managedType);
 
     /// <summary>
     /// Get the stacks list from BlackMarket using direct offset access.

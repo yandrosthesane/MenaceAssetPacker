@@ -382,18 +382,6 @@ public class StatsEditorView : UserControl
       });
     buttonPanel.Children.Add(modpackOnlyToggle);
 
-    // Spacer to push Create Modpack to the right
-    buttonPanel.Children.Add(new Border { Width = 8 });
-
-    var createModpackButton = new Button
-    {
-      Content = "+ Create Modpack",
-      FontSize = 11
-    };
-    createModpackButton.Classes.Add("primary");
-    createModpackButton.Click += async (_, _) => await ShowCreateModpackDialogAsync();
-    buttonPanel.Children.Add(createModpackButton);
-
     buttonContainer.Children.Add(buttonPanel);
 
     // Section filter + Sort panel (shown when searching)
@@ -472,10 +460,31 @@ public class StatsEditorView : UserControl
     treeView.Bind(TreeView.IsVisibleProperty,
       new Avalonia.Data.Binding("IsSearching") { Converter = BoolInverseConverter.Instance });
 
-    // Tree item template
+    // Tree item template with folder icons for categories
     treeView.ItemTemplate = new Avalonia.Controls.Templates.FuncTreeDataTemplate<TreeNodeViewModel>(
       (node, _) =>
       {
+        var panel = new StackPanel
+        {
+          Orientation = Orientation.Horizontal,
+          Spacing = 6
+        };
+
+        // Folder icon for category items (flat white Fluent style)
+        if (node.IsCategory)
+        {
+          var iconPath = new Avalonia.Controls.Shapes.Path
+          {
+            Width = 14,
+            Height = 14,
+            Stretch = Stretch.Uniform,
+            Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
+            VerticalAlignment = VerticalAlignment.Center
+          };
+          panel.Children.Add(iconPath);
+        }
+
         var text = new TextBlock
         {
           Text = node.Name,
@@ -484,7 +493,9 @@ public class StatsEditorView : UserControl
           FontSize = node.IsCategory ? 13 : 12,
           Margin = new Thickness(8, 8)
         };
-        return text;
+        panel.Children.Add(text);
+
+        return panel;
       },
       node => node.Children);
 
@@ -622,13 +633,63 @@ public class StatsEditorView : UserControl
     };
     toolbar.Children.Add(modpackCombo);
 
+    // Save/Create button - state dependent based on modpack selection
     var saveButton = new Button
     {
       Content = "Save",
       FontSize = 12
     };
     saveButton.Classes.Add("primary");
-    saveButton.Click += OnSaveClick;
+
+    // Update button content based on modpack selection
+    void UpdateSaveButtonState()
+    {
+      if (DataContext is StatsEditorViewModel vm)
+      {
+        var hasModpack = !string.IsNullOrEmpty(vm.CurrentModpackName);
+        saveButton.Content = hasModpack ? "Save" : "+ Create Modpack";
+      }
+    }
+
+    saveButton.Click += async (_, _) =>
+    {
+      if (DataContext is StatsEditorViewModel vm)
+      {
+        if (string.IsNullOrEmpty(vm.CurrentModpackName))
+        {
+          // No modpack - show create dialog
+          await ShowCreateModpackDialogAsync();
+        }
+        else
+        {
+          // Has modpack - save
+          OnSaveClick(saveButton, new Avalonia.Interactivity.RoutedEventArgs());
+        }
+      }
+    };
+
+    // Listen for modpack changes to update button state
+    if (DataContext is StatsEditorViewModel initialVm)
+    {
+      initialVm.PropertyChanged += (s, e) =>
+      {
+        if (e.PropertyName == nameof(StatsEditorViewModel.CurrentModpackName))
+          UpdateSaveButtonState();
+      };
+    }
+    DataContextChanged += (_, _) =>
+    {
+      UpdateSaveButtonState();
+      if (DataContext is StatsEditorViewModel vm)
+      {
+        vm.PropertyChanged += (s, e) =>
+        {
+          if (e.PropertyName == nameof(StatsEditorViewModel.CurrentModpackName))
+            UpdateSaveButtonState();
+        };
+      }
+    };
+
     toolbar.Children.Add(saveButton);
 
     var cloneButton = new Button

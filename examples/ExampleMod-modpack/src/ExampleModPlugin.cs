@@ -14,7 +14,8 @@ namespace Menace.ExampleMod;
 /// Features demonstrated:
 /// - ModSettings: All control types (toggle, slider, number, dropdown, text)
 /// - Templates API: Reading and writing game data
-/// - GamePatch: Harmony patching for runtime behavior
+/// - PatchSet: Fluent Harmony patching with reduced boilerplate (recommended)
+/// - GamePatch: Traditional Harmony patching for runtime behavior
 /// - DevConsole: Custom panels, logging, watching values
 /// - GameState: Scene awareness, delayed execution
 /// - ModError: Error reporting
@@ -23,6 +24,7 @@ public class ExampleModPlugin : IModpackPlugin
 {
     private MelonLogger.Instance _log;
     private HarmonyLib.Harmony _harmony;
+    private PatchResult _patchResult;
 
     // =========================================================================
     // INITIALIZATION
@@ -238,31 +240,151 @@ public class ExampleModPlugin : IModpackPlugin
     }
 
     // =========================================================================
-    // GAME PATCH - Harmony patching for runtime behavior
+    // PATCHSET - Fluent Harmony patching (RECOMMENDED)
+    // =========================================================================
+
+    /// <summary>
+    /// Example of using PatchSet for fluent, batched Harmony patching.
+    /// This is the recommended approach - less boilerplate than GamePatch.
+    /// </summary>
+    private void SetupPatchesWithPatchSet()
+    {
+        // PatchSet provides a fluent API for batching multiple patches together.
+        // Benefits over GamePatch:
+        // - Chainable calls reduce boilerplate
+        // - Generic type parameters for compile-time safety
+        // - Built-in optional patch support
+        // - PatchResult provides success/failure counts
+
+        _patchResult = new PatchSet(_harmony, "Example Mod")
+            // Basic postfix - runs after method completes
+            .Postfix<ExampleModPlugin>("ApplyDamageMultiplier", Patches.DamagePostfix)
+
+            // Basic prefix - runs before method, can skip original
+            .Prefix<ExampleModPlugin>("ApplySupplyMultiplier", Patches.SupplyPrefix)
+
+            // Combined prefix + postfix on same method
+            .PrefixPostfix<ExampleModPlugin>("ApplySquadSize",
+                Patches.SquadPrefix, Patches.SquadPostfix)
+
+            // With overload resolution using parameter types
+            .Postfix<ExampleModPlugin>("ApplyDifficultyPreset",
+                new[] { typeof(string) },  // parameter types
+                Patches.DifficultyPostfix)
+
+            // Optional patches - log warning but don't fail if method not found
+            // Useful for game version compatibility
+            .Prefix<ExampleModPlugin>("SomeMethodThatMightNotExist",
+                Patches.OptionalPatch,
+                optional: true)
+
+            // String-based type resolution (for types not available at compile time)
+            .Postfix("DamageCalculator", "CalculateDamage", Patches.DamageCalcPostfix)
+            .Prefix("ExperienceManager", "GetExperienceForKill", Patches.ExpPrefix, optional: true)
+
+            // Apply all patches at once
+            .Apply();
+
+        // Check results
+        _log.Msg($"PatchSet: {_patchResult.SuccessCount}/{_patchResult.TotalCount} patches applied");
+
+        if (!_patchResult.AllSucceeded)
+        {
+            foreach (var failed in _patchResult.FailedPatches)
+            {
+                _log.Warning($"Failed patch: {failed}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Container class for patch methods.
+    /// Patch methods must be static.
+    /// </summary>
+    private static class Patches
+    {
+        // Postfix patches run after the original method
+        public static void DamagePostfix(float multiplier)
+        {
+            DevConsole.Log($"[Patch] Damage multiplier applied: {multiplier}x");
+        }
+
+        // Prefix patches run before the original method
+        // Return false to skip the original method
+        public static bool SupplyPrefix(ref float multiplier)
+        {
+            // Clamp multiplier to valid range
+            multiplier = Math.Clamp(multiplier, 0.1f, 10f);
+            return true; // true = continue to original method
+        }
+
+        public static void SquadPrefix(ref int size)
+        {
+            // Ensure minimum squad size
+            if (size < 1) size = 1;
+        }
+
+        public static void SquadPostfix(int size)
+        {
+            DevConsole.Log($"[Patch] Squad size set to: {size}");
+        }
+
+        public static void DifficultyPostfix(string preset)
+        {
+            DevConsole.Log($"[Patch] Difficulty preset applied: {preset}");
+        }
+
+        public static void OptionalPatch()
+        {
+            // This patch is marked optional - won't cause errors if method not found
+        }
+
+        public static void DamageCalcPostfix(ref float __result)
+        {
+            // Modify return value
+            float mult = ModSettings.Get<float>("Example Mod", "DamageMultiplier");
+            __result *= mult;
+        }
+
+        public static void ExpPrefix(ref int amount)
+        {
+            // Double XP if setting enabled
+            bool doubleXP = ModSettings.Get<bool>("Example Mod", "DoubleXP");
+            if (doubleXP) amount *= 2;
+        }
+    }
+
+    // =========================================================================
+    // GAME PATCH - Traditional Harmony patching (alternative approach)
     // =========================================================================
 
     /// <summary>
     /// Example of patching a game method using GamePatch.
-    /// This runs BEFORE the original method.
+    /// Consider using PatchSet instead for most cases.
     /// </summary>
-    private void SetupPatches()
+    private void SetupPatchesWithGamePatch()
     {
+        // GamePatch is still available for simple one-off patches
+        // or when you need more direct control
+
         // Prefix patch: runs before the original method
         // Return false from prefix to skip the original method
         GamePatch.Prefix(
+            _harmony,
             "DamageCalculator",           // Type name
             "CalculateDamage",            // Method name
-            typeof(ExampleModPlugin),     // Class containing patch method
-            nameof(DamageCalculatorPrefix) // Patch method name
+            typeof(ExampleModPlugin).GetMethod(nameof(DamageCalculatorPrefix),
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
         );
 
         // Postfix patch: runs after the original method
         // Can modify the return value via __result parameter
         GamePatch.Postfix(
+            _harmony,
             "ExperienceManager",
             "GetExperienceForKill",
-            typeof(ExampleModPlugin),
-            nameof(ExperiencePostfix)
+            typeof(ExampleModPlugin).GetMethod(nameof(ExperiencePostfix),
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
         );
     }
 
@@ -319,7 +441,18 @@ public class ExampleModPlugin : IModpackPlugin
 
         GUI.Label(new Rect(area.x, y, area.width, lineHeight),
             $"Difficulty: {ModSettings.Get<string>("Example Mod", "Difficulty")}");
-        y += lineHeight + 10;
+        y += lineHeight;
+
+        // Show patch status if available
+        if (_patchResult != null)
+        {
+            var status = _patchResult.AllSucceeded ? "OK" : $"{_patchResult.FailureCount} failed";
+            GUI.Label(new Rect(area.x, y, area.width, lineHeight),
+                $"Patches: {_patchResult.SuccessCount}/{_patchResult.TotalCount} ({status})");
+            y += lineHeight;
+        }
+
+        y += 10;
 
         // Add a button
         if (GUI.Button(new Rect(area.x, y, 150, 24), "Apply All Settings"))
@@ -374,6 +507,13 @@ public class ExampleModPlugin : IModpackPlugin
 
         // GameState.CurrentScene is also available
         DevConsole.Log($"[Example] Scene: {GameState.CurrentScene}");
+
+        // Setup patches when game scene loads
+        // (Many game types aren't available until main menu/gameplay scenes)
+        if (sceneName == "MainMenu" || sceneName == "Gameplay")
+        {
+            SetupPatchesWithPatchSet();
+        }
 
         // Run code after a delay (in frames)
         // Useful for waiting for game objects to initialize

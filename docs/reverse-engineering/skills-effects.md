@@ -257,3 +257,140 @@ Special interfaces for specific behaviors:
 - `ISkillDelayedEffectHandler` - Delayed effect execution
 - `IExpectedDamageContributor` - Damage preview calculation
 - `IExpectedSuppressionContributor` - Suppression preview
+
+## Miscellaneous Effect Handlers
+
+### ToggleSkillsHandler
+
+Cycles through a list of skills, enabling one at a time while disabling others.
+
+```c
+// Handler layout
+class ToggleSkillsHandler : SkillEventHandler {
+    Skill skill;                // +0x10
+    ToggleSkills effect;        // +0x18
+    int currentIndex;           // +0x20 - Index of currently enabled skill
+}
+
+// Effect layout (ToggleSkills template)
+class ToggleSkills : SkillEventHandlerTemplate {
+    SkillTemplate[] SkillsToToggle;  // +0x58 - Array of skills to cycle through
+}
+```
+
+**Functions:**
+- `EnableOnlySkillWithIndex` (0x1807208e0) - Enables skill at index, disables others
+- `OnMissionStarted` (0x180720ad0) - Resets index to 0, enables first skill
+- `OnUse` (0x180720af0) - Increments index modulo array length
+- `Create` (0x180720b30) - Factory method
+
+**Behavior:** Sets `skill.IsEnabled` (+0x38) based on matching currentIndex.
+
+### DelayTurnHandler
+
+Ends the current turn without further action (delay/wait functionality).
+
+```c
+// Handler layout
+class DelayTurnHandler : SkillEventHandler {
+    Skill skill;              // +0x10
+    DelayTurn effect;         // +0x18
+    // No additional fields
+}
+
+// Effect layout - No specific fields at 0x58+
+```
+
+**Functions:**
+- `OnUse` (0x1807038b0) - Deselects actor, ends turn
+- `Create` (0x180703980) - Factory method
+- `IsUsable` (0x1807039e0) - Returns true if player-controlled and hasn't acted
+
+**Behavior:** Calls `TacticalManager.SetActiveActor(null)` then `TacticalState.EndTurn()`.
+
+### UseSkillHandler
+
+Triggers use of another skill as part of this skill's effect.
+
+```c
+// Handler layout
+class UseSkillHandler : SkillEventHandler {
+    Skill skill;              // +0x10
+    UseSkill effect;          // +0x18
+}
+
+// Effect layout
+class UseSkill : SkillEventHandlerTemplate {
+    SkillTemplate SkillToUse; // +0x58 - Template of skill to trigger
+    int TriggerType;          // +0x60 - When to trigger (0=OnAdded)
+}
+
+// Related Skill fields for targeting
+class Skill {
+    int MinRange;             // +0xB4 - Minimum range for target calc
+    int MaxRange;             // +0xBC - Maximum range for target calc
+}
+```
+
+**Functions:**
+- `ApplySkill` (0x180721510) - Finds and uses the linked skill
+- `OnAdded` (0x180721790) - Checks TriggerType, calls ApplySkill if 0
+- `Create` (0x1807217c0) - Factory method
+
+**Behavior:** Gets actor's skill container, finds skill by template, calculates target using actor direction and random range, then uses the skill.
+
+### RecallTargetHandler
+
+Overrides target tile to return to a previously targeted location.
+
+```c
+// Handler layout
+class RecallTargetHandler : SkillEventHandler {
+    Skill skill;                // +0x10
+    RecallTarget effect;        // +0x18
+}
+
+// Effect layout
+class RecallTarget : SkillEventHandlerTemplate {
+    SkillTemplate RecallSkillTemplate;  // +0x58 - Skill whose last target to recall
+}
+
+// Related Skill fields
+class Skill {
+    SkillContainer container;   // +0x18
+    object targetingContext;    // +0x28
+    Tile lastTargetTile;        // +0x68 - Last tile targeted by this skill
+}
+```
+
+**Functions:**
+- `OnDetermineActualTargetTile` (0x180718430) - Returns last target tile or null
+- `Create` (0x180718510) - Factory method
+- `GetLastTargetTile` (0x180718570) - Static helper
+
+**Behavior:** Looks up RecallSkillTemplate in skill container, returns its `lastTargetTile` (+0x68). Used for 'return' or 'recall' abilities.
+
+### GrantBonusTurnHandler
+
+Grants an additional turn with modified action points.
+
+```c
+// Handler layout
+class GrantBonusTurnHandler : SkillEventHandler {
+    Skill skill;                  // +0x10
+    GrantBonusTurn effect;        // +0x18
+    bool hasGrantedTurn;          // +0x20 - Prevents multiple bonus turns
+}
+
+// Effect layout
+class GrantBonusTurn : SkillEventHandlerTemplate {
+    float ActionPointMultiplier;  // +0x58 - Multiplier for bonus turn AP
+}
+```
+
+**Functions:**
+- `OnTurnEnd` (0x180706440) - Grants bonus turn if not already granted
+- `Create` (0x1807064f0) - Factory method
+- `GetAPNextTurn` (0x180706550) - Static helper to calculate AP
+
+**Behavior:** On turn end, if `hasGrantedTurn` is false: resets actor's turn done state, calculates new AP as `currentAP * multiplier`, sets `hasGrantedTurn` to true.
