@@ -129,6 +129,10 @@ public class FieldDescriptionService
             var fieldName = fieldProp.Name;
             var fieldData = fieldProp.Value;
 
+            // Skip non-object values (metadata fields like _verified_date)
+            if (fieldData.ValueKind != JsonValueKind.Object)
+                continue;
+
             var desc = new FieldDescription
             {
                 Description = fieldData.TryGetProperty("description", out var d) ? d.GetString() : null,

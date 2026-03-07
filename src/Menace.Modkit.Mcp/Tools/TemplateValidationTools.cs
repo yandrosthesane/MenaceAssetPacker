@@ -89,9 +89,14 @@ public static class TemplateValidationTools
 
                     foreach (var instanceNode in instancesToTest)
                     {
-                        var instance = instanceNode.AsObject();
-                        var instanceName = instance["name"]?.ToString();
+                        if (instanceNode == null)
+                            continue;
 
+                        var instance = instanceNode.AsObject();
+                        if (instance == null)
+                            continue;
+
+                        var instanceName = instance["name"]?.ToString();
                         if (string.IsNullOrEmpty(instanceName))
                             continue;
 

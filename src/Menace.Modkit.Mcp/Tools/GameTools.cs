@@ -422,7 +422,7 @@ public static class GameTools
         }
     }
 
-    private static string FindGameExecutable()
+    private static string? FindGameExecutable()
     {
         // Check environment variable first
         var envPath = Environment.GetEnvironmentVariable("MODKIT_GAME_PATH");

@@ -1,9 +1,7 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 
@@ -26,7 +24,6 @@ public class InfoButton : Button
 
     private Popup? _tooltipPopup;
     private TextBlock? _tooltipTextBlock;
-    private bool _isPopupAttached;
 
     public InfoButton()
     {
@@ -44,15 +41,13 @@ public class InfoButton : Button
         VerticalAlignment = VerticalAlignment.Center;
         HorizontalContentAlignment = HorizontalAlignment.Center;
         VerticalContentAlignment = VerticalAlignment.Center;
-
-        // Focusable is true by default for Button, ensuring tab navigation works
         Focusable = true;
 
         // Create tooltip content
         _tooltipTextBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 300,
+            MaxWidth = 350,
             Foreground = Brushes.White,
             FontSize = 12
         };
@@ -71,7 +66,6 @@ public class InfoButton : Button
         {
             Child = tooltipBorder,
             Placement = PlacementMode.Right,
-            PlacementTarget = this,
             IsLightDismissEnabled = false
         };
     }
@@ -79,18 +73,9 @@ public class InfoButton : Button
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-
-        // Attach popup to visual tree via TopLevel
-        if (!_isPopupAttached && _tooltipPopup != null)
+        if (_tooltipPopup != null)
         {
-            var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel is Window window)
-            {
-                // For popups to work, they need to be in the visual tree
-                // We can achieve this by setting the popup's PlacementTarget
-                _tooltipPopup.PlacementTarget = this;
-                _isPopupAttached = true;
-            }
+            _tooltipPopup.PlacementTarget = this;
         }
     }
 
@@ -112,7 +97,7 @@ public class InfoButton : Button
         ShowTooltip();
     }
 
-    protected override void OnLostFocus(RoutedEventArgs e)
+    protected override void OnLostFocus(Avalonia.Interactivity.RoutedEventArgs e)
     {
         base.OnLostFocus(e);
         HideTooltip();
@@ -138,12 +123,9 @@ public class InfoButton : Button
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-
-        // Clean up popup when detached
         if (_tooltipPopup != null)
         {
             _tooltipPopup.IsOpen = false;
         }
-        _isPopupAttached = false;
     }
 }
