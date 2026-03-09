@@ -90,6 +90,9 @@ High-level APIs for controlling entities and game state during tactical combat.
 | `EntitySpawner` | Spawn and destroy entities. `SpawnUnit(template, x, y, faction)` creates actors at tile positions. `ListEntities(faction)` queries actors. `ClearEnemies()` removes all enemies. |
 | `EntityMovement` | Control entity movement. `MoveTo(actor, x, y)` pathfinds and moves. `Teleport(actor, x, y)` instant repositioning. `GetMovementRange(actor)` returns reachable tiles. Manage facing direction and action points. |
 | `EntityCombat` | Combat actions and status effects. `Attack(attacker, target)` uses primary weapon. `UseAbility(actor, skill, target)` for abilities. Manage suppression, morale, HP. Query skills with `GetSkills(actor)`. |
+| `EntityState` | Actor state manipulation. `SetHeavyWeaponDeployed()`, `SetDetectedByFaction()`, `RevealToAll()`, `ConcealFromAll()`. Control dying/leaving states, minion flags, and player selectability. Direct memory access for boolean flags and bitmasks. |
+| `EntitySkills` | Skill system manipulation. `AddSkill()`, `RemoveSkill()`, `SetCooldown()`, `ModifySkillRange()`, `ModifySkillAPCost()`, `EnableSkill()`, `DisableSkill()`. Runtime modification of skill properties and availability. |
+| `EntityVisibility` | Detection and visibility control. `RevealToFaction()`, `ConcealFromFaction()`, `SetDetectionMask()`. Temporary visibility overrides with `ForceVisibleTo()` and `ForceConcealedFrom()` for turn-based effects. |
 | `TacticalController` | Game state control. `GetCurrentRound()`, `NextRound()`, `EndTurn()` for turn management. `SetPaused()`, `SetTimeScale()` for time control. `SpawnWave()` for enemy spawning. `GetTacticalState()` for full status. |
 
 ### Tier 5 -- Map & Environment
@@ -102,6 +105,7 @@ APIs for querying and manipulating the tactical map, tiles, and environmental ef
 | `Pathfinding` | Find paths and check reachability. `FindPath(from, to)` returns tile path. `GetMovementCost(from, to)` calculates AP cost. `IsReachable(actor, x, y)` checks if tile is reachable. |
 | `LineOfSight` | LOS and visibility checks. `HasLOS(from, to)` checks line of sight. `GetVisibleTiles(actor)` returns visible tile set. `IsVisible(actor, target)` checks target visibility. |
 | `TileEffects` | Environmental effects on tiles. `SpawnFire(x, y)`, `SpawnSmoke(x, y)` create effects. `GetTileEffects(x, y)` queries active effects. `ClearEffects(x, y)` removes effects. |
+| `TileManipulation` | Dynamic tile state modification. `SetTraversableOverride()`, `SetCoverOverride()`, `SetBlocksLOS()`, `SetBlocksMovement()`. Counter-based blocking systems with optional turn-based cleanup. Create dynamic terrain changes at runtime. |
 
 ### Tier 6 -- Strategy Layer
 
@@ -113,7 +117,7 @@ APIs for campaign/strategy state including missions, operations, roster, and eco
 | `Operation` | Campaign operations. `GetOperationInfo()` returns operation state. `GetCurrentMission()` returns active mission. `GetMissions()` lists all missions in operation. |
 | `Roster` | Unit roster management. `GetHiredLeaders()` lists all hired units. `GetHirableLeaders()` lists recruitable templates. `HireLeader(template)` hires a leader. `DismissLeader(leader)` fires a leader. `GetLeaderInfo(leader)` returns unit details. `FindByNickname(name)` searches roster. |
 | `Perks` | Perk and skill management. `GetLeaderPerks(leader)` lists learned perks. `GetPerkTrees(leader)` shows available perk trees. `AddPerk(leader, perk)` grants a perk. `RemoveLastPerk(leader)` demotes. `GetAvailablePerks(leader)` returns unlearned perks. `CanBePromoted(leader)` checks eligibility. |
-| `Inventory` | Items and equipment. `GetContainer(actor)` gets inventory. `GetAllItems(container)` lists items. `GetEquippedWeapons(actor)` returns equipped weapons. Trade value calculations. |
+| `Inventory` | Items and equipment. `GetContainer(actor)` gets inventory. `GetAllItems(container)` lists items. `GetEquippedWeapons(actor)` returns equipped weapons. `RemoveItem()`, `RemoveItemAt()`, `TransferItem()`, `ClearInventory()` for runtime inventory manipulation. Trade value calculations. |
 | `ArmyGeneration` | Army spawning and budgets. `GetArmyInfo(army)` returns army composition. `GetArmyTemplates()` lists available templates. `GetEntityCost(template)` returns spawn cost. |
 | `Vehicle` | Vehicle information. `GetVehicleInfo(entity)` returns vehicle data. `GetModularVehicle(entity)` returns slot info. `IsVehicle(entity)` type check. |
 | `BlackMarket` | Shop system access. `GetBlackMarketInfo()` returns shop state. `GetAvailableStacks()` lists items for sale. Item generation and timeout tracking. |
@@ -134,6 +138,7 @@ APIs for inspecting, modifying, and coordinating AI decision-making.
 | Type | Purpose |
 |------|---------|
 | `AI` | AI decision system access. `GetAgent(actor)` gets the AI agent. `GetAgentInfo(actor)` returns state (evaluating, ready, executing). `GetRoleData(actor)` returns AI config (utility/safety weights). `GetBehaviors(actor)` lists available actions. `GetTileScores(actor)` returns scored positions. `SetRoleDataFloat/Bool(actor, field, value)` modifies AI config. `IsAnyFactionEvaluating()` checks write safety. |
+| `EntityAI` | High-level AI behavior control. `PauseAI()`, `ResumeAI()` for disabling AI. `ForceFleeDecision()`, `BlockFleeDecision()` for morale-based control. `SetThreatValueOverride()` for custom threat tables. Thread-safe only during `OnTurnStart`/`OnTurnEnd` - do not call during parallel AI evaluation. |
 | `AICoordination` | Coordinated AI behavior (Combined Arms-style). `InitializeTurnState(faction)` sets up turn state. `ClassifyUnit(actor)` returns role (Suppressor/DamageDealer). `ClassifyFormationBand(actor)` returns position band. `CalculateAgentScoreMultiplier()` for sequencing/focus fire. `ApplyTileScoreModifiers()` for Center of Forces/Formation Depth. Thread-safe per-agent writes. |
 
 ### Tier 9 -- REPL
@@ -425,6 +430,9 @@ Detailed documentation for each SDK type:
 - [EntitySpawner](api/entity-spawner.md) -- Entity spawning and destruction
 - [EntityMovement](api/entity-movement.md) -- Movement and pathfinding control
 - [EntityCombat](api/entity-combat.md) -- Combat actions and status effects
+- [EntityState](api/entity-state.md) -- Actor state flag manipulation
+- [EntitySkills](api/entity-skills.md) -- Skill management and modification
+- [EntityVisibility](api/entity-visibility.md) -- Detection and visibility control
 - [TacticalController](api/tactical-controller.md) -- Game state and turn management
 
 ### Map & Environment (Tier 5)
@@ -432,6 +440,7 @@ Detailed documentation for each SDK type:
 - [Pathfinding](api/pathfinding.md) -- Path finding and movement costs
 - [LineOfSight](api/line-of-sight.md) -- LOS and visibility checks
 - [TileEffects](api/tile-effects.md) -- Fire, smoke, and environmental effects
+- [TileManipulation](api/tile-manipulation.md) -- Dynamic tile state modification
 
 ### Strategy Layer (Tier 6)
 - [Mission](api/mission.md) -- Mission state and objectives
@@ -448,6 +457,7 @@ Detailed documentation for each SDK type:
 
 ### AI System (Tier 8)
 - [AI](api/ai.md) -- AI decision system access
+- [EntityAI](api/entity-ai.md) -- High-level AI behavior control
 - [AICoordination](api/ai-coordination.md) -- Coordinated AI behavior
 
 ### Developer Utilities (Tier 10)

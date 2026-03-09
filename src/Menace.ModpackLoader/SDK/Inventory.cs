@@ -1098,6 +1098,173 @@ public static class Inventory
         }
     }
 
+    /// <summary>
+    /// Remove a specific item from a container.
+    /// </summary>
+    /// <param name="container">The container to remove from</param>
+    /// <param name="item">The item to remove</param>
+    /// <returns>True if item was removed successfully</returns>
+    public static bool RemoveItem(GameObj container, GameObj item)
+    {
+        if (container.IsNull || item.IsNull)
+            return false;
+
+        try
+        {
+            EnsureTypesLoaded();
+
+            var containerType = _itemContainerType?.ManagedType;
+            if (containerType == null) return false;
+
+            var proxy = GetManagedProxy(container, containerType);
+            if (proxy == null) return false;
+
+            var itemProxy = GetManagedProxy(item, _itemType?.ManagedType);
+            if (itemProxy == null) return false;
+
+            // Use RemoveItem(BaseItem) method
+            var removeMethod = containerType.GetMethod("RemoveItem",
+                BindingFlags.Public | BindingFlags.Instance);
+
+            if (removeMethod != null)
+            {
+                removeMethod.Invoke(proxy, new object[] { itemProxy });
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            ModError.ReportInternal("Inventory.RemoveItem", "Failed", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Remove item at a specific slot and index.
+    /// </summary>
+    /// <param name="container">The container to remove from</param>
+    /// <param name="slotType">The slot type (0-10)</param>
+    /// <param name="index">The index within the slot</param>
+    /// <returns>True if item was removed successfully</returns>
+    public static bool RemoveItemAt(GameObj container, int slotType, int index)
+    {
+        if (container.IsNull || slotType < 0 || slotType >= SLOT_TYPE_COUNT)
+            return false;
+
+        try
+        {
+            // Get the item first
+            var item = GetItemAt(container, slotType, index);
+            if (item.IsNull)
+                return false;
+
+            // Remove it
+            return RemoveItem(container, item);
+        }
+        catch (Exception ex)
+        {
+            ModError.ReportInternal("Inventory.RemoveItemAt", "Failed", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Transfer an item from one container to another.
+    /// </summary>
+    /// <param name="from">Source container</param>
+    /// <param name="to">Destination container</param>
+    /// <param name="item">The item to transfer</param>
+    /// <returns>True if transfer was successful</returns>
+    public static bool TransferItem(GameObj from, GameObj to, GameObj item)
+    {
+        if (from.IsNull || to.IsNull || item.IsNull)
+            return false;
+
+        try
+        {
+            EnsureTypesLoaded();
+
+            var containerType = _itemContainerType?.ManagedType;
+            if (containerType == null) return false;
+
+            var fromProxy = GetManagedProxy(from, containerType);
+            var toProxy = GetManagedProxy(to, containerType);
+            if (fromProxy == null || toProxy == null) return false;
+
+            // Remove from source
+            var removeMethod = containerType.GetMethod("RemoveItem",
+                BindingFlags.Public | BindingFlags.Instance);
+            if (removeMethod == null) return false;
+
+            var itemProxy = GetManagedProxy(item, _itemType?.ManagedType);
+            if (itemProxy == null) return false;
+
+            removeMethod.Invoke(fromProxy, new object[] { itemProxy });
+
+            // Add to destination using Place method
+            var placeMethod = containerType.GetMethod("Place",
+                BindingFlags.Public | BindingFlags.Instance);
+            if (placeMethod == null) return false;
+
+            placeMethod.Invoke(toProxy, new object[] { itemProxy });
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ModError.ReportInternal("Inventory.TransferItem", "Failed", ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Clear all items from a container, optionally filtered by slot type.
+    /// </summary>
+    /// <param name="container">The container to clear</param>
+    /// <param name="slotType">Optional slot type filter (-1 for all slots)</param>
+    /// <returns>Number of items removed</returns>
+    public static int ClearInventory(GameObj container, int slotType = -1)
+    {
+        if (container.IsNull)
+            return 0;
+
+        try
+        {
+            int removedCount = 0;
+
+            if (slotType >= 0 && slotType < SLOT_TYPE_COUNT)
+            {
+                // Clear specific slot
+                var items = GetItemsInSlot(container, slotType);
+                foreach (var itemInfo in items)
+                {
+                    var item = new GameObj(itemInfo.Pointer);
+                    if (RemoveItem(container, item))
+                        removedCount++;
+                }
+            }
+            else
+            {
+                // Clear all slots
+                var allItems = GetAllItems(container);
+                foreach (var itemInfo in allItems)
+                {
+                    var item = new GameObj(itemInfo.Pointer);
+                    if (RemoveItem(container, item))
+                        removedCount++;
+                }
+            }
+
+            return removedCount;
+        }
+        catch (Exception ex)
+        {
+            ModError.ReportInternal("Inventory.ClearInventory", "Failed", ex);
+            return 0;
+        }
+    }
+
     // --- Internal helpers ---
 
     private static void EnsureTypesLoaded()

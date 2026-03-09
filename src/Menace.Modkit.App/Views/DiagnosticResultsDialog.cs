@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -42,7 +43,7 @@ public class DiagnosticResultsDialog : Window
         Width = 600;
         Height = 550;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
         CanResize = true;
         MinWidth = 450;
         MinHeight = 350;
@@ -65,8 +66,8 @@ public class DiagnosticResultsDialog : Window
         {
             FontSize = 24,
             VerticalAlignment = VerticalAlignment.Center,
-            Text = "\u23f3", // Hourglass
-            Foreground = new SolidColorBrush(Color.Parse(isDestructive ? "#8B0000" : "#006666"))
+            Text = ThemeIcons.Hourglass,
+            Foreground = isDestructive ? ThemeColors.BrushMaroon : ThemeColors.BrushPrimary
         };
         headerStack.Children.Add(_statusIcon);
 
@@ -87,7 +88,7 @@ public class DiagnosticResultsDialog : Window
         {
             Text = "Running diagnostic checks...",
             FontSize = 14,
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextSecondary,
             TextWrapping = TextWrapping.Wrap
         };
         mainStack.Children.Add(_statusText);
@@ -104,7 +105,7 @@ public class DiagnosticResultsDialog : Window
         // Results area with scroll
         var resultsBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252526")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(12),
             MinHeight = 280
@@ -237,18 +238,18 @@ public class DiagnosticResultsDialog : Window
         // Update status icon
         if (failCount > 0 || errorCount > 0)
         {
-            _statusIcon.Text = "\u2716"; // X
-            _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#FF6B6B"));
+            _statusIcon.Text = ThemeIcons.CrossHeavy;
+            _statusIcon.Foreground = ThemeColors.BrushStatusError;
         }
         else if (warnCount > 0)
         {
-            _statusIcon.Text = "\u26a0"; // Warning
-            _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#FFB347"));
+            _statusIcon.Text = ThemeIcons.Warning;
+            _statusIcon.Foreground = ThemeColors.BrushStatusWarning;
         }
         else
         {
-            _statusIcon.Text = "\u2714"; // Checkmark
-            _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+            _statusIcon.Text = ThemeIcons.CheckmarkHeavy;
+            _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
         }
 
         _statusText.Text = $"Completed: {report.Summary}  ({report.Duration.TotalSeconds:F1}s)";
@@ -261,7 +262,7 @@ public class DiagnosticResultsDialog : Window
         {
             Text = $"Platform: {report.Platform}\nModkit: {report.ModkitVersion}\nRuntime: {report.RuntimeVersion}",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             Margin = new Thickness(0, 0, 0, 8)
         };
         _resultsPanel.Children.Add(headerInfo);
@@ -276,19 +277,19 @@ public class DiagnosticResultsDialog : Window
 
     private Border CreateCheckResultPanel(DiagnosticCheck check)
     {
-        var (icon, color) = check.Status switch
+        var (icon, brush) = check.Status switch
         {
-            DiagnosticStatus.Pass => ("\u2714", "#4EC9B0"),    // Green check
-            DiagnosticStatus.Warn => ("\u26a0", "#FFB347"),    // Yellow warning
-            DiagnosticStatus.Fail => ("\u2716", "#FF6B6B"),    // Red X
-            DiagnosticStatus.Error => ("\u26d4", "#FF6B6B"),   // Red circle
-            DiagnosticStatus.Skipped => ("\u23ed", "#888888"), // Skip icon
-            _ => ("?", "#888888")
+            DiagnosticStatus.Pass => (ThemeIcons.CheckmarkHeavy, ThemeColors.BrushStatusSuccess),
+            DiagnosticStatus.Warn => (ThemeIcons.Warning, ThemeColors.BrushStatusWarning),
+            DiagnosticStatus.Fail => (ThemeIcons.CrossHeavy, ThemeColors.BrushStatusError),
+            DiagnosticStatus.Error => (ThemeIcons.NoEntry, ThemeColors.BrushStatusError),
+            DiagnosticStatus.Skipped => (ThemeIcons.Dash, ThemeColors.BrushTextTertiary),
+            _ => ("?", ThemeColors.BrushTextTertiary)
         };
 
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(10),
             Margin = new Thickness(0, 2, 0, 2)
@@ -307,7 +308,7 @@ public class DiagnosticResultsDialog : Window
         {
             Text = icon,
             FontSize = 14,
-            Foreground = new SolidColorBrush(Color.Parse(color)),
+            Foreground = brush,
             VerticalAlignment = VerticalAlignment.Center
         };
         headerRow.Children.Add(iconBlock);
@@ -329,7 +330,7 @@ public class DiagnosticResultsDialog : Window
         {
             Text = check.Message,
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#CCCCCC")),
+            Foreground = ThemeColors.BrushTextSecondary,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(22, 0, 0, 0)
         };
@@ -342,7 +343,7 @@ public class DiagnosticResultsDialog : Window
             {
                 Text = check.Details,
                 FontSize = 11,
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(22, 4, 0, 0),
                 FontFamily = new FontFamily("Consolas, Menlo, monospace")

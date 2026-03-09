@@ -65,6 +65,7 @@
     <PackageReference Include="SharpGLTF.Core" Version="1.0.6" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.4.1" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.4.1" />
+    <PackageReference Include="Raffinert.FuzzySharp" Version="2.0.3" />
   </ItemGroup>
 
   <!-- Copy bundled dependencies to output directory -->
@@ -116,6 +117,11 @@
     <AvaloniaResource Include="Assets\load.png" />
     <AvaloniaResource Include="Assets\marines.png" />
     <AvaloniaResource Include="Assets\pirates.png" />
+  </ItemGroup>
+
+  <!-- Custom code editor theme -->
+  <ItemGroup>
+    <EmbeddedResource Include="Styles\MenaceCodeTheme.json" />
   </ItemGroup>
 
   <!-- Copy docs folder to output for in-app browsing -->

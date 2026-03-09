@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 namespace Menace.Modkit.App.Views;
@@ -148,7 +149,7 @@ public class ToolSettingsView : UserControl
                 Title = "Menace Modkit Update",
                 Width = 800,
                 Height = 650,
-                Background = new SolidColorBrush(Color.Parse("#0D0D0D")),
+                Background = ThemeColors.BrushBgDark,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
@@ -247,7 +248,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -283,7 +284,7 @@ public class ToolSettingsView : UserControl
         stableContent.Children.Add(new TextBlock
         {
             Text = "(Recommended)",
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 12,
             VerticalAlignment = VerticalAlignment.Center
         });
@@ -331,7 +332,7 @@ public class ToolSettingsView : UserControl
         // Beta warning
         var betaWarning = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#3a3a1a")),
+            Background = ThemeColors.BrushWarningBg,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(12, 8),
             Margin = new Thickness(24, 8, 0, 0)
@@ -340,15 +341,15 @@ public class ToolSettingsView : UserControl
         var warningStack = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         warningStack.Children.Add(new TextBlock
         {
-            Text = "\u26A0",
-            Foreground = new SolidColorBrush(Color.Parse("#FFD700")),
+            Text = ThemeIcons.Warning,
+            Foreground = ThemeColors.BrushWarning,
             FontSize = 14,
             VerticalAlignment = VerticalAlignment.Center
         });
         warningStack.Children.Add(new TextBlock
         {
             Text = "Beta builds may break your mods or save data",
-            Foreground = new SolidColorBrush(Color.Parse("#FFD700")),
+            Foreground = ThemeColors.BrushWarning,
             FontSize = 12,
             VerticalAlignment = VerticalAlignment.Center
         });
@@ -376,7 +377,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -409,7 +410,7 @@ public class ToolSettingsView : UserControl
         var currentVersionText = new TextBlock
         {
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#4EC9B0")), // Teal color
+            Foreground = ThemeColors.BrushStatusSuccess, // Teal color
             VerticalAlignment = VerticalAlignment.Center
         };
         currentVersionText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("CurrentAppVersion"));
@@ -460,7 +461,7 @@ public class ToolSettingsView : UserControl
         stack.Children.Add(new Border
         {
             Height = 1,
-            Background = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBorderLight,
             Margin = new Thickness(0, 8, 0, 8)
         });
 
@@ -499,7 +500,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -560,7 +561,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -735,7 +736,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -786,7 +787,7 @@ public class ToolSettingsView : UserControl
         var pendingIndicator = new TextBlock
         {
             Text = "⏳ Pending",
-            Foreground = new SolidColorBrush(Color.Parse("#FFB347")), // Orange
+            Foreground = ThemeColors.BrushStatusWarning, // Orange
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0)
@@ -824,7 +825,7 @@ public class ToolSettingsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1F1F1F")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(24)
         };
@@ -855,11 +856,11 @@ public class ToolSettingsView : UserControl
             Margin = new Thickness(0, 8, 0, 0)
         };
 
-        // Dry Run Diagnostics button - dark teal
+        // Dry Run Diagnostics button - primary teal
         var dryRunButton = new Button
         {
             Content = "Dry Run Diagnostics",
-            Background = new SolidColorBrush(Color.Parse("#006666")), // Dark teal
+            Background = ThemeColors.BrushPrimary,
             Foreground = Brushes.White,
             FontSize = 13,
             Padding = new Thickness(16, 10),
@@ -872,7 +873,7 @@ public class ToolSettingsView : UserControl
         var destructiveButton = new Button
         {
             Content = "Destructive Diagnostic Test",
-            Background = new SolidColorBrush(Color.Parse("#800000")), // Maroon
+            Background = ThemeColors.BrushMaroon,
             Foreground = Brushes.White,
             FontSize = 13,
             Padding = new Thickness(16, 10),
@@ -893,14 +894,14 @@ public class ToolSettingsView : UserControl
         warningStack.Children.Add(new TextBlock
         {
             Text = "\u26A0",
-            Foreground = new SolidColorBrush(Color.Parse("#FFB347")), // Orange warning
+            Foreground = ThemeColors.BrushStatusWarning, // Orange warning
             FontSize = 14,
             VerticalAlignment = VerticalAlignment.Center
         });
         warningStack.Children.Add(new TextBlock
         {
             Text = "Destructive test temporarily undeploys your mods, runs the test, then redeploys them.",
-            Foreground = new SolidColorBrush(Color.Parse("#FFB347")),
+            Foreground = ThemeColors.BrushStatusWarning,
             FontSize = 12,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap

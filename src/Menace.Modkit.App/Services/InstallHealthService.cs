@@ -586,6 +586,93 @@ public class InstallHealthService
     }
 
     /// <summary>
+    /// Clear backup metadata and .original files to resolve stuck verification state.
+    /// Call this after Steam verification when the system is stuck in ReacquireRequired state.
+    /// </summary>
+    /// <returns>True if cleanup was successful, false if it failed.</returns>
+    public bool ClearBackupState()
+    {
+        var gamePath = AppSettings.Instance.GameInstallPath;
+        if (string.IsNullOrEmpty(gamePath) || !Directory.Exists(gamePath))
+        {
+            ModkitLog.Warn("[InstallHealthService] Cannot clear backup state: game path not set");
+            return false;
+        }
+
+        var gameDataDirs = Directory.GetDirectories(gamePath, "*_Data");
+        if (gameDataDirs.Length == 0)
+        {
+            ModkitLog.Warn("[InstallHealthService] Cannot clear backup state: no game data directory found");
+            return false;
+        }
+
+        var gameDataDir = gameDataDirs[0];
+        var errors = new List<string>();
+
+        // Delete backup-metadata.json
+        var metadataPath = Path.Combine(gameDataDir, "backup-metadata.json");
+        if (File.Exists(metadataPath))
+        {
+            try
+            {
+                File.Delete(metadataPath);
+                ModkitLog.Info("[InstallHealthService] Deleted backup-metadata.json");
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Failed to delete backup-metadata.json: {ex.Message}");
+            }
+        }
+
+        // Delete .original backup files
+        var backupFiles = new[] { "resources.assets.original", "globalgamemanagers.original" };
+        foreach (var backupFile in backupFiles)
+        {
+            var backupPath = Path.Combine(gameDataDir, backupFile);
+            if (File.Exists(backupPath))
+            {
+                try
+                {
+                    File.Delete(backupPath);
+                    ModkitLog.Info($"[InstallHealthService] Deleted {backupFile}");
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"Failed to delete {backupFile}: {ex.Message}");
+                }
+            }
+        }
+
+        // Also delete deploy-state.json to force fresh deploy
+        var userDataDir = Path.Combine(gamePath, "UserData");
+        var deployStatePath = Path.Combine(userDataDir, "deploy-state.json");
+        if (File.Exists(deployStatePath))
+        {
+            try
+            {
+                File.Delete(deployStatePath);
+                ModkitLog.Info("[InstallHealthService] Deleted deploy-state.json");
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Failed to delete deploy-state.json: {ex.Message}");
+            }
+        }
+
+        if (errors.Count > 0)
+        {
+            foreach (var error in errors)
+                ModkitLog.Error($"[InstallHealthService] {error}");
+            return false;
+        }
+
+        // Invalidate cache so next health check is fresh
+        InvalidateCache();
+        ModkitLog.Info("[InstallHealthService] Backup state cleared successfully - ready for fresh deploy");
+        return true;
+    }
+
+    /// <summary>
     /// Log the health status for diagnostics.
     /// </summary>
     private void LogHealthStatus(InstallHealthStatus status)

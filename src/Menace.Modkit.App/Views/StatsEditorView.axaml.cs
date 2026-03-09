@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -9,6 +10,7 @@ using Menace.Modkit.App.Controls;
 using Menace.Modkit.App.Converters;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -22,7 +24,7 @@ public class StatsEditorView : UserControl
   private static IBrush GetPrimaryBrush()
   {
     return Application.Current?.FindResource("BrushPrimary") as IBrush
-      ?? new SolidColorBrush(Color.Parse("#004f43"));
+      ?? ThemeColors.BrushPrimary;
   }
 
 
@@ -83,8 +85,8 @@ public class StatsEditorView : UserControl
     // Left: Navigation Tree (darker panel)
     var leftPanel = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#141414")),
-      BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBgPanelLeft,
+      BorderBrush = ThemeColors.BrushBorder,
       BorderThickness = new Thickness(0, 0, 1, 0),
       Child = BuildNavigation()
     };
@@ -94,7 +96,7 @@ public class StatsEditorView : UserControl
     // Splitter
     var splitter = new GridSplitter
     {
-      Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBorder,
       ResizeDirection = GridResizeDirection.Columns
     };
     mainGrid.Children.Add(splitter);
@@ -118,7 +120,7 @@ public class StatsEditorView : UserControl
   {
     var border = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+      Background = ThemeColors.BrushBgSurfaceAlt,
       Padding = new Thickness(48)
     };
 
@@ -278,7 +280,7 @@ public class StatsEditorView : UserControl
 
     var numberBorder = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#004f43")),
+      Background = ThemeColors.BrushPrimary,
       CornerRadius = new CornerRadius(16),
       Width = 32,
       Height = 32
@@ -382,6 +384,20 @@ public class StatsEditorView : UserControl
       });
     buttonPanel.Children.Add(modpackOnlyToggle);
 
+    var folderSearchToggle = new ToggleButton
+    {
+      Content = "Folder Search",
+      FontSize = 11
+    };
+    folderSearchToggle.Classes.Add("secondary");
+    folderSearchToggle.Bind(ToggleButton.IsCheckedProperty,
+      new Avalonia.Data.Binding("FolderSearchEnabled")
+      {
+        Mode = Avalonia.Data.BindingMode.TwoWay
+      });
+    ToolTip.SetTip(folderSearchToggle, "Scope search to the currently selected folder");
+    buttonPanel.Children.Add(folderSearchToggle);
+
     buttonContainer.Children.Add(buttonPanel);
 
     // Section filter + Sort panel (shown when searching)
@@ -413,7 +429,7 @@ public class StatsEditorView : UserControl
     {
       Text = "Sort:",
       FontSize = 11,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center,
       Margin = new Thickness(8, 0, 0, 0)
     };
@@ -478,7 +494,7 @@ public class StatsEditorView : UserControl
             Width = 14,
             Height = 14,
             Stretch = Stretch.Uniform,
-            Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Fill = ThemeColors.BrushTextSecondary,
             Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
             VerticalAlignment = VerticalAlignment.Center
           };
@@ -564,7 +580,7 @@ public class StatsEditorView : UserControl
   {
     var border = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+      Background = ThemeColors.BrushBgSurface,
       Padding = new Thickness(24)
     };
 
@@ -737,9 +753,41 @@ public class StatsEditorView : UserControl
     };
     toolbar.Children.Add(reloadButton);
 
+    // Favourite toggle button (star)
+    var favouriteButton = new Button
+    {
+      FontSize = 16,
+      Width = 32,
+      Height = 28,
+      Padding = new Thickness(0),
+      Background = Brushes.Transparent,
+      Foreground = Brushes.White,
+      Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
+      VerticalContentAlignment = VerticalAlignment.Center,
+      HorizontalContentAlignment = HorizontalAlignment.Center
+    };
+    ToolTip.SetTip(favouriteButton, "Toggle Favourite");
+    favouriteButton.Click += (_, _) =>
+    {
+      if (DataContext is StatsEditorViewModel vm)
+        vm.ToggleFavourite();
+    };
+    // Bind content to show filled/empty star based on favourite status
+    favouriteButton.Bind(Button.ContentProperty, new Avalonia.Data.Binding("IsSelectedNodeFavourite")
+    {
+      Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, string>(isFav => isFav ? "\u2605" : "\u2606")
+    });
+    // Show when any node is selected (template or category)
+    favouriteButton.Bind(Button.IsVisibleProperty, new Avalonia.Data.Binding("SelectedNode")
+    {
+      Converter = new Avalonia.Data.Converters.FuncValueConverter<object?, bool>(obj =>
+        obj is TreeNodeViewModel node && (node.Template != null || node.IsCategory))
+    });
+    toolbar.Children.Add(favouriteButton);
+
     var statusText = new TextBlock
     {
-      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      Foreground = ThemeColors.BrushPrimaryLight,
       VerticalAlignment = VerticalAlignment.Center,
       FontSize = 11,
       Opacity = 0.9
@@ -792,7 +840,7 @@ public class StatsEditorView : UserControl
     // Horizontal splitter between content and backlinks
     var backlinksSplitter = new GridSplitter
     {
-      Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBorder,
       ResizeDirection = GridResizeDirection.Rows
     };
     outerGrid.Children.Add(backlinksSplitter);
@@ -922,7 +970,7 @@ public class StatsEditorView : UserControl
 
     var vanillaScrollViewer = new ScrollViewer
     {
-      Background = new SolidColorBrush(Color.Parse("#252525")),
+      Background = ThemeColors.BrushBgElevated,
       Padding = new Thickness(16),
       VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
     };
@@ -983,7 +1031,7 @@ public class StatsEditorView : UserControl
 
     var modifiedScrollViewer = new ScrollViewer
     {
-      Background = new SolidColorBrush(Color.Parse("#252525")),
+      Background = ThemeColors.BrushBgElevated,
       Padding = new Thickness(16),
       VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
     };
@@ -1007,8 +1055,8 @@ public class StatsEditorView : UserControl
   {
     var panel = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
-      BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBgSurface,
+      BorderBrush = ThemeColors.BrushBorder,
       BorderThickness = new Thickness(0, 1, 0, 0),
       Padding = new Thickness(12, 8)
     };
@@ -1024,7 +1072,7 @@ public class StatsEditorView : UserControl
       Text = "What Links Here",
       FontSize = 13,
       FontWeight = FontWeight.SemiBold,
-      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      Foreground = ThemeColors.BrushPrimaryLight,
       Margin = new Thickness(0, 0, 0, 8)
     };
     panelGrid.Children.Add(header);
@@ -1060,7 +1108,7 @@ public class StatsEditorView : UserControl
       typeBadge.Child = new TextBlock
       {
         Text = entry.SourceTemplateType,
-        Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+        Foreground = ThemeColors.BrushPrimaryLight,
         FontSize = 10
       };
       textPanel.Children.Add(typeBadge);
@@ -1176,7 +1224,7 @@ public class StatsEditorView : UserControl
       Width = 450,
       Height = 180,
       WindowStartupLocation = WindowStartupLocation.CenterOwner,
-      Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+      Background = ThemeColors.BrushBgSurfaceAlt,
       CanResize = false
     };
 
@@ -1341,41 +1389,139 @@ public class StatsEditorView : UserControl
 
       var panel = new StackPanel { Spacing = 12, Margin = new Thickness(0, 0, 0, 60) };
 
-      string? currentGroup = null;
-      StackPanel? groupPanel = null;
+      // Get template type for field grouping
+      var templateTypeName = "";
+      if (DataContext is StatsEditorViewModel vm && vm.SelectedNode?.Template is DynamicDataTemplate ddt)
+      {
+        templateTypeName = ddt.TemplateTypeName ?? "";
+      }
 
-      foreach (var kvp in props)
+      // Group fields by category
+      var (ungrouped, grouped) = FieldGroupingService.GroupFields(props, templateTypeName);
+
+      // Render ungrouped fields first (core properties)
+      string? currentNestedGroup = null;
+      StackPanel? nestedGroupPanel = null;
+
+      foreach (var kvp in ungrouped)
       {
         var dotIdx = kvp.Key.IndexOf('.');
         if (dotIdx > 0)
         {
+          // Nested object subfield (dotted path)
           var prefix = kvp.Key[..dotIdx];
-          if (prefix != currentGroup)
+          if (prefix != currentNestedGroup)
           {
-            currentGroup = prefix;
+            currentNestedGroup = prefix;
             // Section header for the nested object group
             var header = new TextBlock
             {
               Text = prefix,
               FontSize = 13,
               FontWeight = FontWeight.SemiBold,
-              Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+              Foreground = ThemeColors.BrushPrimaryLight,
               Margin = new Thickness(0, 8, 0, 4)
             };
             panel.Children.Add(header);
-            groupPanel = new StackPanel { Spacing = 8, Margin = new Thickness(16, 0, 0, 0) };
-            panel.Children.Add(groupPanel);
+            nestedGroupPanel = new StackPanel { Spacing = 8, Margin = new Thickness(16, 0, 0, 0) };
+            panel.Children.Add(nestedGroupPanel);
           }
           var fieldControl = CreatePropertyField(kvp.Key, kvp.Value, isEditable, 0);
-          groupPanel!.Children.Add(fieldControl);
+          nestedGroupPanel!.Children.Add(fieldControl);
         }
         else
         {
-          currentGroup = null;
-          groupPanel = null;
+          currentNestedGroup = null;
+          nestedGroupPanel = null;
           var fieldControl = CreatePropertyField(kvp.Key, kvp.Value, isEditable, 0);
           panel.Children.Add(fieldControl);
         }
+      }
+
+      // Render grouped fields in collapsible expanders
+      var sortedGroups = grouped.Keys
+        .OrderBy(g => FieldGroupingService.GetGroupPriority(g))
+        .ToList();
+
+      foreach (var groupName in sortedGroups)
+      {
+        var groupFields = grouped[groupName];
+
+        var expander = new Expander
+        {
+          Header = new StackPanel
+          {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+              new TextBlock
+              {
+                Text = groupName,
+                FontSize = 13,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = ThemeColors.BrushPrimaryLight,
+                VerticalAlignment = VerticalAlignment.Center
+              },
+              new TextBlock
+              {
+                Text = $"({groupFields.Count} fields)",
+                FontSize = 11,
+                Foreground = Brushes.White,
+                Opacity = 0.5,
+                VerticalAlignment = VerticalAlignment.Center
+              }
+            }
+          },
+          IsExpanded = false,
+          Margin = new Thickness(0, 12, 0, 0),
+          Padding = new Thickness(0),
+          Background = Brushes.Transparent,
+          HorizontalAlignment = HorizontalAlignment.Stretch,
+          HorizontalContentAlignment = HorizontalAlignment.Stretch,
+        };
+
+        var groupContent = new StackPanel { Spacing = 8, Margin = new Thickness(16, 8, 16, 8) };
+
+        string? innerNestedGroup = null;
+        StackPanel? innerNestedPanel = null;
+
+        foreach (var kvp in groupFields)
+        {
+          var dotIdx = kvp.Key.IndexOf('.');
+          if (dotIdx > 0)
+          {
+            // Nested object subfield within group
+            var prefix = kvp.Key[..dotIdx];
+            if (prefix != innerNestedGroup)
+            {
+              innerNestedGroup = prefix;
+              var header = new TextBlock
+              {
+                Text = prefix,
+                FontSize = 12,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = new SolidColorBrush(Color.Parse("#6BA8A3")),
+                Margin = new Thickness(0, 4, 0, 2)
+              };
+              groupContent.Children.Add(header);
+              innerNestedPanel = new StackPanel { Spacing = 6, Margin = new Thickness(12, 0, 0, 0) };
+              groupContent.Children.Add(innerNestedPanel);
+            }
+            var fieldControl = CreatePropertyField(kvp.Key, kvp.Value, isEditable, 0);
+            innerNestedPanel!.Children.Add(fieldControl);
+          }
+          else
+          {
+            innerNestedGroup = null;
+            innerNestedPanel = null;
+            var fieldControl = CreatePropertyField(kvp.Key, kvp.Value, isEditable, 0);
+            groupContent.Children.Add(fieldControl);
+          }
+        }
+
+        expander.Content = groupContent;
+        panel.Children.Add(expander);
       }
 
       return panel;
@@ -1403,7 +1549,7 @@ public class StatsEditorView : UserControl
     var label = new TextBlock
     {
       Text = isReadOnlyField ? $"{displayName} (read-only)" : displayName,
-      Foreground = isReadOnlyField ? new SolidColorBrush(Color.Parse("#888888")) : Brushes.White,
+      Foreground = isReadOnlyField ? ThemeColors.BrushTextTertiary : Brushes.White,
       Opacity = isReadOnlyField ? 0.6 : 0.8,
       FontSize = 11,
       FontWeight = FontWeight.SemiBold,
@@ -1490,7 +1636,7 @@ public class StatsEditorView : UserControl
             var summaryText = new TextBlock
             {
               Text = $"({vanillaArray.GetArrayLength()} handlers)",
-              Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+              Foreground = ThemeColors.BrushPrimaryLight,
               FontSize = 11,
               Margin = new Thickness(0, 4)
             };
@@ -1612,7 +1758,7 @@ public class StatsEditorView : UserControl
                   var summaryText2 = new TextBlock
                   {
                     Text = $"({vanillaArray2.GetArrayLength()} handlers)",
-                    Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                    Foreground = ThemeColors.BrushPrimaryLight,
                     FontSize = 11,
                     Margin = new Thickness(0, 4)
                   };
@@ -1732,7 +1878,7 @@ public class StatsEditorView : UserControl
               var summaryText3 = new TextBlock
               {
                 Text = $"({jsonElement.GetArrayLength()} handlers)",
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 11,
                 Margin = new Thickness(0, 4)
               };
@@ -1849,7 +1995,7 @@ public class StatsEditorView : UserControl
           {
             ItemsSource = enumItems,
             SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
             FontSize = 12,
             MinWidth = 200,
@@ -1880,9 +2026,9 @@ public class StatsEditorView : UserControl
       var textBox = new TextBox
       {
         Text = value?.ToString() ?? "",
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         Padding = new Thickness(8, 6),
         FontSize = 12,
@@ -1955,7 +2101,7 @@ public class StatsEditorView : UserControl
       Text = assetValue.DisplayText,
       Foreground = assetValue.IsResolved
         ? Brushes.White
-        : new SolidColorBrush(Color.Parse("#888888")),
+        : ThemeColors.BrushTextTertiary,
       FontSize = 12,
       FontStyle = assetValue.IsResolved ? FontStyle.Normal : FontStyle.Italic,
       VerticalAlignment = VerticalAlignment.Center,
@@ -1974,8 +2120,8 @@ public class StatsEditorView : UserControl
         {
           var thumbnailBorder = new Border
           {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBgSurface,
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(2),
@@ -2064,7 +2210,7 @@ public class StatsEditorView : UserControl
         assetValue.ThumbnailPath = null;
         assetValue.RawValue = null;
         nameText.Text = "null";
-        nameText.Foreground = new SolidColorBrush(Color.Parse("#888888"));
+        nameText.Foreground = ThemeColors.BrushTextTertiary;
         nameText.FontStyle = FontStyle.Italic;
 
         // Mark this field as edited for change tracking
@@ -2116,7 +2262,7 @@ public class StatsEditorView : UserControl
         itemsPanel.Children.Add(new TextBlock
         {
           Text = "(empty)",
-          Foreground = new SolidColorBrush(Color.Parse("#888888")),
+          Foreground = ThemeColors.BrushTextTertiary,
           FontStyle = FontStyle.Italic,
           FontSize = 12,
           Padding = new Thickness(8, 4)
@@ -2127,8 +2273,8 @@ public class StatsEditorView : UserControl
       {
         var idx = i;
         var rowBg = i % 2 == 0
-          ? new SolidColorBrush(Color.Parse("#1E1E1E"))
-          : new SolidColorBrush(Color.Parse("#252525"));
+          ? ThemeColors.BrushBgSurfaceAlt
+          : ThemeColors.BrushBgElevated;
 
         var row = new Grid
         {
@@ -2196,9 +2342,9 @@ public class StatsEditorView : UserControl
         ItemsSource = instanceNames,
         FilterMode = AutoCompleteFilterMode.ContainsOrdinal,
         MinimumPrefixLength = 0,
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         FontSize = 12,
         MinWidth = 100
@@ -2373,7 +2519,7 @@ public class StatsEditorView : UserControl
     var countLabel = new TextBlock
     {
       Text = $"({elements.Count} entries)",
-      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      Foreground = ThemeColors.BrushPrimaryLight,
       FontSize = 10,
       Margin = new Thickness(0, 0, 0, 4)
     };
@@ -2457,7 +2603,7 @@ public class StatsEditorView : UserControl
             ColumnDefinitions = isEditable
               ? new ColumnDefinitions("Auto,*,Auto")
               : new ColumnDefinitions("Auto,*"),
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Margin = new Thickness(0, 1)
           };
 
@@ -2510,9 +2656,9 @@ public class StatsEditorView : UserControl
               var tb = new TextBox
               {
                 Text = fv?.ToString() ?? "",
-                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                Background = ThemeColors.BrushBgSurfaceAlt,
                 Foreground = Brushes.White,
-                BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                BorderBrush = ThemeColors.BrushBorderLight,
                 BorderThickness = new Thickness(1),
                 Padding = new Thickness(6, 3),
                 FontSize = 12,
@@ -2625,12 +2771,14 @@ public class StatsEditorView : UserControl
           IsExpanded = false,
           Margin = new Thickness(0, 1),
           Padding = new Thickness(0),
-          Background = new SolidColorBrush(Color.Parse("#252525")),
-          BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
-          BorderThickness = new Thickness(1)
+          Background = ThemeColors.BrushBgElevated,
+          BorderBrush = ThemeColors.BrushBorderLight,
+          BorderThickness = new Thickness(1),
+          HorizontalAlignment = HorizontalAlignment.Stretch,
+          HorizontalContentAlignment = HorizontalAlignment.Stretch,
         };
 
-        var bodyPanel = new StackPanel { Spacing = 8, Margin = new Thickness(12, 8, 0, 8) };
+        var bodyPanel = new StackPanel { Spacing = 8, Margin = new Thickness(12, 8, 12, 8) };
         foreach (var kvp in element.ToList())
         {
           // Skip _type field - it's already shown in the header
@@ -2865,7 +3013,7 @@ public class StatsEditorView : UserControl
         {
           ItemsSource = instanceNames,
           SelectedItem = propValue?.ToString(),
-          Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+          Background = ThemeColors.BrushBgSurfaceAlt,
           Foreground = Brushes.White,
           FontSize = 12,
           MinWidth = 200
@@ -2902,7 +3050,7 @@ public class StatsEditorView : UserControl
         {
           ItemsSource = enumItems,
           SelectedItem = selectedItem,
-          Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+          Background = ThemeColors.BrushBgSurfaceAlt,
           Foreground = Brushes.White,
           FontSize = 12,
           MinWidth = 200
@@ -2933,9 +3081,9 @@ public class StatsEditorView : UserControl
     var textBox = new TextBox
     {
       Text = propValue?.ToString() ?? "",
-      Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+      Background = ThemeColors.BrushBgSurfaceAlt,
       Foreground = Brushes.White,
-      BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+      BorderBrush = ThemeColors.BrushBorderLight,
       BorderThickness = new Thickness(1),
       Padding = new Thickness(8, 6),
       FontSize = 12,
@@ -2985,7 +3133,7 @@ public class StatsEditorView : UserControl
     var countLabel = new TextBlock
     {
       Text = $"({elements.Count} entries)",
-      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      Foreground = ThemeColors.BrushPrimaryLight,
       FontSize = 10,
       Margin = new Thickness(0, 0, 0, 4)
     };
@@ -3026,14 +3174,14 @@ public class StatsEditorView : UserControl
             ColumnDefinitions = isEditable
               ? new ColumnDefinitions("Auto,*,Auto")
               : new ColumnDefinitions("Auto,*"),
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Margin = new Thickness(0, 1)
           };
 
           var indexLabel = new TextBlock
           {
             Text = $"[{idx}]",
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 4)
@@ -3079,9 +3227,9 @@ public class StatsEditorView : UserControl
               var tb = new TextBox
               {
                 Text = fv?.ToString() ?? "",
-                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                Background = ThemeColors.BrushBgSurfaceAlt,
                 Foreground = Brushes.White,
-                BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                BorderBrush = ThemeColors.BrushBorderLight,
                 BorderThickness = new Thickness(1),
                 Padding = new Thickness(6, 3),
                 FontSize = 12,
@@ -3191,12 +3339,14 @@ public class StatsEditorView : UserControl
           IsExpanded = false,
           Margin = new Thickness(0, 1),
           Padding = new Thickness(0),
-          Background = new SolidColorBrush(Color.Parse("#252525")),
-          BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
-          BorderThickness = new Thickness(1)
+          Background = ThemeColors.BrushBgElevated,
+          BorderBrush = ThemeColors.BrushBorderLight,
+          BorderThickness = new Thickness(1),
+          HorizontalAlignment = HorizontalAlignment.Stretch,
+          HorizontalContentAlignment = HorizontalAlignment.Stretch,
         };
 
-        var bodyPanel = new StackPanel { Spacing = 8, Margin = new Thickness(12, 8, 0, 8) };
+        var bodyPanel = new StackPanel { Spacing = 8, Margin = new Thickness(12, 8, 12, 8) };
         foreach (var kvp in element.ToList())
         {
           // Skip _type field - it's already shown in the header
@@ -3338,7 +3488,7 @@ public class StatsEditorView : UserControl
             var summaryText = new TextBlock
             {
               Text = $"({je.GetArrayLength()} handlers)",
-              Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+              Foreground = ThemeColors.BrushPrimaryLight,
               FontSize = 11,
               Margin = new Thickness(0, 4)
             };
@@ -3477,9 +3627,9 @@ public class StatsEditorView : UserControl
         ItemsSource = instanceNames,
         FilterMode = AutoCompleteFilterMode.ContainsOrdinal,
         MinimumPrefixLength = 0,
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         FontSize = 12
       };
@@ -3508,9 +3658,9 @@ public class StatsEditorView : UserControl
         ItemsSource = instanceNames,
         FilterMode = AutoCompleteFilterMode.ContainsOrdinal,
         MinimumPrefixLength = 0,
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         FontSize = 12
       };
@@ -3533,9 +3683,9 @@ public class StatsEditorView : UserControl
       var textBox = new TextBox
       {
         Text = originalText,
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         Padding = new Thickness(8, 6),
         FontSize = 12
@@ -3596,9 +3746,9 @@ public class StatsEditorView : UserControl
       return new TextBox
       {
         Text = currentValue.ToString(),
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         Padding = new Thickness(8, 6),
         FontSize = 12
@@ -3613,9 +3763,9 @@ public class StatsEditorView : UserControl
       return new TextBox
       {
         Text = currentValue.ToString(),
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+        Background = ThemeColors.BrushBgSurfaceAlt,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1),
         Padding = new Thickness(8, 6),
         FontSize = 12
@@ -3640,9 +3790,9 @@ public class StatsEditorView : UserControl
     {
       ItemsSource = displayItems,
       SelectedItem = selectedItem,
-      Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+      Background = ThemeColors.BrushBgSurfaceAlt,
       Foreground = Brushes.White,
-      BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+      BorderBrush = ThemeColors.BrushBorderLight,
       BorderThickness = new Thickness(1),
       FontSize = 12
     };
@@ -3705,7 +3855,7 @@ public class StatsEditorView : UserControl
     panel.Children.Add(new TextBlock
     {
       Text = $"Effects ({effectRefs.Count} references)",
-      Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+      Foreground = ThemeColors.BrushPrimaryLight,
       FontSize = 11,
       FontWeight = FontWeight.SemiBold
     });
@@ -3732,7 +3882,7 @@ public class StatsEditorView : UserControl
       {
         var itemBorder = new Border
         {
-          Background = new SolidColorBrush(Color.Parse("#252525")),
+          Background = ThemeColors.BrushBgElevated,
           Margin = new Thickness(0, 1),
           Padding = new Thickness(8, 4)
         };
@@ -3805,9 +3955,9 @@ public class StatsEditorView : UserControl
         Content = "+ Add Effect Reference",
         HorizontalAlignment = HorizontalAlignment.Left,
         Margin = new Thickness(0, 4),
-        Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+        Background = ThemeColors.BrushBorder,
         Foreground = Brushes.White,
-        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+        BorderBrush = ThemeColors.BrushBorderLight,
         BorderThickness = new Thickness(1)
       };
       addButton.Click += async (_, _) =>
@@ -3913,7 +4063,7 @@ public class StatsEditorView : UserControl
         itemsPanel.Children.Add(new TextBlock
         {
           Text = "(empty)",
-          Foreground = new SolidColorBrush(Color.Parse("#888888")),
+          Foreground = ThemeColors.BrushTextTertiary,
           FontStyle = FontStyle.Italic,
           FontSize = 12,
           Padding = new Thickness(8, 4)
@@ -3925,8 +4075,8 @@ public class StatsEditorView : UserControl
       {
         var idx = i;
         var rowBg = i % 2 == 0
-          ? new SolidColorBrush(Color.Parse("#1E1E1E"))
-          : new SolidColorBrush(Color.Parse("#252525"));
+          ? ThemeColors.BrushBgSurfaceAlt
+          : ThemeColors.BrushBgElevated;
 
         // Try structured rendering for "Type|{json}" serialized nodes
         var nodeControl = TryCreateSerializedNodeControl(

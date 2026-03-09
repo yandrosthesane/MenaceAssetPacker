@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -43,7 +44,7 @@ public class ModelReplacementWizard : Window
         Height = 550;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1a1a1a"));
+        Background = ThemeColors.BrushBgSurface;
 
         BuildUI();
         DataContext = _viewModel;

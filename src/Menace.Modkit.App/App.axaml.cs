@@ -240,17 +240,19 @@ public class App : Application
         var setupViewModel = new SetupViewModel();
         setupViewModel.SetupComplete += async () =>
         {
-            setupWindow.Close();
             // Check for legacy install after setup completes - enforce resolution
             await EnforceLegacyMigrationAsync();
+            // Show main window BEFORE closing setup to prevent app exit
             ShowMainWindow();
+            setupWindow.Close();
         };
         setupViewModel.SetupSkipped += async () =>
         {
-            setupWindow.Close();
             // Check for legacy install even if setup was skipped - enforce resolution
             await EnforceLegacyMigrationAsync();
+            // Show main window BEFORE closing setup to prevent app exit
             ShowMainWindow();
+            setupWindow.Close();
         };
 
         var setupView = new SetupView

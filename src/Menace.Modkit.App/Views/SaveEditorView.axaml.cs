@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -101,8 +102,8 @@ public class SaveEditorView : UserControl
         // Left panel: Save list (darker panel)
         var leftWrapper = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgPanelLeft,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 1, 0),
             Child = BuildSaveListPanel()
         };
@@ -112,7 +113,7 @@ public class SaveEditorView : UserControl
         // Splitter
         var splitter = new GridSplitter
         {
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             ResizeDirection = GridResizeDirection.Columns
         };
         mainGrid.Children.Add(splitter);
@@ -136,7 +137,7 @@ public class SaveEditorView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Padding = new Thickness(48)
         };
 
@@ -225,7 +226,7 @@ public class SaveEditorView : UserControl
 
         var numberBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#004f43")),
+            Background = ThemeColors.BrushPrimary,
             CornerRadius = new CornerRadius(16),
             Width = 32,
             Height = 32
@@ -265,7 +266,7 @@ public class SaveEditorView : UserControl
         // Row 0: Header
         var header = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Padding = new Thickness(16, 12)
         };
         var headerStack = new StackPanel
@@ -345,7 +346,7 @@ public class SaveEditorView : UserControl
 
             var itemBorder = new Border
             {
-                Background = new SolidColorBrush(Color.Parse("#252525")),
+                Background = ThemeColors.BrushBgElevated,
                 CornerRadius = new CornerRadius(4),
                 Padding = new Thickness(12, 8),
                 Margin = new Thickness(0, 2)
@@ -413,7 +414,7 @@ public class SaveEditorView : UserControl
             };
             var planetText = new TextBlock
             {
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 11
             };
             planetText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("PlanetName"));
@@ -470,7 +471,7 @@ public class SaveEditorView : UserControl
         // Row 3: Footer with Open Folder button
         var footer = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Padding = new Thickness(12, 8)
         };
         var openFolderBtn = new Button
@@ -504,11 +505,11 @@ public class SaveEditorView : UserControl
     {
         return type switch
         {
-            SaveStateType.Auto => new SolidColorBrush(Color.Parse("#004f43")),    // Teal (logo color)
+            SaveStateType.Auto => ThemeColors.BrushPrimary,    // Teal (logo color)
             SaveStateType.Quick => new SolidColorBrush(Color.Parse("#4A3068")),   // Purple
             SaveStateType.Manual => new SolidColorBrush(Color.Parse("#3A5A80")),  // Blue
             SaveStateType.Ironman => new SolidColorBrush(Color.Parse("#410511")), // Maroon
-            _ => new SolidColorBrush(Color.Parse("#3E3E3E"))
+            _ => ThemeColors.BrushBorderLight
         };
     }
 
@@ -516,7 +517,7 @@ public class SaveEditorView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+            Background = ThemeColors.BrushBgSurface,
             Padding = new Thickness(24)
         };
 
@@ -551,7 +552,7 @@ public class SaveEditorView : UserControl
         // Screenshot preview
         var screenshotBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Width = 192,
             Height = 108,
@@ -627,7 +628,7 @@ public class SaveEditorView : UserControl
         // Metadata section with editable fields
         var metadataSection = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(16)
         };
@@ -722,7 +723,7 @@ public class SaveEditorView : UserControl
         // Status message
         var statusText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 12,
             Margin = new Thickness(0, 8, 0, 0)
         };
@@ -757,7 +758,7 @@ public class SaveEditorView : UserControl
                 Width = 450,
                 Height = 180,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                Background = ThemeColors.BrushBgSurfaceAlt,
                 CanResize = false
             };
 
@@ -850,7 +851,7 @@ public class SaveEditorView : UserControl
                 Width = 400,
                 Height = 160,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                Background = ThemeColors.BrushBgSurfaceAlt,
                 CanResize = false
             };
 
@@ -977,9 +978,9 @@ public class SaveEditorView : UserControl
 
         var numericBox = new NumericUpDown
         {
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(4, 2),
             FontSize = 12,
@@ -1003,9 +1004,9 @@ public class SaveEditorView : UserControl
 
         var numericBox = new NumericUpDown
         {
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(4, 2),
             FontSize = 12,
@@ -1074,9 +1075,9 @@ public class SaveEditorView : UserControl
 
         var numericBox = new NumericUpDown
         {
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(4, 2),
             FontSize = 12,
@@ -1100,9 +1101,9 @@ public class SaveEditorView : UserControl
 
         var numericBox = new NumericUpDown
         {
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(4, 2),
             FontSize = 12,
@@ -1307,7 +1308,7 @@ public class SaveEditorView : UserControl
         // Error message when body data fails to parse
         var bodyErrorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),  // Teal text
+            Foreground = ThemeColors.BrushPrimaryLight,  // Teal text
             FontSize = 12,
             TextWrapping = TextWrapping.Wrap
         };
@@ -1332,14 +1333,14 @@ public class SaveEditorView : UserControl
             Text = "Resources",
             FontSize = 13,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             Margin = new Thickness(0, 0, 0, 8)
         });
 
         // Resources section (editable)
         var resourcesSection = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(16),
             Margin = new Thickness(0, 0, 0, 12)
@@ -1403,7 +1404,7 @@ public class SaveEditorView : UserControl
                 FontSize = 12,
                 FontWeight = FontWeight.SemiBold
             },
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Foreground = Brushes.White,
             Padding = new Thickness(8),
             IsExpanded = false
@@ -1431,7 +1432,7 @@ public class SaveEditorView : UserControl
             // Planet name
             var nameText = new TextBlock
             {
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 11,
                 Width = 100,
                 VerticalAlignment = VerticalAlignment.Center
@@ -1452,9 +1453,9 @@ public class SaveEditorView : UserControl
             // Editable Control value
             var controlBox = new NumericUpDown
             {
-                Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+                Background = ThemeColors.BrushBgInput,
                 Foreground = Brushes.White,
-                BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                BorderBrush = ThemeColors.BrushBorderLight,
                 BorderThickness = new Thickness(1),
                 Padding = new Thickness(2),
                 FontSize = 11,
@@ -1492,9 +1493,9 @@ public class SaveEditorView : UserControl
             // Editable ControlChange value
             var changeBox = new NumericUpDown
             {
-                Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+                Background = ThemeColors.BrushBgInput,
                 Foreground = Brushes.White,
-                BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                BorderBrush = ThemeColors.BrushBorderLight,
                 BorderThickness = new Thickness(1),
                 Padding = new Thickness(2),
                 FontSize = 11,
@@ -1560,7 +1561,7 @@ public class SaveEditorView : UserControl
             new TextBlock
             {
                 Text = $"  {leader.TemplateName}",
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 11,
                 FontStyle = FontStyle.Italic,
                 Margin = new Thickness(0, 1)
@@ -1591,7 +1592,7 @@ public class SaveEditorView : UserControl
             panel.Children.Add(new TextBlock
             {
                 Text = squaddie.TemplateName,
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 11
             });
 

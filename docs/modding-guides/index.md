@@ -52,6 +52,8 @@ This guide is organized by complexity:
 - [SDK Getting Started](../coding-sdk/getting-started.md) - Canonical entry point for current plugin lifecycle and setup
 - [What Is the SDK?](../coding-sdk/what-is-sdk.md) - Runtime model, scope, and when to use SDK vs patches
 - [SDK API Reference](../coding-sdk/index.md) - Full API surface across all tiers
+- [Combat Intercepts](13-combat-intercepts.md) - Intercept combat events (damage, suppression, pathfinding, movement)
+- [Action API Guide](15-action-api-guide.md) - Programmatically control game state (skills, AI, visibility, tiles)
 
 ### Tier 5: Advanced Code
 

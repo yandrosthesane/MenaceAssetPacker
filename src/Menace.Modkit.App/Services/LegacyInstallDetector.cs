@@ -131,12 +131,15 @@ public class LegacyInstallDetector
             issues.Add($"Detection error: {ex.Message}");
         }
 
-        var isLegacy = detectionFlags.HasAnyIssue;
+        // Only flag as legacy if there are BLOCKING issues
+        // Minor issues (unbacked originals alone, no provenance) are logged but don't block
+        var isLegacy = detectionFlags.HasBlockingIssue;
         var confidence = CalculateConfidence(detectionFlags);
 
-        if (isLegacy)
+        if (detectionFlags.HasAnyIssue)
         {
-            ModkitLog.Info($"[LegacyInstallDetector] Legacy install detected with {issues.Count} issue(s), confidence: {confidence:P0}");
+            var severity = isLegacy ? "BLOCKING" : "informational";
+            ModkitLog.Info($"[LegacyInstallDetector] Detected {issues.Count} {severity} issue(s), confidence: {confidence:P0}");
             foreach (var issue in issues)
             {
                 ModkitLog.Info($"[LegacyInstallDetector]   - {issue}");
@@ -488,6 +491,19 @@ public class LegacyInstallDetector
         public bool NoProvenance { get; set; }
         public bool OldModsLayout { get; set; }
         public bool LegacyDependencies { get; set; }
+
+        /// <summary>
+        /// Only flag as legacy install if there are SERIOUS issues that would break deployment.
+        /// NoProvenance and LegacyDependencies are informational only - they don't prevent deployment.
+        /// UnbackedOriginals without deploy state is the main concern.
+        /// OldModsLayout with DLLs in wrong places can cause loading issues.
+        /// </summary>
+        public bool HasBlockingIssue =>
+            // Unbacked originals is only serious if combined with other issues
+            // (on its own, the system will create metadata on next deploy)
+            (UnbackedOriginals && OldModsLayout) ||
+            // Old mods layout with loose DLLs is serious - they may conflict
+            (OldModsLayout && LegacyDependencies);
 
         public bool HasAnyIssue =>
             UnbackedOriginals || NoProvenance || OldModsLayout || LegacyDependencies;

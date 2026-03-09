@@ -70,6 +70,9 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
         Backlinks = new ObservableCollection<ReferenceEntry>();
         SearchResults = new ObservableCollection<SearchResultItem>();
 
+        // Subscribe to favourites changes to rebuild tree
+        AppSettings.Instance.StatsEditorFavouritesChanged += OnFavouritesChanged;
+
         LoadData();
     }
 
@@ -230,6 +233,7 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
                 OnNodeSelected(value);
                 this.RaisePropertyChanged(nameof(HasModifications));
                 this.RaisePropertyChanged(nameof(CanDeleteSelectedClone));
+                this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
             }
         }
     }
@@ -633,6 +637,125 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
             return $"{dyn.TemplateTypeName}/{template.Name}";
         return null;
     }
+
+    #region Favourites
+
+    /// <summary>
+    /// Toggle the favourite status of the selected node.
+    /// </summary>
+    public void ToggleFavourite()
+    {
+        if (SelectedNode == null) return;
+
+        var key = GetFavouriteKey(SelectedNode);
+        if (key == null) return;
+
+        AppSettings.Instance.ToggleStatsEditorFavourite(key);
+        // Tree will be rebuilt via event subscription
+    }
+
+    /// <summary>
+    /// Check if a tree node is favourited.
+    /// </summary>
+    public bool IsFavourite(TreeNodeViewModel? node)
+    {
+        if (node == null) return false;
+
+        var key = GetFavouriteKey(node);
+        return key != null && AppSettings.Instance.IsStatsEditorFavourite(key);
+    }
+
+    /// <summary>
+    /// Get the favourite key for a node. For templates, uses TemplateType/name.
+    /// For categories, uses the category path.
+    /// </summary>
+    private static string? GetFavouriteKey(TreeNodeViewModel node)
+    {
+        if (node.Template != null)
+            return GetTemplateKey(node.Template);
+
+        // For categories, build path from root
+        if (node.IsCategory)
+            return "category:" + GetNodePath(node);
+
+        return null;
+    }
+
+    /// <summary>
+    /// Build the path from root to this node (e.g., "SkillTemplate/Combat").
+    /// </summary>
+    private static string GetNodePath(TreeNodeViewModel node)
+    {
+        var parts = new List<string>();
+        var current = node;
+        while (current != null)
+        {
+            parts.Insert(0, current.Name);
+            current = current.Parent;
+        }
+        return string.Join("/", parts);
+    }
+
+    /// <summary>
+    /// Find a node by its path (e.g., "SkillTemplate/Combat").
+    /// </summary>
+    private static TreeNodeViewModel? FindNodeByPath(IEnumerable<TreeNodeViewModel> roots, string path)
+    {
+        var parts = path.Split('/');
+        IEnumerable<TreeNodeViewModel> currentLevel = roots;
+
+        foreach (var part in parts)
+        {
+            TreeNodeViewModel? found = null;
+            foreach (var node in currentLevel)
+            {
+                if (node.Name == part)
+                {
+                    found = node;
+                    break;
+                }
+            }
+            if (found == null)
+                return null;
+
+            if (part == parts[^1])
+                return found;
+
+            currentLevel = found.Children;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Check if the currently selected node is favourited.
+    /// </summary>
+    public bool IsSelectedNodeFavourite => IsFavourite(SelectedNode);
+
+    private void OnFavouritesChanged(object? sender, EventArgs e)
+    {
+        // Remember current selection
+        var selectedKey = SelectedNode?.Template != null ? GetTemplateKey(SelectedNode.Template) : null;
+
+        // Rebuild tree with updated favourites folder
+        LoadAllTemplates();
+
+        // Restore selection if possible
+        if (selectedKey != null)
+        {
+            var parts = selectedKey.Split('/');
+            if (parts.Length == 2)
+            {
+                var target = FindNode(_allTreeNodes, parts[0], parts[1]);
+                if (target != null)
+                    SelectedNode = target;
+            }
+        }
+
+        // Notify UI that favourite status may have changed
+        this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
+    }
+
+    #endregion
 
     /// <summary>
     /// Navigate to a specific template instance. Sets the modpack, then finds and
@@ -2333,6 +2456,65 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
         }
     }
 
+    private bool _folderSearchEnabled;
+    /// <summary>
+    /// When enabled, search is scoped to the folder that was selected when search began.
+    /// </summary>
+    public bool FolderSearchEnabled
+    {
+        get => _folderSearchEnabled;
+        set
+        {
+            if (_folderSearchEnabled != value)
+            {
+                this.RaiseAndSetIfChanged(ref _folderSearchEnabled, value);
+                // If enabling and currently searching, capture the scope now
+                if (value && IsSearching && _searchScopeFolder == null)
+                {
+                    CaptureSearchScope();
+                }
+                // If disabling, clear scope and re-search
+                if (!value)
+                {
+                    _searchScopeFolder = null;
+                    this.RaisePropertyChanged(nameof(SearchScopeName));
+                }
+                if (IsSearching)
+                {
+                    GenerateSearchResults();
+                }
+            }
+        }
+    }
+
+    private TreeNodeViewModel? _searchScopeFolder;
+    /// <summary>
+    /// The folder that search is scoped to (when FolderSearchEnabled is true).
+    /// </summary>
+    public string SearchScopeName => _searchScopeFolder?.Name ?? "All";
+
+    /// <summary>
+    /// Captures the current selection as the search scope folder.
+    /// </summary>
+    private void CaptureSearchScope()
+    {
+        // Find the nearest category ancestor (or the node itself if it's a category)
+        var node = _selectedNode;
+        while (node != null)
+        {
+            if (node.IsCategory)
+            {
+                _searchScopeFolder = node;
+                this.RaisePropertyChanged(nameof(SearchScopeName));
+                return;
+            }
+            node = node.Parent;
+        }
+        // If no category found, use first top-level node or null
+        _searchScopeFolder = null;
+        this.RaisePropertyChanged(nameof(SearchScopeName));
+    }
+
     private string _searchText = string.Empty;
     public string SearchText
     {
@@ -2343,6 +2525,12 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
             {
                 var wasSearching = IsSearching;
                 var currentSelection = _selectedNode;
+
+                // Capture scope when entering search mode with folder search enabled
+                if (!wasSearching && value.Length >= 3 && _folderSearchEnabled)
+                {
+                    CaptureSearchScope();
+                }
 
                 this.RaiseAndSetIfChanged(ref _searchText, value);
                 this.RaisePropertyChanged(nameof(IsSearching));
@@ -2355,6 +2543,12 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
                 else
                 {
                     SearchResults.Clear();
+                    // Clear scope when exiting search
+                    if (wasSearching)
+                    {
+                        _searchScopeFolder = null;
+                        this.RaisePropertyChanged(nameof(SearchScopeName));
+                    }
                 }
 
                 // When exiting search mode, preserve selection and focus it in tree
@@ -2478,6 +2672,9 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
         var sectionFilter = _selectedSectionFilter;
         var filterBySection = !string.IsNullOrEmpty(sectionFilter) && sectionFilter != "All Sections";
 
+        // Folder search: only search within the scoped folder
+        var folderScope = _folderSearchEnabled ? _searchScopeFolder : null;
+
         void SearchNode(TreeNodeViewModel node, string parentPath, string topLevelFolder)
         {
             var currentPath = string.IsNullOrEmpty(parentPath)
@@ -2514,9 +2711,16 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
             }
         }
 
-        // Search from top-level nodes (not flat list)
-        foreach (var root in _topLevelNodes)
-            SearchNode(root, "", root.Name);
+        // Search from scoped folder or all top-level nodes
+        if (folderScope != null)
+        {
+            SearchNode(folderScope, "", folderScope.Name);
+        }
+        else
+        {
+            foreach (var root in _topLevelNodes)
+                SearchNode(root, "", root.Name);
+        }
 
         ApplySearchResultsSort(results);
         }
@@ -2826,6 +3030,72 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
 
         // Add root-level nodes to TreeNodes and save for later restoration (sorted alphabetically)
         _topLevelNodes = rootDict.Values.OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase).ToList();
+
+        // Add Favourites folder at top if there are any favourites
+        var favourites = AppSettings.Instance.StatsEditorFavourites;
+        if (favourites.Count > 0)
+        {
+            var favouritesNode = new TreeNodeViewModel
+            {
+                Name = "\u2b50 Favourites",
+                IsCategory = true,
+                IsExpanded = true
+            };
+
+            foreach (var key in favourites)
+            {
+                // Handle category favourites (prefixed with "category:")
+                if (key.StartsWith("category:"))
+                {
+                    var path = key.Substring("category:".Length);
+                    var originalNode = FindNodeByPath(_topLevelNodes, path);
+                    if (originalNode != null && originalNode.IsCategory)
+                    {
+                        // Create a reference node for the category
+                        var refNode = new TreeNodeViewModel
+                        {
+                            Name = originalNode.Name,
+                            IsCategory = true,
+                            IsExpanded = false,
+                            Parent = favouritesNode
+                        };
+                        // Copy children references
+                        foreach (var child in originalNode.Children)
+                            refNode.Children.Add(child);
+                        favouritesNode.Children.Add(refNode);
+                    }
+                    continue;
+                }
+
+                // Handle template favourites (TemplateType/instanceName)
+                var parts = key.Split('/');
+                if (parts.Length == 2)
+                {
+                    var templateType = parts[0];
+                    var instanceName = parts[1];
+
+                    // Find the template in the regular tree
+                    var originalNode = FindNode(_topLevelNodes, templateType, instanceName);
+                    if (originalNode?.Template != null)
+                    {
+                        // Create a reference node that points to the same template
+                        var refNode = new TreeNodeViewModel
+                        {
+                            Name = originalNode.Name,
+                            IsCategory = false,
+                            Template = originalNode.Template,
+                            Parent = favouritesNode
+                        };
+                        favouritesNode.Children.Add(refNode);
+                    }
+                }
+            }
+
+            // Only add if we found at least one valid favourite
+            if (favouritesNode.Children.Count > 0)
+                TreeNodes.Add(favouritesNode);
+        }
+
         foreach (var node in _topLevelNodes)
         {
             SortChildrenRecursively(node);
@@ -2968,10 +3238,13 @@ public sealed class StatsEditorViewModel : ViewModelBase, ISearchableViewModel
     private int ScoreMatch(TreeNodeViewModel node, string query)
     {
         if (!_searchEntries.TryGetValue(node, out var entry)) return -1;
-        if (entry.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) return 100;
-        if (entry.Title.Contains(query, StringComparison.OrdinalIgnoreCase)) return 80;
-        if (entry.Fields.Contains(query, StringComparison.OrdinalIgnoreCase)) return 40;
-        if (entry.Description.Contains(query, StringComparison.OrdinalIgnoreCase)) return 20;
+
+        int score;
+        if ((score = SearchService.ScoreTokenMatchFuzzy(query, entry.Name, 100)) >= 0) return score;
+        if ((score = SearchService.ScoreTokenMatchFuzzy(query, entry.Title, 80)) >= 0) return score;
+        if ((score = SearchService.ScoreTokenMatchFuzzy(query, entry.Fields, 40)) >= 0) return score;
+        if ((score = SearchService.ScoreTokenMatchFuzzy(query, entry.Description, 20)) >= 0) return score;
+
         return -1;
     }
 

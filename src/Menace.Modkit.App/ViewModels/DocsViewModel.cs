@@ -25,6 +25,9 @@ public sealed class DocsViewModel : ViewModelBase, ISearchableViewModel
     {
         DocTree = new ObservableCollection<DocTreeNode>();
         SearchResults = new ObservableCollection<SearchResultItem>();
+
+        // Subscribe to favourites changes to rebuild tree
+        Services.AppSettings.Instance.DocsFavouritesChanged += OnFavouritesChanged;
     }
 
     public ObservableCollection<DocTreeNode> DocTree { get; }
@@ -66,10 +69,61 @@ public sealed class DocsViewModel : ViewModelBase, ISearchableViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedNode, value);
+            this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
             if (value != null && value.IsFile)
                 LoadDocument(value);
         }
     }
+
+    #region Favourites
+
+    /// <summary>
+    /// Toggle the favourite status of the selected node.
+    /// </summary>
+    public void ToggleFavourite()
+    {
+        if (SelectedNode == null) return;
+        if (string.IsNullOrEmpty(SelectedNode.FullPath)) return;
+
+        Services.AppSettings.Instance.ToggleDocsFavourite(SelectedNode.FullPath);
+        this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
+    }
+
+    /// <summary>
+    /// Check if a tree node is favourited.
+    /// </summary>
+    public bool IsFavourite(DocTreeNode? node)
+    {
+        if (node == null) return false;
+        if (string.IsNullOrEmpty(node.FullPath)) return false;
+        return Services.AppSettings.Instance.IsDocsFavourite(node.FullPath);
+    }
+
+    /// <summary>
+    /// Check if the currently selected node is favourited.
+    /// </summary>
+    public bool IsSelectedNodeFavourite => IsFavourite(SelectedNode);
+
+    private void OnFavouritesChanged(object? sender, EventArgs e)
+    {
+        // Remember current selection
+        var selectedPath = SelectedNode?.FullPath;
+
+        // Rebuild tree with updated favourites folder
+        RefreshDocTree();
+
+        // Restore selection if possible
+        if (selectedPath != null)
+        {
+            var target = FindNodeByPath(_allDocNodes, selectedPath);
+            if (target != null)
+                SelectedNode = target;
+        }
+
+        this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
+    }
+
+    #endregion
 
     public string MarkdownContent
     {
@@ -243,8 +297,9 @@ public sealed class DocsViewModel : ViewModelBase, ISearchableViewModel
                 if (filterBySection && !topLevelFolder.Equals(sectionFilter, StringComparison.OrdinalIgnoreCase))
                     return;
 
-                var nameLower = node.Name.ToLowerInvariant();
-                if (nameLower.Contains(searchLower))
+                // Use token-based fuzzy matching for multi-word search
+                var score = Services.SearchService.ScoreTokenMatchFuzzy(_searchText, node.Name, 100);
+                if (score >= 0)
                 {
                     var snippet = GetDocSnippet(node.FullPath);
 
@@ -253,7 +308,7 @@ public sealed class DocsViewModel : ViewModelBase, ISearchableViewModel
                         Breadcrumb = parentPath,
                         Name = node.Name,
                         Snippet = snippet,
-                        Score = nameLower.StartsWith(searchLower) ? 100 : 50,
+                        Score = score,
                         SourceNode = node,
                         TypeIndicator = ".md"
                     });
@@ -443,7 +498,63 @@ public sealed class DocsViewModel : ViewModelBase, ISearchableViewModel
             var ordered = root.Children
                 .OrderBy(n => n.IsFile) // folders first
                 .ThenByDescending(n => n.RelativePath.StartsWith("modding-guides", StringComparison.OrdinalIgnoreCase)) // modding-guides first
-                .ThenBy(n => n.Name);
+                .ThenBy(n => n.Name)
+                .ToList();
+
+            // Add Favourites folder at top if there are any favourites
+            var favourites = Services.AppSettings.Instance.DocsFavourites;
+            if (favourites.Count > 0)
+            {
+                var favouritesNode = new DocTreeNode
+                {
+                    Name = "\u2b50 Favourites",
+                    IsFile = false,
+                    IsExpanded = true,
+                    FullPath = "",  // Virtual folder
+                    RelativePath = ""
+                };
+
+                foreach (var docPath in favourites)
+                {
+                    // Find the original node in the tree
+                    var originalNode = FindNodeByPath(ordered, docPath);
+                    if (originalNode != null)
+                    {
+                        if (originalNode.IsFile)
+                        {
+                            // Create a reference node for file
+                            var refNode = new DocTreeNode
+                            {
+                                Name = originalNode.Name,
+                                IsFile = true,
+                                FullPath = originalNode.FullPath,
+                                RelativePath = originalNode.RelativePath
+                            };
+                            favouritesNode.Children.Add(refNode);
+                        }
+                        else
+                        {
+                            // Create a reference node for folder
+                            var refNode = new DocTreeNode
+                            {
+                                Name = originalNode.Name,
+                                IsFile = false,
+                                FullPath = originalNode.FullPath,
+                                RelativePath = originalNode.RelativePath,
+                                IsExpanded = false
+                            };
+                            // Copy children references
+                            foreach (var child in originalNode.Children)
+                                refNode.Children.Add(child);
+                            favouritesNode.Children.Add(refNode);
+                        }
+                    }
+                }
+
+                // Only add if we found at least one valid favourite
+                if (favouritesNode.Children.Count > 0)
+                    DocTree.Add(favouritesNode);
+            }
 
             foreach (var child in ordered)
             {

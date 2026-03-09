@@ -8,6 +8,7 @@ using Avalonia.Platform;
 using Menace;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -31,7 +32,7 @@ public class MainWindow : Window
         Width = 1200;
         Height = 750;
         Title = ModkitVersion.AppFull;
-        Background = new SolidColorBrush(Color.Parse("#121212"));
+        Background = ThemeColors.BrushBgWindow;
 
         // Set app icon
         try
@@ -71,31 +72,18 @@ public class MainWindow : Window
 
         if (!_healthStatusBar.IsVisible) return;
 
-        // Update colors based on severity
-        var bgColor = status.State switch
+        // Use consistent dark theme colors - no bright yellows/reds
+        // Just subtle background tinting to indicate severity
+        _healthStatusBar.Background = status.State switch
         {
-            InstallHealthState.UpdatePendingRestart => Color.Parse("#1A3A5C"), // Blue for info
-            InstallHealthState.NeedsSetup => Color.Parse("#4A3A1A"),           // Orange/amber for setup
-            InstallHealthState.NeedsRepair => Color.Parse("#4A3A1A"),          // Orange/amber for repair
-            InstallHealthState.RepairableFromBackup => Color.Parse("#4A3A1A"), // Orange/amber
-            _ => Color.Parse("#4A1A1A")                                        // Red for errors
+            InstallHealthState.UpdatePendingRestart => ThemeColors.BrushInfoBg,
+            _ => ThemeColors.BrushBgSurfaceAlt
         };
-
-        var textColor = status.State switch
-        {
-            InstallHealthState.UpdatePendingRestart => Color.Parse("#6BB3FF"),
-            InstallHealthState.NeedsSetup => Color.Parse("#FFB74D"),
-            InstallHealthState.NeedsRepair => Color.Parse("#FFB74D"),
-            InstallHealthState.RepairableFromBackup => Color.Parse("#FFB74D"),
-            _ => Color.Parse("#FF6B6B")
-        };
-
-        _healthStatusBar.Background = new SolidColorBrush(bgColor);
 
         if (_healthStatusText != null)
         {
             _healthStatusText.Text = status.ShortSummary;
-            _healthStatusText.Foreground = new SolidColorBrush(textColor);
+            _healthStatusText.Foreground = ThemeColors.BrushTextPrimary;
         }
 
         if (_healthActionText != null)
@@ -103,7 +91,21 @@ public class MainWindow : Window
             _healthActionText.Text = !string.IsNullOrEmpty(status.RequiredUserAction)
                 ? status.RequiredUserAction
                 : status.BlockingReason;
-            _healthActionText.Foreground = new SolidColorBrush(Color.Parse("#AAAAAA"));
+            _healthActionText.Foreground = ThemeColors.BrushTextTertiary;
+        }
+
+        // Configure action button based on state
+        if (_healthActionButton != null)
+        {
+            var (showButton, buttonText) = status.State switch
+            {
+                InstallHealthState.ReacquireRequired => (true, "Clear & Retry"),
+                InstallHealthState.UpdatePendingRestart => (true, "Restart Now"),
+                _ => (false, "")
+            };
+
+            _healthActionButton.IsVisible = showButton;
+            _healthActionButton.Content = buttonText;
         }
     }
 
@@ -136,12 +138,14 @@ public class MainWindow : Window
         return mainGrid;
     }
 
+    private Button? _healthActionButton;
+
     private Control BuildHealthStatusBar()
     {
         _healthStatusBar = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#4A3A1A")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#6A5A2A")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(16, 8),
             IsVisible = false // Hidden by default, shown when health state != Healthy
@@ -157,9 +161,9 @@ public class MainWindow : Window
         // Warning icon
         var iconText = new TextBlock
         {
-            Text = "\u26A0", // Warning triangle
+            Text = ThemeIcons.Warning,
             FontSize = 14,
-            Foreground = new SolidColorBrush(Color.Parse("#FFB74D")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center
         };
         contentStack.Children.Add(iconText);
@@ -170,7 +174,7 @@ public class MainWindow : Window
             Text = "",
             FontSize = 13,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#FFB74D")),
+            Foreground = ThemeColors.BrushTextPrimary,
             VerticalAlignment = VerticalAlignment.Center
         };
         contentStack.Children.Add(_healthStatusText);
@@ -179,7 +183,7 @@ public class MainWindow : Window
         contentStack.Children.Add(new Border
         {
             Width = 1,
-            Background = new SolidColorBrush(Color.Parse("#5A4A2A")),
+            Background = ThemeColors.BrushBorderLight,
             Margin = new Thickness(4, 2)
         });
 
@@ -188,13 +192,27 @@ public class MainWindow : Window
         {
             Text = "",
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.NoWrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxWidth = 800
+            MaxWidth = 600
         };
         contentStack.Children.Add(_healthActionText);
+
+        // Action button (shown for states that have a quick fix)
+        _healthActionButton = new Button
+        {
+            Content = "Fix",
+            FontSize = 11,
+            Padding = new Thickness(12, 4),
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = false
+        };
+        _healthActionButton.Classes.Add("secondary");
+        _healthActionButton.Click += OnHealthActionButtonClick;
+        contentStack.Children.Add(_healthActionButton);
 
         _healthStatusBar.Child = contentStack;
 
@@ -205,12 +223,36 @@ public class MainWindow : Window
         return _healthStatusBar;
     }
 
+    private async void OnHealthActionButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var status = _viewModel.HealthState.CurrentStatus;
+
+        if (status.State == InstallHealthState.ReacquireRequired)
+        {
+            // Clear backup state and refresh
+            if (InstallHealthService.Instance.ClearBackupState())
+            {
+                await _viewModel.HealthState.InvalidateAndRefreshAsync();
+            }
+        }
+        else if (status.State == InstallHealthState.UpdatePendingRestart)
+        {
+            // Restart the app
+            var exePath = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(exePath))
+            {
+                System.Diagnostics.Process.Start(exePath);
+                Close();
+            }
+        }
+    }
+
     private Control BuildMenuBar()
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(12, 6)
         };
@@ -260,7 +302,7 @@ public class MainWindow : Window
             Text = "Menace Modkit",
             FontSize = 15,
             FontWeight = FontWeight.SemiBold,
-            Foreground = Brushes.White,
+            Foreground = ThemeColors.BrushTextPrimary,
             VerticalAlignment = VerticalAlignment.Center
         });
 
@@ -272,7 +314,7 @@ public class MainWindow : Window
         stack.Children.Add(new Border
         {
             Width = 1,
-            Background = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBorderLight,
             Margin = new Thickness(16, 4)
         });
 
@@ -293,7 +335,7 @@ public class MainWindow : Window
         {
             Content = text,
             Background = Brushes.Transparent,
-            Foreground = Brushes.White,
+            Foreground = ThemeColors.BrushTextPrimary,
             BorderThickness = new Thickness(2, 0, 0, 0),
             BorderBrush = Brushes.Transparent,
             Padding = new Thickness(16, 10),
@@ -310,8 +352,8 @@ public class MainWindow : Window
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#161616")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgPanelLeft,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(16, 8),  // Add vertical padding for breathing room
             MinHeight = 44  // Increased to accommodate padding
@@ -364,8 +406,8 @@ public class MainWindow : Window
     private void UpdateMainTabHighlight()
     {
         // Active state: grey background with teal left border
-        var activeBg = new SolidColorBrush(Color.Parse("#2A2A2A"));
-        var activeBorder = new SolidColorBrush(Color.Parse("#004f43"));
+        var activeBg = ThemeColors.BrushBgInput;
+        var activeBorder = ThemeColors.BrushPrimary;
         var inactiveBg = Brushes.Transparent;
         var inactiveBorder = Brushes.Transparent;
 
@@ -388,7 +430,7 @@ public class MainWindow : Window
         {
             Content = text,
             Background = Brushes.Transparent,
-            Foreground = Brushes.White,
+            Foreground = ThemeColors.BrushTextPrimary,
             BorderThickness = new Thickness(2, 0, 0, 0),
             BorderBrush = Brushes.Transparent,
             Padding = new Thickness(16, 10),
@@ -406,8 +448,8 @@ public class MainWindow : Window
         if (_subNavPanel == null) return;
 
         // Active state: grey background with teal left border
-        var activeBg = new SolidColorBrush(Color.Parse("#2A2A2A"));
-        var activeBorder = new SolidColorBrush(Color.Parse("#004f43"));
+        var activeBg = ThemeColors.BrushBgInput;
+        var activeBorder = ThemeColors.BrushPrimary;
         var inactiveBg = Brushes.Transparent;
         var inactiveBorder = Brushes.Transparent;
 
@@ -427,7 +469,7 @@ public class MainWindow : Window
     {
         var contentView = new ContentControl
         {
-            Background = new SolidColorBrush(Color.Parse("#121212"))
+            Background = ThemeColors.BrushBgWindow
         };
 
         // Bind to selected view model

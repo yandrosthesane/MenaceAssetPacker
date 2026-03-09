@@ -87,12 +87,19 @@ public static class LuaApiReference
             GetCSharpSpawn(),
             GetCSharpTileEffects(),
             GetCSharpInventory(),
+            // Action APIs (v35.0)
+            GetCSharpEntityState(),
+            GetCSharpEntitySkills(),
+            GetCSharpEntityAI(),
+            GetCSharpEntityVisibility(),
+            GetCSharpTileManipulation(),
             // Events
             GetCSharpTacticalEvents(),
             GetCSharpStrategyEvents(),
             // Interceptors
             GetCSharpPropertyInterceptors(),
             GetCSharpSkillInterceptors(),
+            GetCSharpCombatInterceptors(),
             GetCSharpTileInterceptors(),
             GetCSharpMovementInterceptors(),
             GetCSharpStrategyInterceptors(),
@@ -239,7 +246,117 @@ public static class LuaApiReference
             {
                 new() { Name = "Inventory.GetContainer", Description = "Get actor's inventory", Signature = "Inventory.GetContainer(actor)", InsertText = "var container = Inventory.GetContainer(actor);", ItemType = LuaApiItemType.Function },
                 new() { Name = "Inventory.GetAllItems", Description = "Get all items", Signature = "Inventory.GetAllItems(container)", InsertText = "var items = Inventory.GetAllItems(container);", ItemType = LuaApiItemType.Function },
-                new() { Name = "Inventory.GetEquippedWeapons", Description = "Get equipped weapons", Signature = "Inventory.GetEquippedWeapons(actor)", InsertText = "var weapons = Inventory.GetEquippedWeapons(actor);", ItemType = LuaApiItemType.Function }
+                new() { Name = "Inventory.GetEquippedWeapons", Description = "Get equipped weapons", Signature = "Inventory.GetEquippedWeapons(actor)", InsertText = "var weapons = Inventory.GetEquippedWeapons(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.RemoveItem", Description = "Remove specific item", Signature = "Inventory.RemoveItem(container, item)", InsertText = "Inventory.RemoveItem(container, item);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.RemoveItemAt", Description = "Remove item at slot index", Signature = "Inventory.RemoveItemAt(container, slotType, index)", InsertText = "Inventory.RemoveItemAt(container, 0, 0);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.TransferItem", Description = "Transfer item between containers", Signature = "Inventory.TransferItem(from, to, item)", InsertText = "Inventory.TransferItem(fromContainer, toContainer, item);", ItemType = LuaApiItemType.Function },
+                new() { Name = "Inventory.ClearInventory", Description = "Remove all items from container", Signature = "Inventory.ClearInventory(container, slotType = -1)", InsertText = "int removed = Inventory.ClearInventory(container);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpEntityState()
+    {
+        return new LuaApiItem
+        {
+            Name = "Entity State",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntityState.SetHeavyWeaponDeployed", Description = "Set heavy weapon deployment", Signature = "EntityState.SetHeavyWeaponDeployed(actor, deployed)", InsertText = "EntityState.SetHeavyWeaponDeployed(actor, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.ToggleHeavyWeapon", Description = "Toggle deployment on/off", Signature = "EntityState.ToggleHeavyWeapon(actor)", InsertText = "EntityState.ToggleHeavyWeapon(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.SetDetectedByFaction", Description = "Set faction detection", Signature = "EntityState.SetDetectedByFaction(actor, faction, detected)", InsertText = "EntityState.SetDetectedByFaction(actor, 1, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.RevealToAll", Description = "Reveal to all factions", Signature = "EntityState.RevealToAll(actor)", InsertText = "EntityState.RevealToAll(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.ConcealFromAll", Description = "Conceal from all factions", Signature = "EntityState.ConcealFromAll(actor)", InsertText = "EntityState.ConcealFromAll(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.SetHiddenToAI", Description = "Hide/reveal from AI", Signature = "EntityState.SetHiddenToAI(actor, hidden)", InsertText = "EntityState.SetHiddenToAI(actor, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.SetDying", Description = "Set dying state flag", Signature = "EntityState.SetDying(actor, dying)", InsertText = "EntityState.SetDying(actor, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.SetLeavingMap", Description = "Set leaving map state", Signature = "EntityState.SetLeavingMap(actor, leaving)", InsertText = "EntityState.SetLeavingMap(actor, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityState.GetStateFlags", Description = "Query all state flags", Signature = "EntityState.GetStateFlags(actor)", InsertText = "var flags = EntityState.GetStateFlags(actor);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpEntitySkills()
+    {
+        return new LuaApiItem
+        {
+            Name = "Entity Skills",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntitySkills.AddSkill", Description = "Add skill to actor", Signature = "EntitySkills.AddSkill(actor, skillTemplateID)", InsertText = "EntitySkills.AddSkill(actor, \"skill.overwatch\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.RemoveSkill", Description = "Remove skill from actor", Signature = "EntitySkills.RemoveSkill(actor, skillID)", InsertText = "EntitySkills.RemoveSkill(actor, \"skill.overwatch\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.HasSkill", Description = "Check if actor has skill", Signature = "EntitySkills.HasSkill(actor, skillID)", InsertText = "if (EntitySkills.HasSkill(actor, \"skill.overwatch\"))\n{\n    // Has skill\n}", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.GetSkillIDs", Description = "List all skill IDs", Signature = "EntitySkills.GetSkillIDs(actor)", InsertText = "var skills = EntitySkills.GetSkillIDs(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.SetCooldown", Description = "Set skill cooldown", Signature = "EntitySkills.SetCooldown(actor, skillID, turns)", InsertText = "EntitySkills.SetCooldown(actor, \"skill.ultimate\", 3);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.ResetCooldown", Description = "Clear skill cooldown", Signature = "EntitySkills.ResetCooldown(actor, skillID)", InsertText = "EntitySkills.ResetCooldown(actor, \"skill.ultimate\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.ModifyCooldown", Description = "Modify cooldown by delta", Signature = "EntitySkills.ModifyCooldown(actor, skillID, delta)", InsertText = "EntitySkills.ModifyCooldown(actor, \"skill.ultimate\", -1);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.GetRemainingCooldown", Description = "Query current cooldown", Signature = "EntitySkills.GetRemainingCooldown(actor, skillID)", InsertText = "int cd = EntitySkills.GetRemainingCooldown(actor, \"skill.ultimate\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.ModifySkillRange", Description = "Change skill range", Signature = "EntitySkills.ModifySkillRange(actor, skillID, newRange)", InsertText = "EntitySkills.ModifySkillRange(actor, \"skill.overwatch\", 15);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.ModifySkillAPCost", Description = "Change skill AP cost", Signature = "EntitySkills.ModifySkillAPCost(actor, skillID, newCost)", InsertText = "EntitySkills.ModifySkillAPCost(actor, \"skill.overwatch\", 25);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.EnableSkill", Description = "Enable skill usage", Signature = "EntitySkills.EnableSkill(actor, skillID)", InsertText = "EntitySkills.EnableSkill(actor, \"skill.overwatch\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.DisableSkill", Description = "Disable skill usage", Signature = "EntitySkills.DisableSkill(actor, skillID)", InsertText = "EntitySkills.DisableSkill(actor, \"skill.overwatch\");", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntitySkills.GetSkillState", Description = "Get comprehensive skill info", Signature = "EntitySkills.GetSkillState(actor, skillID)", InsertText = "var state = EntitySkills.GetSkillState(actor, \"skill.overwatch\");", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpEntityAI()
+    {
+        return new LuaApiItem
+        {
+            Name = "Entity AI",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntityAI.PauseAI", Description = "Pause AI for actor", Signature = "EntityAI.PauseAI(actor)", InsertText = "EntityAI.PauseAI(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.ResumeAI", Description = "Resume AI for actor", Signature = "EntityAI.ResumeAI(actor)", InsertText = "EntityAI.ResumeAI(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.IsAIPaused", Description = "Check if AI is paused", Signature = "EntityAI.IsAIPaused(actor)", InsertText = "if (EntityAI.IsAIPaused(actor))\n{\n    // AI paused\n}", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.ForceFleeDecision", Description = "Force actor to flee (morale 0)", Signature = "EntityAI.ForceFleeDecision(actor)", InsertText = "EntityAI.ForceFleeDecision(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.BlockFleeDecision", Description = "Prevent fleeing (morale 100)", Signature = "EntityAI.BlockFleeDecision(actor)", InsertText = "EntityAI.BlockFleeDecision(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.SetThreatValueOverride", Description = "Override threat value", Signature = "EntityAI.SetThreatValueOverride(actor, target, threat)", InsertText = "EntityAI.SetThreatValueOverride(actor, target, 100.0f);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityAI.ClearThreatOverrides", Description = "Clear threat overrides", Signature = "EntityAI.ClearThreatOverrides(actor)", InsertText = "EntityAI.ClearThreatOverrides(actor);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpEntityVisibility()
+    {
+        return new LuaApiItem
+        {
+            Name = "Entity Visibility",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "EntityVisibility.RevealToFaction", Description = "Reveal to specific faction", Signature = "EntityVisibility.RevealToFaction(actor, factionIndex)", InsertText = "EntityVisibility.RevealToFaction(actor, 1);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityVisibility.ConcealFromFaction", Description = "Conceal from specific faction", Signature = "EntityVisibility.ConcealFromFaction(actor, factionIndex)", InsertText = "EntityVisibility.ConcealFromFaction(actor, 1);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityVisibility.SetDetectionMask", Description = "Set entire detection bitmask", Signature = "EntityVisibility.SetDetectionMask(actor, bitmask)", InsertText = "EntityVisibility.SetDetectionMask(actor, 0b0110);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityVisibility.GetDetectionMask", Description = "Get detection bitmask", Signature = "EntityVisibility.GetDetectionMask(actor)", InsertText = "int mask = EntityVisibility.GetDetectionMask(actor);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityVisibility.ForceVisibleTo", Description = "Temporary visibility (N turns)", Signature = "EntityVisibility.ForceVisibleTo(actor, viewer, turns = 1)", InsertText = "EntityVisibility.ForceVisibleTo(actor, viewer, 3);", ItemType = LuaApiItemType.Function },
+                new() { Name = "EntityVisibility.ForceConcealedFrom", Description = "Temporary concealment (N turns)", Signature = "EntityVisibility.ForceConcealedFrom(actor, viewer, turns = 1)", InsertText = "EntityVisibility.ForceConcealedFrom(actor, viewer, 3);", ItemType = LuaApiItemType.Function }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpTileManipulation()
+    {
+        return new LuaApiItem
+        {
+            Name = "Tile Manipulation",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "TileManipulation.SetTraversableOverride", Description = "Set tile traversability", Signature = "TileManipulation.SetTraversableOverride(tile, traversable, turns = -1)", InsertText = "TileManipulation.SetTraversableOverride(tile, false, 3);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileManipulation.ClearTraversableOverride", Description = "Clear traversability override", Signature = "TileManipulation.ClearTraversableOverride(tile)", InsertText = "TileManipulation.ClearTraversableOverride(tile);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileManipulation.SetCoverOverride", Description = "Set cover value", Signature = "TileManipulation.SetCoverOverride(tile, direction, cover, turns = -1)", InsertText = "TileManipulation.SetCoverOverride(tile, 0, 3.0f, 5);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileManipulation.ClearCoverOverrides", Description = "Clear all cover overrides", Signature = "TileManipulation.ClearCoverOverrides(tile)", InsertText = "TileManipulation.ClearCoverOverrides(tile);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileManipulation.SetBlocksLOS", Description = "Block/unblock line of sight", Signature = "TileManipulation.SetBlocksLOS(tile, blocks, turns = -1)", InsertText = "TileManipulation.SetBlocksLOS(tile, true);", ItemType = LuaApiItemType.Function },
+                new() { Name = "TileManipulation.SetBlocksMovement", Description = "Block/unblock movement", Signature = "TileManipulation.SetBlocksMovement(tile, blocks, turns = -1)", InsertText = "TileManipulation.SetBlocksMovement(tile, true);", ItemType = LuaApiItemType.Function }
             }
         };
     }
@@ -289,7 +406,9 @@ public static class LuaApiReference
                 new() { Name = "Intercept.OnGetDamage", Description = "Intercept damage calculations", Signature = "Intercept.OnGetDamage += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetDamage += (GameObj props, GameObj owner, ref float result) =>\n{\n    result *= 1.5f;  // +50% damage\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
                 new() { Name = "Intercept.OnGetAccuracy", Description = "Intercept accuracy calculations", Signature = "Intercept.OnGetAccuracy += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetAccuracy += (GameObj props, GameObj owner, ref float result) =>\n{\n    result += 10f;  // +10 accuracy\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
                 new() { Name = "Intercept.OnGetArmor", Description = "Intercept armor calculations", Signature = "Intercept.OnGetArmor += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetArmor += (GameObj props, GameObj owner, ref int result) =>\n{\n    result += 2;  // +2 armor\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
-                new() { Name = "Intercept.OnGetMaxHitpoints", Description = "Intercept max HP", Signature = "Intercept.OnGetMaxHitpoints += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetMaxHitpoints += (GameObj props, GameObj owner, ref int result) =>\n{\n    result = (int)(result * 1.25f);  // +25% HP\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+                new() { Name = "Intercept.OnGetMaxHitpoints", Description = "Intercept max HP", Signature = "Intercept.OnGetMaxHitpoints += (props, owner, ref result) => { }", InsertText = "Intercept.OnGetMaxHitpoints += (GameObj props, GameObj owner, ref int result) =>\n{\n    result = (int)(result * 1.25f);  // +25% HP\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnPropertyUpdate", Description = "Intercept additive stat bonuses", Signature = "Intercept.OnPropertyUpdate += (props, propertyType, ref amount) => { }", InsertText = "Intercept.OnPropertyUpdate += (GameObj props, int propertyType, ref int amount) =>\n{\n    amount *= 2;  // Double all additive bonuses\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnPropertyUpdateMult", Description = "Intercept multiplicative stat modifiers", Signature = "Intercept.OnPropertyUpdateMult += (props, propertyType, ref multiplier) => { }", InsertText = "Intercept.OnPropertyUpdateMult += (GameObj props, int propertyType, ref float multiplier) =>\n{\n    multiplier *= 1.5f;  // Boost multipliers by 50%\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
             }
         };
     }
@@ -306,7 +425,8 @@ public static class LuaApiReference
             {
                 new() { Name = "Intercept.OnGetHitChance", Description = "Intercept hit chance", Signature = "Intercept.OnGetHitChance += (skill, attacker, target, ref result) => { }", InsertText = "Intercept.OnGetHitChance += (GameObj skill, GameObj attacker, GameObj target, ref HitChanceResult result) =>\n{\n    result.FinalChance = Math.Min(result.FinalChance + 0.1f, 1.0f);  // +10% hit\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
                 new() { Name = "Intercept.OnGetActionPointCost", Description = "Intercept AP cost", Signature = "Intercept.OnGetActionPointCost += (skill, ref result) => { }", InsertText = "Intercept.OnGetActionPointCost += (GameObj skill, ref int result) =>\n{\n    result = Math.Max(1, result - 1);  // -1 AP (min 1)\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
-                new() { Name = "Intercept.OnGetExpectedDamage", Description = "Intercept damage preview", Signature = "Intercept.OnGetExpectedDamage += (skill, attacker, target, ref result) => { }", InsertText = "Intercept.OnGetExpectedDamage += (GameObj skill, GameObj attacker, GameObj target, ref ExpectedDamageResult result) =>\n{\n    result.Damage *= 1.5f;\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+                new() { Name = "Intercept.OnGetExpectedDamage", Description = "Intercept damage preview", Signature = "Intercept.OnGetExpectedDamage += (skill, attacker, target, ref result) => { }", InsertText = "Intercept.OnGetExpectedDamage += (GameObj skill, GameObj attacker, GameObj target, ref ExpectedDamageResult result) =>\n{\n    result.Damage *= 1.5f;\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnSkillIsUsable", Description = "Intercept skill availability check", Signature = "Intercept.OnSkillIsUsable += (skill, actor, ref result) => { }", InsertText = "Intercept.OnSkillIsUsable += (GameObj skill, GameObj actor, ref bool result) =>\n{\n    // result = true;  // Force skill available\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
             }
         };
     }
@@ -338,7 +458,10 @@ public static class LuaApiReference
             Children = new List<LuaApiItem>
             {
                 new() { Name = "Intercept.OnGetMaxSpeed", Description = "Intercept movement speed", Signature = "Intercept.OnGetMaxSpeed += (instance, mode, ref result) => { }", InsertText = "Intercept.OnGetMaxSpeed += (GameObj instance, int mode, ref float result) =>\n{\n    result *= 1.5f;  // +50% speed\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
-                new() { Name = "Intercept.OnGetPathCost", Description = "Intercept path AP cost", Signature = "Intercept.OnGetPathCost += (actor, path, ref result) => { }", InsertText = "Intercept.OnGetPathCost += (GameObj actor, GameObj path, ref int result) =>\n{\n    result = (int)(result * 0.75f);  // -25% move cost\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+                new() { Name = "Intercept.OnGetPathCost", Description = "Intercept path AP cost", Signature = "Intercept.OnGetPathCost += (actor, path, ref result) => { }", InsertText = "Intercept.OnGetPathCost += (GameObj actor, GameObj path, ref int result) =>\n{\n    result = (int)(result * 0.75f);  // -25% move cost\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnTileTraversable", Description = "Intercept tile traversability (⚠️ high-frequency)", Signature = "Intercept.OnTileTraversable += (process, tile, ref result) => { }", InsertText = "Intercept.OnTileTraversable += (GameObj process, GameObj tile, ref bool result) =>\n{\n    // result = false;  // Block tile\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnPathfinding", Description = "Intercept pathfinding calculation", Signature = "Intercept.OnPathfinding += (process, start, end, ref pathResult, ref cancel) => { }", InsertText = "Intercept.OnPathfinding += (GameObj process, GameObj start, GameObj end, ref IntPtr pathResult, ref bool cancel) =>\n{\n    // cancel = true;  // Prevent pathfinding\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnMoveTo", Description = "Intercept actor movement (master hook)", Signature = "Intercept.OnMoveTo += (actor, tile, flags, ref cancel) => { }", InsertText = "Intercept.OnMoveTo += (GameObj actor, GameObj tile, int flags, ref bool cancel) =>\n{\n    // cancel = true;  // Prevent movement\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
             }
         };
     }
@@ -370,7 +493,27 @@ public static class LuaApiReference
             Children = new List<LuaApiItem>
             {
                 new() { Name = "Intercept.OnAIGetAttackScore", Description = "Intercept AI target scoring", Signature = "Intercept.OnAIGetAttackScore += (ai, target, ref result) => { }", InsertText = "Intercept.OnAIGetAttackScore += (GameObj ai, GameObj target, ref float result) =>\n{\n    result *= 0.5f;  // Make targets less attractive\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
-                new() { Name = "Intercept.OnAIShouldFlee", Description = "Intercept flee decisions", Signature = "Intercept.OnAIShouldFlee += (ai, context, ref result) => { }", InsertText = "Intercept.OnAIShouldFlee += (GameObj ai, GameObj context, ref bool result) =>\n{\n    result = false;  // Never flee\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+                new() { Name = "Intercept.OnAIShouldFlee", Description = "Intercept flee decisions", Signature = "Intercept.OnAIShouldFlee += (ai, context, ref result) => { }", InsertText = "Intercept.OnAIShouldFlee += (GameObj ai, GameObj context, ref bool result) =>\n{\n    result = false;  // Never flee\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnAIEvaluate", Description = "Intercept AI evaluation start (⚠️ thread-safe required)", Signature = "Intercept.OnAIEvaluate += (agent, ref cancel) => { }", InsertText = "Intercept.OnAIEvaluate += (GameObj agent, ref bool cancel) =>\n{\n    // cancel = true;  // Skip AI evaluation\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnPositionScore", Description = "Intercept AI position scoring (⚠️ parallel, thread-safe required)", Signature = "Intercept.OnPositionScore += (criterion, tile, ref score) => { }", InsertText = "Intercept.OnPositionScore += (GameObj criterion, GameObj tile, ref float score) =>\n{\n    // Modify position score (thread-safe only!)\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
+            }
+        };
+    }
+
+    private static LuaApiItem GetCSharpCombatInterceptors()
+    {
+        return new LuaApiItem
+        {
+            Name = "Combat Interceptors",
+            ItemType = LuaApiItemType.Category,
+            IsExpanded = false,
+            IsInterceptor = true,
+            Children = new List<LuaApiItem>
+            {
+                new() { Name = "Intercept.OnDamageApplied", Description = "Intercept damage application", Signature = "Intercept.OnDamageApplied += (handler, target, attacker, skill, ref damage, ref cancel) => { }", InsertText = "Intercept.OnDamageApplied += (GameObj handler, GameObj target, GameObj attacker, GameObj skill, ref float damage, ref bool cancel) =>\n{\n    damage *= 1.5f;  // +50% damage\n    // cancel = true;  // Prevent damage\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnSuppressionApplied", Description = "Intercept suppression application", Signature = "Intercept.OnSuppressionApplied += (actor, attacker, ref amount, ref isFriendlyFire, ref cancel) => { }", InsertText = "Intercept.OnSuppressionApplied += (GameObj actor, GameObj attacker, ref float amount, ref bool isFriendlyFire, ref bool cancel) =>\n{\n    amount *= 0.5f;  // -50% suppression\n    // cancel = true;  // Prevent suppression\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnMoraleApplied", Description = "Intercept morale changes", Signature = "Intercept.OnMoraleApplied += (actor, eventType, ref amount, ref cancel) => { }", InsertText = "Intercept.OnMoraleApplied += (GameObj actor, int eventType, ref float amount, ref bool cancel) =>\n{\n    amount *= 1.5f;  // Amplify morale changes\n    // cancel = true;  // Prevent morale change\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true },
+                new() { Name = "Intercept.OnItemAdd", Description = "Intercept item added to container", Signature = "Intercept.OnItemAdd += (container, item, ref expandSlots, ref cancel) => { }", InsertText = "Intercept.OnItemAdd += (GameObj container, GameObj item, ref bool expandSlots, ref bool cancel) =>\n{\n    // cancel = true;  // Prevent item from being added\n};", ItemType = LuaApiItemType.Event, IsInterceptor = true }
             }
         };
     }

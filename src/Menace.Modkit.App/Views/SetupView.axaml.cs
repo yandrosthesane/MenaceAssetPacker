@@ -6,6 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 // Import enums from EnvironmentChecker
@@ -164,7 +165,7 @@ public class SetupView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
+            Background = ThemeColors.BrushBgPanelLeft,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(20)
         };
@@ -189,7 +190,7 @@ public class SetupView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
+            Background = ThemeColors.BrushBgPanelLeft,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(20)
         };
@@ -220,7 +221,7 @@ public class SetupView : UserControl
             Text = text,
             FontSize = 12,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             LetterSpacing = 1
         };
     }
@@ -259,8 +260,8 @@ public class SetupView : UserControl
             {
                 Converter = new Avalonia.Data.Converters.FuncValueConverter<ComponentState, IBrush>(state => state switch
                 {
-                    ComponentState.UpToDate => new SolidColorBrush(Color.Parse("#8ECDC8")),
-                    ComponentState.UpdateAvailable => new SolidColorBrush(Color.Parse("#8ECDC8")), // Same as UpToDate
+                    ComponentState.UpToDate => ThemeColors.BrushPrimaryLight,
+                    ComponentState.UpdateAvailable => ThemeColors.BrushPrimaryLight, // Same as UpToDate
                     ComponentState.Outdated => new SolidColorBrush(Color.Parse("#FFD700")),
                     ComponentState.NotInstalled => new SolidColorBrush(Color.Parse("#6B9FFF")), // Blue
                     _ => Brushes.White
@@ -385,8 +386,8 @@ public class SetupView : UserControl
         {
             Converter = new Avalonia.Data.Converters.FuncValueConverter<ComponentState, IBrush>(state => state switch
             {
-                ComponentState.UpToDate => new SolidColorBrush(Color.Parse("#8ECDC8")),
-                ComponentState.UpdateAvailable => new SolidColorBrush(Color.Parse("#8ECDC8")), // Same as UpToDate
+                ComponentState.UpToDate => ThemeColors.BrushPrimaryLight,
+                ComponentState.UpdateAvailable => ThemeColors.BrushPrimaryLight, // Same as UpToDate
                 ComponentState.Outdated => new SolidColorBrush(Color.Parse("#FFD700")),
                 ComponentState.NotInstalled => new SolidColorBrush(Color.Parse("#6B9FFF")), // Blue, not red
                 _ => Brushes.White
@@ -404,7 +405,7 @@ public class SetupView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
+            Background = ThemeColors.BrushBgPanelLeft,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(20)
         };
@@ -427,7 +428,7 @@ public class SetupView : UserControl
             Text = "ENVIRONMENT",
             FontSize = 12,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             LetterSpacing = 1,
             VerticalAlignment = VerticalAlignment.Center
         });
@@ -447,8 +448,8 @@ public class SetupView : UserControl
         statusIcon.Bind(TextBlock.ForegroundProperty, new Avalonia.Data.Binding("HasEnvironmentFailures")
         {
             Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, IBrush>(hasFailed =>
-                hasFailed ? new SolidColorBrush(Color.Parse("#FF6B6B"))
-                          : new SolidColorBrush(Color.Parse("#8ECDC8")))
+                hasFailed ? ThemeColors.BrushStatusError
+                          : ThemeColors.BrushPrimaryLight)
         });
         headerStack.Children.Add(statusIcon);
         Grid.SetColumn(headerStack, 0);
@@ -524,8 +525,8 @@ public class SetupView : UserControl
         statusText.Bind(TextBlock.ForegroundProperty, new Avalonia.Data.Binding("HasAnyAiClient")
         {
             Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, IBrush>(hasClient =>
-                hasClient ? new SolidColorBrush(Color.Parse("#8ECDC8"))
-                          : new SolidColorBrush(Color.Parse("#888888")))
+                hasClient ? ThemeColors.BrushPrimaryLight
+                          : ThemeColors.BrushTextTertiary)
         });
         headerGrid.Children.Add(statusText);
         Grid.SetColumn(statusText, 1);
@@ -657,7 +658,7 @@ public class SetupView : UserControl
         else if (client.IsConfigured)
         {
             statusIcon.Text = "\u2713"; // Checkmark
-            statusIcon.Foreground = new SolidColorBrush(Color.Parse("#8ECDC8"));
+            statusIcon.Foreground = ThemeColors.BrushPrimaryLight;
         }
         else
         {
@@ -703,7 +704,7 @@ public class SetupView : UserControl
                 Text = client.IsConfigured ? "Configured" : "Needs Setup",
                 FontSize = 10,
                 Foreground = client.IsConfigured
-                    ? new SolidColorBrush(Color.Parse("#8ECDC8"))
+                    ? ThemeColors.BrushPrimaryLight
                     : new SolidColorBrush(Color.Parse("#FFD700"))
             };
             nameStack.Children.Add(statusBadge);
@@ -789,9 +790,9 @@ public class SetupView : UserControl
         {
             Converter = new Avalonia.Data.Converters.FuncValueConverter<CheckStatus, IBrush>(status => status switch
             {
-                CheckStatus.Passed => new SolidColorBrush(Color.Parse("#8ECDC8")),
+                CheckStatus.Passed => ThemeColors.BrushPrimaryLight,
                 CheckStatus.Warning => new SolidColorBrush(Color.Parse("#FFD700")),
-                CheckStatus.Failed => new SolidColorBrush(Color.Parse("#FF6B6B")),
+                CheckStatus.Failed => ThemeColors.BrushStatusError,
                 _ => Brushes.White
             })
         });
@@ -834,7 +835,7 @@ public class SetupView : UserControl
             {
                 Text = check.FixInstructions,
                 FontSize = 11,
-                Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                Foreground = ThemeColors.BrushTextSecondary,
                 TextWrapping = Avalonia.Media.TextWrapping.Wrap,
                 MaxWidth = 400
             };
@@ -1022,7 +1023,7 @@ public class SetupView : UserControl
             FontSize = 14,
             FontWeight = FontWeight.SemiBold,
             Padding = new Thickness(24, 12),
-            Background = new SolidColorBrush(Color.Parse("#22C55E")),
+            Background = ThemeColors.BrushSuccess,
             Foreground = Brushes.White
         };
         restartButton.Bind(Button.IsVisibleProperty, new Avalonia.Data.Binding("NeedsSelfUpdateRestart"));
@@ -1113,7 +1114,7 @@ public class SetupView : UserControl
         var statusText = new TextBlock
         {
             FontSize = 13,
-            Foreground = new SolidColorBrush(Color.Parse("#CCCCCC")),
+            Foreground = ThemeColors.BrushTextSecondary,
             VerticalAlignment = VerticalAlignment.Center
         };
         statusText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("DownloadStatus"));
@@ -1123,7 +1124,7 @@ public class SetupView : UserControl
         var speedText = new TextBlock
         {
             FontSize = 13,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             VerticalAlignment = VerticalAlignment.Center
         };
         speedText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("DownloadSpeed"));

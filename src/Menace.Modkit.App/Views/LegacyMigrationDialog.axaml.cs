@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -52,35 +53,36 @@ public partial class LegacyMigrationDialog : UserControl
 
     private void UpdateConfidenceDisplay(float confidence)
     {
+        // Use theme-consistent colors: teal for success, maroon for errors
         if (confidence >= 0.7f)
         {
-            // High confidence - migration recommended
+            // High confidence - migration recommended (dark teal tint)
             ConfidenceIcon.Text = "\u2713"; // Checkmark
-            ConfidenceIcon.Foreground = new SolidColorBrush(Color.Parse("#22c55e")); // Green
+            ConfidenceIcon.Foreground = ThemeColors.BrushPrimaryLight; // Light teal
             ConfidenceText.Text = "High Confidence";
-            ConfidenceText.Foreground = new SolidColorBrush(Color.Parse("#22c55e"));
+            ConfidenceText.Foreground = ThemeColors.BrushPrimaryLight;
             ConfidenceDescription.Text = "The issues detected are well understood and can likely be fixed automatically. Migration is recommended.";
-            ConfidenceBorder.Background = new SolidColorBrush(Color.Parse("#1a2a1a"));
+            ConfidenceBorder.Background = new SolidColorBrush(Color.Parse("#0a1f1c")); // Very dark teal
         }
         else if (confidence >= 0.5f)
         {
             // Medium confidence - either option works
             ConfidenceIcon.Text = "\u26A0"; // Warning
-            ConfidenceIcon.Foreground = new SolidColorBrush(Color.Parse("#c89b3c")); // Warning yellow
+            ConfidenceIcon.Foreground = ThemeColors.BrushTextSecondary;
             ConfidenceText.Text = "Medium Confidence";
-            ConfidenceText.Foreground = new SolidColorBrush(Color.Parse("#c89b3c"));
+            ConfidenceText.Foreground = Brushes.White;
             ConfidenceDescription.Text = "Some issues were detected that may require manual review. Both migration and clean reset are viable options.";
-            ConfidenceBorder.Background = new SolidColorBrush(Color.Parse("#2a2a1a"));
+            ConfidenceBorder.Background = ThemeColors.BrushBgSurfaceAlt;
         }
         else
         {
-            // Low confidence - clean reset recommended
+            // Low confidence - clean reset recommended (maroon tint)
             ConfidenceIcon.Text = "\u2717"; // X
-            ConfidenceIcon.Foreground = new SolidColorBrush(Color.Parse("#ef4444")); // Red
+            ConfidenceIcon.Foreground = ThemeColors.BrushTextTertiary;
             ConfidenceText.Text = "Low Confidence - Clean Reset Recommended";
-            ConfidenceText.Foreground = new SolidColorBrush(Color.Parse("#ef4444"));
+            ConfidenceText.Foreground = Brushes.White;
             ConfidenceDescription.Text = "Multiple issues detected that may not migrate cleanly. A clean reset is strongly recommended to avoid future problems.";
-            ConfidenceBorder.Background = new SolidColorBrush(Color.Parse("#2a1a1a"));
+            ConfidenceBorder.Background = new SolidColorBrush(Color.Parse("#1a0a0c")); // Very dark maroon
 
             // Swap button emphasis
             MigrateButton.Classes.Remove("primary");
@@ -148,21 +150,22 @@ public partial class LegacyMigrationDialog : UserControl
 
             _operationSucceeded = result.Success;
 
+            // Use theme-consistent colors: teal for success, maroon tint for errors
             if (result.Success)
             {
-                ResultPanel.Background = new SolidColorBrush(Color.Parse("#1a2a1a"));
+                ResultPanel.Background = new SolidColorBrush(Color.Parse("#0a1f1c")); // Dark teal
                 ResultIcon.Text = "\u2713"; // Checkmark
-                ResultIcon.Foreground = new SolidColorBrush(Color.Parse("#22c55e"));
+                ResultIcon.Foreground = ThemeColors.BrushPrimaryLight; // Light teal
                 ResultMessage.Text = result.Message;
-                ResultMessage.Foreground = new SolidColorBrush(Color.Parse("#22c55e"));
+                ResultMessage.Foreground = ThemeColors.BrushPrimaryLight;
             }
             else
             {
-                ResultPanel.Background = new SolidColorBrush(Color.Parse("#2a1a1a"));
+                ResultPanel.Background = new SolidColorBrush(Color.Parse("#1a0a0c")); // Dark maroon
                 ResultIcon.Text = "\u2717"; // X
-                ResultIcon.Foreground = new SolidColorBrush(Color.Parse("#ef4444"));
+                ResultIcon.Foreground = ThemeColors.BrushTextTertiary;
                 ResultMessage.Text = result.Message;
-                ResultMessage.Foreground = new SolidColorBrush(Color.Parse("#ef4444"));
+                ResultMessage.Foreground = Brushes.White;
             }
 
             ResultDetails.ItemsSource = result.Details;
@@ -172,15 +175,15 @@ public partial class LegacyMigrationDialog : UserControl
         }
         catch (Exception ex)
         {
-            // Show error - operation failed
+            // Show error - operation failed (use maroon theme)
             _operationSucceeded = false;
             ProgressPanel.IsVisible = false;
             ResultPanel.IsVisible = true;
-            ResultPanel.Background = new SolidColorBrush(Color.Parse("#2a1a1a"));
+            ResultPanel.Background = new SolidColorBrush(Color.Parse("#1a0a0c")); // Dark maroon
             ResultIcon.Text = "\u2717";
-            ResultIcon.Foreground = new SolidColorBrush(Color.Parse("#ef4444"));
+            ResultIcon.Foreground = ThemeColors.BrushTextTertiary;
             ResultMessage.Text = $"Error: {ex.Message}";
-            ResultMessage.Foreground = new SolidColorBrush(Color.Parse("#ef4444"));
+            ResultMessage.Foreground = Brushes.White;
             ResultDetails.ItemsSource = new List<string>();
 
             ContinueButton.IsVisible = true;

@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.VisualTree;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 namespace Menace.Modkit.App.Views;
@@ -118,7 +119,7 @@ public class HomeView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+            Background = ThemeColors.BrushBgSurface,
             CornerRadius = new CornerRadius(12),
             Width = 300,
             Height = 220,

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -100,9 +101,9 @@ public class LoaderSettingsView : UserControl
         var pathBox = new TextBox
         {
             Watermark = "~/.steam/debian-installation/steamapps/common/Menace",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(12, 8)
         };
@@ -156,9 +157,9 @@ public class LoaderSettingsView : UserControl
         var cleanRedeployButton = new Button
         {
             Content = "Clean Redeploy",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(16, 8)
         };
         cleanRedeployButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("CleanRedeployCommand"));
@@ -235,9 +236,9 @@ public class LoaderSettingsView : UserControl
         var openModkitLogButton = new Button
         {
             Content = "Open Log",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(12, 6)
         };
         openModkitLogButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("OpenModkitLogCommand"));
@@ -246,9 +247,9 @@ public class LoaderSettingsView : UserControl
         var openModkitFolderButton = new Button
         {
             Content = "Open Folder",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(12, 6)
         };
         openModkitFolderButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("OpenModkitLogFolderCommand"));
@@ -287,9 +288,9 @@ public class LoaderSettingsView : UserControl
         var openMlLogButton = new Button
         {
             Content = "Open Log",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(12, 6)
         };
         openMlLogButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("OpenMelonLoaderLogCommand"));
@@ -298,9 +299,9 @@ public class LoaderSettingsView : UserControl
         var openMlFolderButton = new Button
         {
             Content = "Open Folder",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(12, 6)
         };
         openMlFolderButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("OpenMelonLoaderLogFolderCommand"));
@@ -341,9 +342,9 @@ public class LoaderSettingsView : UserControl
         var openSavesFolderButton = new Button
         {
             Content = "Open Saves Folder",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
+            Background = ThemeColors.BrushBgInput,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             Padding = new Thickness(12, 6)
         };
         openSavesFolderButton.Bind(Button.CommandProperty, new Avalonia.Data.Binding("OpenSavesFolderCommand"));

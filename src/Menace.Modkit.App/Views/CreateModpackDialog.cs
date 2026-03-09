@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -26,7 +27,7 @@ public class CreateModpackDialog : Window
         Width = 450;
         Height = 350;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
         CanResize = false;
 
         var stack = new StackPanel

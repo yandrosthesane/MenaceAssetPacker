@@ -26,6 +26,12 @@ public sealed class ModpacksViewModel : ViewModelBase
         AllModpacks = new ObservableCollection<ModpackItemViewModel>();
         LoadOrderVM = new LoadOrderViewModel(_modpackManager);
 
+        // Subscribe to health state changes to update CanDeploy
+        AppHealthStateService.Instance.HealthStatusChanged += (_, _) =>
+        {
+            this.RaisePropertyChanged(nameof(CanDeploy));
+        };
+
         LoadModpacks();
         QueueUpdateCheck();
     }
@@ -47,6 +53,11 @@ public sealed class ModpacksViewModel : ViewModelBase
         get => _isDeploying;
         set => this.RaiseAndSetIfChanged(ref _isDeploying, value);
     }
+
+    /// <summary>
+    /// Whether deployment is allowed based on current health state.
+    /// </summary>
+    public bool CanDeploy => AppHealthStateService.Instance.CurrentStatus.CanDeploy;
 
     private bool _isCheckingUpdates;
     public bool IsCheckingUpdates

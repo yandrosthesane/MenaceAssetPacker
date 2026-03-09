@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,8 +13,11 @@ using AvaloniaEdit.TextMate;
 using Menace.Modkit.App.Controls;
 using Menace.Modkit.App.Converters;
 using Menace.Modkit.App.Models;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using TextMateSharp.Grammars;
+using TextMateSharp.Internal.Themes.Reader;
+using TextMateSharp.Themes;
 
 namespace Menace.Modkit.App.Views;
 
@@ -146,6 +151,14 @@ public class CodeEditorView : UserControl
             {
                 _registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 _textMateInstallation = _textEditor.InstallTextMate(_registryOptions);
+
+                // Load our custom theme that uses our color palette
+                var customTheme = LoadCustomTheme();
+                if (customTheme != null)
+                {
+                    _textMateInstallation.SetTheme(customTheme);
+                }
+
                 // Set initial grammar based on current file, default to Lua
                 UpdateGrammarForCurrentFile();
             });
@@ -154,6 +167,30 @@ public class CodeEditorView : UserControl
         catch (Exception ex)
         {
             Services.ModkitLog.Warn($"[CodeEditorView] TextMate setup failed: {ex.Message}");
+        }
+    }
+
+    private IRawTheme? LoadCustomTheme()
+    {
+        try
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Menace.Modkit.Styles.MenaceCodeTheme.json";
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                Services.ModkitLog.Warn($"[CodeEditorView] Custom theme resource not found: {resourceName}");
+                return null;
+            }
+
+            using var reader = new StreamReader(stream);
+            return ThemeReader.ReadThemeSync(reader);
+        }
+        catch (Exception ex)
+        {
+            Services.ModkitLog.Warn($"[CodeEditorView] Failed to load custom theme: {ex.Message}");
+            return null;
         }
     }
 
@@ -198,8 +235,8 @@ public class CodeEditorView : UserControl
         // Left panel: trees + toolbar (darker panel)
         var leftWrapper = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgPanelLeft,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 1, 0),
             Child = BuildLeftPanel()
         };
@@ -210,7 +247,7 @@ public class CodeEditorView : UserControl
         // Splitter
         var splitter = new GridSplitter
         {
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             ResizeDirection = GridResizeDirection.Columns
         };
         mainGrid.Children.Add(splitter);
@@ -328,7 +365,7 @@ public class CodeEditorView : UserControl
         {
             Text = "Sort:",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0)
         };
@@ -501,7 +538,7 @@ public class CodeEditorView : UserControl
         var sep = new Border
         {
             Height = 1,
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             Margin = new Thickness(0, 4)
         };
         grid.Children.Add(sep);
@@ -618,8 +655,8 @@ public class CodeEditorView : UserControl
                         Height = 14,
                         Stretch = Stretch.Uniform,
                         Fill = item.IsInterceptor
-                            ? new SolidColorBrush(Color.Parse("#004f43"))  // Dark teal for interceptors
-                            : new SolidColorBrush(Color.Parse("#AAAAAA")), // White/gray for regular
+                            ? ThemeColors.BrushPrimary  // Dark teal for interceptors
+                            : ThemeColors.BrushTextSecondary, // White/gray for regular
                         Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
                         VerticalAlignment = VerticalAlignment.Center
                     };
@@ -639,11 +676,11 @@ public class CodeEditorView : UserControl
                     {
                         IBrush badgeColor;
                         if (item.IsInterceptor)
-                            badgeColor = new SolidColorBrush(Color.Parse("#004f43")); // Dark teal
+                            badgeColor = ThemeColors.BrushPrimary; // Dark teal
                         else if (item.ItemType == LuaApiItemType.Function)
-                            badgeColor = new SolidColorBrush(Color.Parse("#3B7DD8")); // Blue
+                            badgeColor = ThemeColors.BrushIconFunction;
                         else
-                            badgeColor = new SolidColorBrush(Color.Parse("#8B5CF6")); // Purple
+                            badgeColor = ThemeColors.BrushIconEvent;
 
                         var typeBadge = new Border
                         {
@@ -667,7 +704,7 @@ public class CodeEditorView : UserControl
                     FontSize = 12,
                     Foreground = item.IsCategory
                         ? Brushes.White
-                        : new SolidColorBrush(Color.Parse("#9CDCFE")),
+                        : ThemeColors.BrushCodeIdentifier,
                     FontWeight = item.IsCategory ? FontWeight.SemiBold : FontWeight.Normal,
                     FontFamily = item.IsCategory ? FontFamily.Default : new FontFamily("monospace")
                 };
@@ -681,7 +718,7 @@ public class CodeEditorView : UserControl
                     {
                         Text = " - " + item.Description,
                         FontSize = 11,
-                        Foreground = new SolidColorBrush(Color.Parse("#666666")),
+                        Foreground = ThemeColors.BrushTextMuted,
                         TextTrimming = TextTrimming.CharacterEllipsis,
                         MaxWidth = 200
                     };
@@ -738,7 +775,7 @@ public class CodeEditorView : UserControl
                         Width = 14,
                         Height = 14,
                         Stretch = Stretch.Uniform,
-                        Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                        Fill = ThemeColors.BrushTextSecondary,
                         Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
                         VerticalAlignment = VerticalAlignment.Center
                     };
@@ -749,7 +786,7 @@ public class CodeEditorView : UserControl
                 {
                     FontSize = 12,
                     Foreground = node.IsReadOnly
-                        ? new SolidColorBrush(Color.Parse("#999999"))
+                        ? ThemeColors.BrushTextDim
                         : Brushes.White,
                     FontFamily = node.IsFile ? new FontFamily("monospace") : FontFamily.Default,
                     FontWeight = node.IsFile ? FontWeight.Normal : FontWeight.SemiBold
@@ -766,7 +803,7 @@ public class CodeEditorView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A"))
+            Background = ThemeColors.BrushBgSurface
         };
 
         var stack = new DockPanel();
@@ -774,7 +811,7 @@ public class CodeEditorView : UserControl
         // File path header
         var header = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             Padding = new Thickness(12, 6)
         };
 
@@ -838,14 +875,14 @@ public class CodeEditorView : UserControl
         headerRow.Children.Add(new Border
         {
             Width = 1,
-            Background = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBorderLight,
             Margin = new Thickness(4, 0)
         });
 
         var pathText = new TextBlock
         {
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextSecondary,
             FontFamily = new FontFamily("monospace"),
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -882,8 +919,8 @@ public class CodeEditorView : UserControl
             ShowLineNumbers = true,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
-            Foreground = new SolidColorBrush(Color.Parse("#D4D4D4")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
+            Foreground = ThemeColors.BrushCodeForeground,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(8)
         };
@@ -907,8 +944,8 @@ public class CodeEditorView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgSurface,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(12, 6)
         };
@@ -931,7 +968,7 @@ public class CodeEditorView : UserControl
         var statusText = new TextBlock
         {
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#CCCCCC"))
+            Foreground = ThemeColors.BrushTextSecondary
         };
         statusText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("BuildStatus"));
         statusRow.Children.Add(statusText);
@@ -941,7 +978,7 @@ public class CodeEditorView : UserControl
         {
             Text = "Double-click API items to insert code at cursor",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#666666")),
+            Foreground = ThemeColors.BrushTextMuted,
             Margin = new Thickness(20, 0, 0, 0)
         };
         statusRow.Children.Add(hintText);

@@ -64,29 +64,39 @@ public class DeployManager
             return (false, null);
 
         // Game has been updated!
+        // The current game files are PATCHED with old version data - they may be incompatible.
+        // We RENAME (not delete) them so Steam verification sees them as missing and re-downloads.
+        // This way: recovery is possible if something goes wrong.
         ModkitLog.Warn($"[DeployManager] Game update detected: {previousVersion} → {currentVersion}");
-        ModkitLog.Warn($"[DeployManager] Cleaning up stale patched files from previous version...");
+        ModkitLog.Warn($"[DeployManager] Renaming stale patched files so Steam can restore vanilla versions...");
 
-        // Delete patched game data files
-        var filesToDelete = new[] { "resources.assets", "globalgamemanagers" };
-        foreach (var fileName in filesToDelete)
+        var filesToHandle = new[] { "resources.assets", "globalgamemanagers" };
+        var renamedFiles = new List<string>();
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+        foreach (var fileName in filesToHandle)
         {
             var filePath = Path.Combine(gameDataDir, fileName);
             var backupPath = Path.Combine(gameDataDir, fileName + ".original");
+            var stalePath = Path.Combine(gameDataDir, $"{fileName}.stale_{timestamp}");
 
+            // Rename the patched file (not delete) - Steam will re-download it
+            // The .stale file can be manually deleted later or recovered if needed
             if (File.Exists(filePath))
             {
                 try
                 {
-                    File.Delete(filePath);
-                    ModkitLog.Info($"[DeployManager] Deleted stale patched file: {fileName}");
+                    File.Move(filePath, stalePath);
+                    renamedFiles.Add(fileName);
+                    ModkitLog.Info($"[DeployManager] Renamed stale patched file: {fileName} → {fileName}.stale_{timestamp}");
                 }
                 catch (Exception ex)
                 {
-                    ModkitLog.Error($"[DeployManager] Failed to delete {fileName}: {ex.Message}");
+                    ModkitLog.Error($"[DeployManager] Failed to rename {fileName}: {ex.Message}");
                 }
             }
 
+            // Delete the .original backup - it's from the old version
             if (File.Exists(backupPath))
             {
                 try
@@ -98,6 +108,21 @@ public class DeployManager
                 {
                     ModkitLog.Error($"[DeployManager] Failed to delete {fileName}.original: {ex.Message}");
                 }
+            }
+        }
+
+        // Delete backup metadata since backups are now invalid
+        var metadataPath = Path.Combine(gameDataDir, "backup-metadata.json");
+        if (File.Exists(metadataPath))
+        {
+            try
+            {
+                File.Delete(metadataPath);
+                ModkitLog.Info($"[DeployManager] Deleted stale backup-metadata.json");
+            }
+            catch (Exception ex)
+            {
+                ModkitLog.Error($"[DeployManager] Failed to delete backup-metadata.json: {ex.Message}");
             }
         }
 
@@ -116,12 +141,32 @@ public class DeployManager
             }
         }
 
+        // Clear the deploy state so next deploy starts fresh
+        var deployStatePath = DeployStateFilePath;
+        if (File.Exists(deployStatePath))
+        {
+            try
+            {
+                File.Delete(deployStatePath);
+                ModkitLog.Info($"[DeployManager] Cleared deploy state");
+            }
+            catch (Exception ex)
+            {
+                ModkitLog.Error($"[DeployManager] Failed to clear deploy state: {ex.Message}");
+            }
+        }
+
+        var renamedList = renamedFiles.Count > 0
+            ? $"Renamed {renamedFiles.Count} patched file(s) to .stale_* (recoverable if needed).\n\n"
+            : "";
+
         var message = $"Game update detected ({previousVersion} → {currentVersion}).\n\n" +
-                     $"Cleaned up stale files from the previous version.\n\n" +
+                     renamedList +
                      $"ACTION REQUIRED:\n" +
-                     $"1. Verify game files via Steam to download updated game data\n" +
+                     $"1. Verify game files via Steam to download updated vanilla files\n" +
                      $"2. Then redeploy mods\n\n" +
-                     $"In Steam: Right-click Menace → Properties → Installed Files → Verify integrity";
+                     $"In Steam: Right-click game → Properties → Installed Files → Verify integrity\n\n" +
+                     $"Note: .stale_* files in the game data folder can be safely deleted after verification.";
 
         return (true, message);
     }
@@ -331,6 +376,26 @@ public class DeployManager
             progress?.Report("Beginning transactional deploy...");
             transaction.Begin();
             ModkitLog.Info("[DeployManager] Transaction started - all changes will be staged before commit");
+
+            // Clean up any .stale_* files from previous game updates (non-critical, best effort)
+            // These are old patched files that were renamed during a game version change
+            if (!string.IsNullOrEmpty(gameDataDir))
+            {
+                try
+                {
+                    var staleFiles = Directory.GetFiles(gameDataDir, "*.stale_*");
+                    foreach (var staleFile in staleFiles)
+                    {
+                        try
+                        {
+                            File.Delete(staleFile);
+                            ModkitLog.Info($"[DeployManager] Cleaned up stale file: {Path.GetFileName(staleFile)}");
+                        }
+                        catch { /* Best effort cleanup */ }
+                    }
+                }
+                catch { /* Ignore errors in stale cleanup */ }
+            }
 
             // Step 0: Stage removal of modpacks that existed in previous deploy but aren't in current staging
             // This replaces the old CleanPreviousDeployment which happened outside the transaction.

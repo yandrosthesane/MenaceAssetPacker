@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 namespace Menace.Modkit.App.Views;
@@ -60,7 +61,7 @@ public class CloningWizardDialog : Window
         Width = 600;
         Height = 550;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
         CanResize = false;
 
         var mainStack = new StackPanel
@@ -81,7 +82,7 @@ public class CloningWizardDialog : Window
         _stepDescription = new TextBlock
         {
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextSecondary,
             TextWrapping = TextWrapping.Wrap
         };
         mainStack.Children.Add(_stepDescription);
@@ -91,7 +92,7 @@ public class CloningWizardDialog : Window
         {
             Text = $"Source: {sourceTemplateType}/{sourceInstanceName}",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             Margin = new Thickness(0, 0, 0, 8)
         };
         mainStack.Children.Add(sourceInfo);
@@ -104,7 +105,7 @@ public class CloningWizardDialog : Window
         };
         var contentBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252526")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(12),
             Child = _contentPanel,
@@ -115,7 +116,7 @@ public class CloningWizardDialog : Window
         // Error text
         _errorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#FF6B6B")),
+            Foreground = ThemeColors.BrushStatusError,
             FontSize = 11,
             TextWrapping = TextWrapping.Wrap,
             IsVisible = false
@@ -248,7 +249,7 @@ public class CloningWizardDialog : Window
         stack.Children.Add(new TextBlock
         {
             Text = "The clone will be created in the DataTemplateLoader registry and can be patched like any other template.",
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             FontSize = 11,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 16, 0, 0)
@@ -266,13 +267,13 @@ public class CloningWizardDialog : Window
             stack.Children.Add(new TextBlock
             {
                 Text = "No collection references found for this template.",
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 12
             });
             stack.Children.Add(new TextBlock
             {
                 Text = "The clone will be created but won't automatically appear in any lists.",
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 11,
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 8, 0, 0)
@@ -404,13 +405,13 @@ public class CloningWizardDialog : Window
             stack.Children.Add(new TextBlock
             {
                 Text = "No asset dependencies found for this template.",
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 12
             });
             stack.Children.Add(new TextBlock
             {
                 Text = "You can skip this step.",
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 11,
                 Margin = new Thickness(0, 8, 0, 0)
             });
@@ -431,7 +432,7 @@ public class CloningWizardDialog : Window
             {
                 var assetRow = new Border
                 {
-                    Background = new SolidColorBrush(Color.Parse("#2D2D30")),
+                    Background = ThemeColors.BrushBorder,
                     CornerRadius = new CornerRadius(3),
                     Padding = new Thickness(8),
                     Margin = new Thickness(0, 2, 0, 2)
@@ -454,7 +455,7 @@ public class CloningWizardDialog : Window
                 {
                     Background = dep.Category == "mesh"
                         ? new SolidColorBrush(Color.Parse("#3D5A80"))
-                        : new SolidColorBrush(Color.Parse("#3E3E3E")),
+                        : ThemeColors.BrushBorderLight,
                     CornerRadius = new CornerRadius(3),
                     Padding = new Thickness(6, 2),
                     Child = new TextBlock
@@ -470,7 +471,7 @@ public class CloningWizardDialog : Window
                 assetStack.Children.Add(new TextBlock
                 {
                     Text = dep.OriginalAsset,
-                    Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                    Foreground = ThemeColors.BrushTextSecondary,
                     FontSize = 11
                 });
 
@@ -480,7 +481,7 @@ public class CloningWizardDialog : Window
                     assetStack.Children.Add(new TextBlock
                     {
                         Text = $"Note: {dep.Warning}",
-                        Foreground = new SolidColorBrush(Color.Parse("#FFD93D")),
+                        Foreground = ThemeColors.BrushWarning,
                         FontSize = 10,
                         FontStyle = FontStyle.Italic
                     });
@@ -511,7 +512,7 @@ public class CloningWizardDialog : Window
                 var pathText = new TextBlock
                 {
                     Text = dep.CustomAssetPath ?? "",
-                    Foreground = new SolidColorBrush(Color.Parse("#66BB6A")),
+                    Foreground = ThemeColors.BrushSuccess,
                     FontSize = 10,
                     VerticalAlignment = VerticalAlignment.Center,
                     MaxWidth = 200,
@@ -607,7 +608,7 @@ public class CloningWizardDialog : Window
         {
             Text = _viewModel.GeneratedPatchesPreview,
             FontFamily = new FontFamily("Consolas, Menlo, monospace"),
-            Foreground = new SolidColorBrush(Color.Parse("#D4D4D4")),
+            Foreground = ThemeColors.BrushTextPrimary,
             FontSize = 11,
             TextWrapping = TextWrapping.Wrap
         };
@@ -634,7 +635,7 @@ public class CloningWizardDialog : Window
         summaryPanel.Children.Add(new TextBlock
         {
             Text = $"References to patch: {_viewModel.SelectedReferenceCount}",
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextSecondary,
             FontSize = 11
         });
         stack.Children.Add(summaryPanel);

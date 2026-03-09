@@ -207,6 +207,148 @@ Get the human-readable name for a slot type.
 
 **Returns:** String name like "Weapon1", "Armor", "Grenade", etc.
 
+### RemoveItem
+
+```csharp
+public static bool RemoveItem(GameObj container, GameObj item)
+```
+
+Remove a specific item from a container.
+
+**Parameters:**
+- `container` - The container to remove from
+- `item` - The item to remove
+
+**Returns:** `true` if item was removed successfully, `false` otherwise.
+
+**Example:**
+```csharp
+var actor = TacticalController.GetActiveActor();
+var container = Inventory.GetContainer(actor);
+var item = Inventory.GetItemAt(container, Inventory.SLOT_WEAPON1, 0);
+
+if (Inventory.RemoveItem(container, item))
+{
+    DevConsole.Log("Weapon removed successfully");
+}
+```
+
+**Related:**
+- [RemoveItemAt](#removeitemat) - Remove item at specific slot and index
+- [TransferItem](#transferitem) - Move item between containers
+
+### RemoveItemAt
+
+```csharp
+public static bool RemoveItemAt(GameObj container, int slotType, int index)
+```
+
+Remove item at a specific slot and index.
+
+**Parameters:**
+- `container` - The container to remove from
+- `slotType` - The slot type (0-10)
+- `index` - The index within the slot
+
+**Returns:** `true` if item was removed successfully, `false` otherwise.
+
+**Example:**
+```csharp
+var actor = TacticalController.GetActiveActor();
+var container = Inventory.GetContainer(actor);
+
+// Remove the first grenade
+if (Inventory.RemoveItemAt(container, Inventory.SLOT_GRENADE, 0))
+{
+    DevConsole.Log("First grenade removed");
+}
+```
+
+**Notes:**
+- Validates slot type is between 0-10
+- Returns false if no item exists at the specified location
+
+**Related:**
+- [RemoveItem](#removeitem) - Remove item by reference
+- [ClearInventory](#clearinventory) - Remove all items
+
+### TransferItem
+
+```csharp
+public static bool TransferItem(GameObj from, GameObj to, GameObj item)
+```
+
+Transfer an item from one container to another.
+
+**Parameters:**
+- `from` - Source container
+- `to` - Destination container
+- `item` - The item to transfer
+
+**Returns:** `true` if transfer was successful, `false` otherwise.
+
+**Example:**
+```csharp
+var ally = TacticalController.GetActiveActor();
+var leader = FindActorByName("Leader");
+
+var allyContainer = Inventory.GetContainer(ally);
+var leaderContainer = Inventory.GetContainer(leader);
+
+// Transfer medkit to leader
+var medkit = Inventory.GetItemAt(allyContainer, Inventory.SLOT_CONSUMABLE1, 0);
+if (Inventory.TransferItem(allyContainer, leaderContainer, medkit))
+{
+    DevConsole.Log("Medkit transferred to leader");
+}
+```
+
+**Notes:**
+- Removes item from source container before adding to destination
+- Uses the container's Place() method to automatically assign correct slot
+- Atomic operation - item stays in source if destination placement fails
+
+**Related:**
+- [RemoveItem](#removeitem) - Remove without transferring
+- [OnItemAdd](intercept.md#equipment-system---onitemaadd) - Intercept transfers
+
+### ClearInventory
+
+```csharp
+public static int ClearInventory(GameObj container, int slotType = -1)
+```
+
+Clear all items from a container, optionally filtered by slot type.
+
+**Parameters:**
+- `container` - The container to clear
+- `slotType` - Optional slot type filter (-1 for all slots, 0-10 for specific slot)
+
+**Returns:** Number of items removed.
+
+**Example:**
+```csharp
+var actor = TacticalController.GetActiveActor();
+var container = Inventory.GetContainer(actor);
+
+// Clear all consumables
+int removed = Inventory.ClearInventory(container, Inventory.SLOT_CONSUMABLE1);
+DevConsole.Log($"Removed {removed} consumables");
+
+// Clear entire inventory
+int totalRemoved = Inventory.ClearInventory(container);
+DevConsole.Log($"Removed {totalRemoved} items total");
+```
+
+**Notes:**
+- Use slotType = -1 to clear all slots
+- Returns count of successfully removed items
+- Useful for inventory resets, death drops, or story events
+
+**Related:**
+- [RemoveItem](#removeitem) - Remove single item
+- [RemoveItemAt](#removeitemat) - Remove from specific slot
+
 ## Types
 
 ### ItemInfo

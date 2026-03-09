@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -47,7 +48,7 @@ public class AssetPickerDialog : Window
         Width = 700;
         Height = 500;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
 
         // Build UI
         var mainGrid = new Grid
@@ -61,8 +62,8 @@ public class AssetPickerDialog : Window
         _searchBox = new TextBox
         {
             Watermark = $"Search {assetType} assets...",
-            Background = new SolidColorBrush(Color.Parse("#2A2A2A")),
-            Foreground = Brushes.White,
+            Background = ThemeColors.BrushBgInput,
+            Foreground = ThemeColors.BrushTextPrimary,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(12, 8),
             Margin = new Thickness(0, 0, 0, 12)
@@ -75,7 +76,7 @@ public class AssetPickerDialog : Window
         // Asset list (row 1, column 0)
         _assetListBox = new ListBox
         {
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             BorderThickness = new Thickness(0),
             Margin = new Thickness(0, 0, 12, 0)
         };
@@ -115,7 +116,7 @@ public class AssetPickerDialog : Window
             panel.Children.Add(new TextBlock
             {
                 Text = item.RelativePath,
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 FontSize = 10
             });
             return panel;
@@ -142,8 +143,8 @@ public class AssetPickerDialog : Window
 
         var previewBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBgSurface,
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(4),
             MinHeight = 128,
@@ -162,7 +163,7 @@ public class AssetPickerDialog : Window
 
         _statusText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             FontSize = 11,
             TextWrapping = TextWrapping.Wrap,
             HorizontalAlignment = HorizontalAlignment.Center

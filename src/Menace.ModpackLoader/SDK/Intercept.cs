@@ -126,6 +126,15 @@ public delegate void FloatSkillInterceptor(GameObj skill, ref float result);
 public delegate void IntSkillInterceptor(GameObj skill, ref int result);
 
 /// <summary>
+/// Interceptor for skill usability checks.
+/// Fires when checking if a skill/behavior is usable by an actor.
+/// </summary>
+/// <param name="skill">The skill being checked</param>
+/// <param name="actor">The actor attempting to use the skill (may be null)</param>
+/// <param name="result">Whether the skill is usable (can be modified)</param>
+public delegate void SkillUsableInterceptor(GameObj skill, GameObj actor, ref bool result);
+
+/// <summary>
 /// Interceptor for Entity float state methods (health percentage, armor durability).
 /// </summary>
 /// <param name="entity">The Entity instance being queried</param>
@@ -269,6 +278,15 @@ public delegate void BaseTileDirHalfCoverInterceptor(GameObj tile, int direction
 public delegate void BaseTileMovementBlockedInterceptor(GameObj tile, int direction, ref bool result);
 
 /// <summary>
+/// Interceptor for pathfinding traversability checks (PathfindingProcess.IsTraversable).
+/// Called extremely frequently during pathfinding - keep handlers fast!
+/// </summary>
+/// <param name="process">The pathfinding process performing the check</param>
+/// <param name="tile">The tile being checked for traversability</param>
+/// <param name="result">Whether the tile can be traversed (can be modified)</param>
+public delegate void TraversableCheckInterceptor(GameObj process, GameObj tile, ref bool result);
+
+/// <summary>
 /// Interceptor for core LoS algorithm (LineOfSight.HasLineOfSight / RayTrace).
 /// Static method - no instance parameter.
 /// </summary>
@@ -337,12 +355,34 @@ public delegate void ActorTurningCostInterceptor(GameObj actor, int targetDirect
 public delegate void ActorSuppressionStateInterceptor(GameObj actor, float additionalSuppression, ref int result);
 
 /// <summary>
+/// Interceptor for Actor.ApplySuppression which fires before suppression is applied to an actor.
+/// Allows modifying the amount, detecting friendly fire, and canceling the suppression application.
+/// </summary>
+/// <param name="actor">The Actor receiving suppression</param>
+/// <param name="attacker">The Actor or entity causing suppression (may be null)</param>
+/// <param name="amount">The suppression amount to apply (modify via ref)</param>
+/// <param name="isFriendlyFire">Whether this is friendly fire suppression</param>
+/// <param name="cancel">Set to true to cancel the suppression application entirely</param>
+public delegate void SuppressionApplicationInterceptor(GameObj actor, GameObj attacker, ref float amount, ref bool isFriendlyFire, ref bool cancel);
+
+/// <summary>
 /// Interceptor for Actor.GetMoraleMax which takes a multiplier parameter.
 /// </summary>
 /// <param name="actor">The Actor being queried</param>
 /// <param name="multiplier">External multiplier applied to the result</param>
 /// <param name="result">The maximum morale value</param>
 public delegate void ActorMoraleMaxInterceptor(GameObj actor, float multiplier, ref int result);
+
+/// <summary>
+/// Interceptor for Actor.ApplyMorale which fires before morale is applied to an actor.
+/// Allows modifying the morale amount and canceling the morale application entirely.
+/// Useful for implementing morale immunity, leader bonuses, and rally mechanics.
+/// </summary>
+/// <param name="actor">The Actor receiving morale change</param>
+/// <param name="eventType">The MoraleEventType bitmask indicating the cause</param>
+/// <param name="amount">The morale amount to apply (modify via ref, can be positive or negative)</param>
+/// <param name="cancel">Set to true to cancel the morale application entirely</param>
+public delegate void MoraleApplicationInterceptor(GameObj actor, int eventType, ref float amount, ref bool cancel);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  MOVEMENT DELEGATE TYPES
@@ -386,6 +426,27 @@ public struct ClipPathResult
 /// <param name="actor">The actor traversing the path</param>
 /// <param name="result">The clip result - modify to change behavior</param>
 public delegate void ClipPathInterceptor(GameObj movementType, GameObj path, GameObj actor, ref ClipPathResult result);
+
+/// <summary>
+/// Interceptor for Actor.MoveTo which fires before an actor attempts to move to a tile.
+/// This is the master hook for ALL actor movement, allowing complete control over
+/// movement restrictions, teleportation, and movement modifications.
+/// </summary>
+/// <param name="actor">The actor attempting to move</param>
+/// <param name="tile">The destination tile (may be null for some movement modes)</param>
+/// <param name="flags">Movement flags bitfield (mode, sprint, etc.)</param>
+/// <param name="cancel">Set to true to prevent movement entirely</param>
+public delegate void MoveToInterceptor(GameObj actor, GameObj tile, int flags, ref bool cancel);
+
+/// <summary>
+/// Interceptor for pathfinding calculations.
+/// </summary>
+/// <param name="process">The pathfinding process instance</param>
+/// <param name="start">Start tile for the path</param>
+/// <param name="end">End/destination tile for the path</param>
+/// <param name="pathResult">Pointer to the path result (can be modified)</param>
+/// <param name="cancel">Set to true to cancel pathfinding calculation</param>
+public delegate void FindPathInterceptor(GameObj process, GameObj start, GameObj end, ref IntPtr pathResult, ref bool cancel);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  STRATEGY LAYER DELEGATE TYPES
@@ -447,6 +508,69 @@ public delegate void AIIntValueInterceptor(GameObj ai, GameObj target, ref int r
 /// <param name="context">Context object (skill, target, etc. - may be null)</param>
 /// <param name="result">The decision result - modify via ref to change behavior</param>
 public delegate void AIBoolDecisionInterceptor(GameObj ai, GameObj context, ref bool result);
+
+/// <summary>
+/// Interceptor for Agent.Evaluate which fires when an AI agent begins evaluating actions.
+/// WARNING: May be called in parallel for multiple agents - ensure thread-safe handlers!
+/// </summary>
+/// <param name="agent">The AI Agent instance evaluating actions</param>
+/// <param name="cancel">Set to true to cancel evaluation and skip AI turn</param>
+public delegate void AgentEvaluateInterceptor(GameObj agent, ref bool cancel);
+
+/// <summary>
+/// Interceptor for AI criterion position evaluation (Criterion.Evaluate).
+/// Fires when AI evaluates a tile for positioning (movement, deployment, etc.).
+/// WARNING: Called in PARALLEL for multiple tiles/criteria - handlers MUST be thread-safe and read-only!
+/// This is called VERY frequently during pathfinding - keep handlers fast and simple.
+/// </summary>
+/// <param name="criterion">The criterion evaluating the position (e.g., AvoidOpponents, DistanceToCurrentTile)</param>
+/// <param name="tile">The tile being scored for positioning</param>
+/// <param name="score">The position score (can be modified to influence AI positioning)</param>
+public delegate void CriterionEvaluateInterceptor(GameObj criterion, GameObj tile, ref float score);
+
+/// <summary>
+/// Interceptor for DamageHandler.ApplyDamage @ 0x180702970 - fires when damage is applied to an entity.
+/// This is the core damage application hook, executing during skill effect processing.
+/// Allows modification of damage values and complete cancellation of damage application.
+/// </summary>
+/// <param name="handler">The DamageHandler instance (effect data at handler+0x18)</param>
+/// <param name="target">The entity receiving damage</param>
+/// <param name="attacker">The entity dealing damage (skill owner from handler+0x10)</param>
+/// <param name="skill">The skill being used (may be null for direct damage)</param>
+/// <param name="damage">The total HP damage being applied (modify via ref)</param>
+/// <param name="cancel">Set to true to completely prevent damage application</param>
+public delegate void DamageApplicationInterceptor(GameObj handler, GameObj target, GameObj attacker, GameObj skill, ref float damage, ref bool cancel);
+
+/// <summary>
+/// Interceptor for EntityProperties.UpdateProperty @ 0x18060d320 - master hook for ALL additive stat modifications.
+/// Fires when additive property bonuses are applied from items, skills, passive effects, and other sources.
+/// Covers 70+ property types including damage, HP, movement, accuracy, concealment, and more.
+/// </summary>
+/// <param name="properties">The EntityProperties instance being modified</param>
+/// <param name="propertyType">The property type enum (EntityPropertyType: 0=MaxHitpoints, 1=Accuracy, 2=SightRange, etc.)</param>
+/// <param name="amount">The additive amount being applied (modify via ref to change bonus magnitude)</param>
+public delegate void PropertyUpdateInterceptor(GameObj properties, int propertyType, ref int amount);
+
+/// <summary>
+/// Interceptor for EntityProperties.UpdateMultProperty @ 0x18060cc80 - master hook for ALL multiplicative stat modifiers.
+/// Fires when multiplicative property bonuses are applied from items, skills, passive effects, and difficulty settings.
+/// Multipliers stack additively as percentages: two +50% bonuses (1.5, 1.5) = 2.0x total, not 2.25x.
+/// Formula: value += (mult - 1.0), so 1.5 adds 0.5 to the accumulated multiplier.
+/// Covers multiplicative properties: AccuracyMult, DamageMult, MovementRangeMult, ActionPointsMult, etc.
+/// </summary>
+/// <param name="properties">The EntityProperties instance being modified</param>
+/// <param name="propertyType">The property type enum (EntityPropertyType: 9=MovementRangeMult, 10=AccuracyMult, 11=DamageMult, etc.)</param>
+/// <param name="multiplier">The multiplier being applied (1.0 = no change, 1.5 = +50%, 2.0 = +100%; modify via ref)</param>
+public delegate void PropertyUpdateMultInterceptor(GameObj properties, int propertyType, ref float multiplier);
+
+/// <summary>
+/// Interceptor for item container add operations.
+/// </summary>
+/// <param name="container">The ItemContainer instance</param>
+/// <param name="item">The Item being added</param>
+/// <param name="expandSlots">Whether to expand slots if container is full (modify via ref)</param>
+/// <param name="cancel">Set to true to prevent item addition</param>
+public delegate void ItemAddInterceptor(GameObj container, GameObj item, ref bool expandSlots, ref bool cancel);
 
 #endregion
 
@@ -529,6 +653,9 @@ public static class Intercept
     private static Type _vehicleType;
     // AI types
     private static Type _aiBrainType;
+    private static Type _agentType;
+    // Pathfinding types
+    private static Type _pathfindingProcessType;
 
     // Cached field offsets for owner resolution
     private const uint OFFSET_SKILL_CONTAINER = 0x18;  // Skill -> SkillContainer
@@ -577,6 +704,55 @@ public static class Intercept
     /// Base vision at offset 0xC4, multiplier at 0xC8.
     /// </summary>
     public static event IntIntercept OnGetVision;
+
+    /// <summary>
+    /// Fires when EntityProperties.UpdateProperty applies additive stat bonuses from items/skills/effects.
+    /// Address: 0x18060d320. Master hook for ALL additive property modifications across all templates.
+    ///
+    /// PropertyType enum values (EntityPropertyType):
+    ///   0 = MaxHitpoints (+0xC4)    - Maximum health points
+    ///   1 = Accuracy (+0xA0, float) - Base hit chance
+    ///   2 = SightRange (+0xD4)      - Vision distance
+    ///   3 = MovementRange (+0x68, float) - Movement distance per turn
+    ///   4 = ActionPoints (+0x1C)    - Actions available per turn
+    ///   5 = MovementCost (+0x14)    - AP cost to move
+    ///   6 = Initiative (+0x34)      - Turn order priority
+    ///   7 = Concealment (+0xCC)     - Stealth rating
+    ///   8 = Discipline (+0x10)      - Morale/suppression resistance
+    ///   ... (and 60+ more property types)
+    ///
+    /// Use Cases:
+    /// - Scale equipment bonuses: Multiply damage bonuses by difficulty
+    /// - Cap stat bonuses: Prevent excessive stacking (e.g., max +50% movement)
+    /// - Conditional modifiers: Apply bonuses only for specific units or conditions
+    /// - Item set bonuses: Grant extra bonuses when multiple items are equipped
+    /// - Difficulty scaling: Adjust all stat gains based on game mode
+    ///
+    /// Example:
+    /// <code>
+    /// // Double all HP bonuses from items
+    /// Intercept.OnPropertyUpdate += (properties, propertyType, ref amount) => {
+    ///     if (propertyType == 0) {  // MaxHitpoints
+    ///         amount *= 2;
+    ///     }
+    /// };
+    ///
+    /// // Cap movement bonuses at +3
+    /// Intercept.OnPropertyUpdate += (properties, propertyType, ref amount) => {
+    ///     if (propertyType == 3) {  // MovementRange
+    ///         amount = Math.Min(amount, 3);
+    ///     }
+    /// };
+    ///
+    /// // Scale damage bonuses by difficulty (hard mode = 50% bonuses)
+    /// Intercept.OnPropertyUpdate += (properties, propertyType, ref amount) => {
+    ///     if (propertyType == 29 && IsHardMode()) {  // Damage property
+    ///         amount = (int)(amount * 0.5f);
+    ///     }
+    /// };
+    /// </code>
+    /// </summary>
+    public static event PropertyUpdateInterceptor OnPropertyUpdate;
 
     #endregion
 
@@ -663,6 +839,60 @@ public static class Intercept
     /// Address: 0x1805df730
     /// </summary>
     public static event ActorSuppressionStateInterceptor OnActorGetSuppressionState;
+
+    /// <summary>
+    /// Fires when Actor.ApplySuppression() is called, BEFORE the suppression value is applied.
+    /// This allows mods to:
+    /// - Modify the suppression amount being applied
+    /// - Detect friendly fire suppression incidents
+    /// - Grant suppression immunity by setting cancel=true
+    /// - Implement cascading suppression to nearby units
+    /// - Track suppression application for analytics
+    ///
+    /// Formula (from Ghidra @ 0x1805ddda0):
+    /// - Base suppression modified by discipline: amount * (1 - discipline * 0.01)
+    /// - Faction modifiers applied based on isFriendlyFire flag
+    /// - Final value stored at Actor+0x15C (current suppression)
+    /// - TacticalManager.InvokeOnSuppressionApplied fires after update
+    ///
+    /// Address: 0x1805ddda0
+    ///
+    /// Use cases:
+    /// - Veteran immunity: Reduce suppression for experienced units
+    /// - Morale interaction: Link suppression to morale state
+    /// - Suppression chains: Apply partial suppression to adjacent allies
+    /// - Suppression tracking: Log all suppression events for AI analysis
+    /// </summary>
+    public static event SuppressionApplicationInterceptor OnSuppressionApplied;
+
+    /// <summary>
+    /// Fires when Actor.ApplyMorale() is called, BEFORE the morale value is applied.
+    /// This allows mods to:
+    /// - Modify the morale amount being applied
+    /// - Grant morale immunity by setting cancel=true
+    /// - Implement leader bonuses (nearby leaders reduce morale loss)
+    /// - Create rally mechanics (prevent morale loss when rallied)
+    /// - Track morale changes for analytics and mission scoring
+    /// - Implement morale cascading to nearby units
+    ///
+    /// Formula (from Ghidra @ 0x1805dd240):
+    /// - Checks morale immunity flag (EntityProps+0xEC bit 7)
+    /// - Validates eventType against allowed morale events (EntityProps+0xA8 bitmask)
+    /// - Applies morale multiplier from EntityProps+0xBC
+    /// - Calls SkillContainer.OnMoraleEvent(eventType, amount, 0)
+    /// - Clamps final morale between 0.0 and GetMoraleMax()
+    /// - Stores at Actor+0x160 via SetMorale()
+    ///
+    /// Address: 0x1805dd240
+    ///
+    /// Use cases:
+    /// - Leader morale protection: Leaders resist morale loss
+    /// - Rally mechanics: Nearby leaders prevent morale loss
+    /// - Elite immunity: Veterans ignore certain morale events
+    /// - Morale cascading: Spread morale changes to nearby allies
+    /// - Achievement tracking: Monitor morale events for mission objectives
+    /// </summary>
+    public static event MoraleApplicationInterceptor OnMoraleApplied;
 
     #endregion
 
@@ -891,6 +1121,32 @@ public static class Intercept
     /// </summary>
     public static event BoolInterceptor OnIsMovementSkill;
 
+    /// <summary>
+    /// Fires after Skill.IsUsable() checks if a skill is usable by an actor.
+    /// This hook allows mods to add custom skill restrictions, cooldown modifications,
+    /// or conditional availability based on actor state, equipment, or environmental factors.
+    ///
+    /// Address: 0x1806deb10
+    ///
+    /// The function performs several checks:
+    /// - Actor death/dying state
+    /// - Cooldown/charge availability
+    /// - Deployment requirements
+    /// - Required stance validation
+    /// - AI state restrictions
+    /// - Effect handler checks
+    ///
+    /// Use cases:
+    /// - Class-based skill restrictions (limit skills to specific unit types)
+    /// - Dynamic cooldown modifications (reduce cooldown for veterans)
+    /// - Conditional abilities (enable/disable based on morale, suppression, etc.)
+    /// - Equipment requirements (require specific items to use skills)
+    /// - Environmental restrictions (disable skills in certain terrain/zones)
+    ///
+    /// Threading: Main thread only - no threading concerns
+    /// </summary>
+    public static event SkillUsableInterceptor OnSkillIsUsable;
+
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
@@ -990,6 +1246,40 @@ public static class Intercept
     /// Use propertyType to filter for specific properties.
     /// </summary>
     public static event PropertyValueInterceptor OnGetPropertyValue;
+
+    /// <summary>
+    /// Fired when multiplicative property modifications are applied (UpdateMultProperty).
+    /// Address: 0x18060cc80. Master hook for ALL multiplier bonuses.
+    ///
+    /// STACKING FORMULA: Multipliers stack additively as percentages using value += (mult - 1.0).
+    /// This means two +50% bonuses (1.5, 1.5) result in 2.0x total, NOT 2.25x.
+    /// Example: Base 1.0, first +50% -> 1.0 + 0.5 = 1.5, second +50% -> 1.5 + 0.5 = 2.0x
+    ///
+    /// MULTIPLIER VALUES:
+    /// - 1.0 = no change (base)
+    /// - 1.5 = +50% bonus
+    /// - 2.0 = +100% bonus (doubles value)
+    /// - 0.5 = -50% penalty (halves value)
+    ///
+    /// PROPERTY TYPES (multiplicative):
+    /// - 9 = MovementRangeMult (movement distance)
+    /// - 10 = AccuracyMult (hit chance)
+    /// - 11 = DamageMult (damage output)
+    /// - 12 = ArmorPenMult (armor penetration)
+    /// - 13 = ActionPointsMult (AP regeneration)
+    /// - 14 = VisionMult (sight range)
+    /// - 15-28, 35-36, 41, 43-44, 46-47, 49, 52, 55, 57, 60, 64, 67, 71 = Other multiplier types
+    ///
+    /// USE CASES:
+    /// - Difficulty-based accuracy scaling (easy mode +20% hit chance)
+    /// - Damage multiplier nerfs/buffs (elite units +50% damage)
+    /// - Conditional multipliers (veteran bonus: +25% accuracy when in cover)
+    /// - Equipment bonuses (scope: +15% accuracy)
+    /// </summary>
+    /// <param name="properties">The EntityProperties being modified</param>
+    /// <param name="propertyType">The multiplier property type (EntityPropertyType enum)</param>
+    /// <param name="multiplier">The multiplier (1.0 = no change, 1.5 = +50%, can be modified)</param>
+    public static event PropertyUpdateMultInterceptor OnPropertyUpdateMult;
 
     #endregion
 
@@ -1145,6 +1435,25 @@ public static class Intercept
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
+    //  PATHFINDING EVENTS - PathfindingProcess method interceptors
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region Pathfinding Events
+
+    /// <summary>
+    /// Fires after PathfindingProcess.IsTraversable() checks if a tile can be traversed.
+    /// Address: 0x180662860. Core pathfinding traversability check.
+    /// WARNING: Called very frequently during pathfinding - keep handlers fast!
+    /// Use for dynamic terrain restrictions, weather effects, or custom tile blocking.
+    /// </summary>
+    /// <param name="process">The pathfinding process</param>
+    /// <param name="tile">The tile being checked</param>
+    /// <param name="result">Whether the tile is traversable (can be modified)</param>
+    public static event TraversableCheckInterceptor OnTileTraversable;
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
     //  LINEOFSIGHT EVENTS - LineOfSight static method interceptors
     // ═══════════════════════════════════════════════════════════════════
 
@@ -1204,6 +1513,52 @@ public static class Intercept
     /// Used to limit movement to available action points.
     /// </summary>
     public static event ClipPathInterceptor OnClipPathToCost;
+
+    /// <summary>
+    /// Fires when PathfindingProcess.FindPath() calculates a route.
+    /// Address: 0x180660c20
+    ///
+    /// Fires before pathfinding algorithm executes, allowing complete control over path calculation.
+    /// Setting cancel=true will prevent pathfinding and return no path found.
+    ///
+    /// Use Cases:
+    /// - Custom pathfinding algorithms (override with pathResult modification)
+    /// - Restricted zones (cancel pathfinding through forbidden areas)
+    /// - Forced routes (inject predetermined paths)
+    /// - Movement tracking (log all pathfinding requests for AI analysis)
+    /// - Pathfinding debugging (inspect start/end tiles)
+    ///
+    /// Note: This is a low-level hook that fires for ALL pathfinding including AI.
+    /// </summary>
+    /// <param name="process">The pathfinding process instance</param>
+    /// <param name="start">Start tile for the path</param>
+    /// <param name="end">End/destination tile for the path</param>
+    /// <param name="pathResult">Pointer to path result (can be modified)</param>
+    /// <param name="cancel">Set to true to cancel pathfinding</param>
+    public static event FindPathInterceptor OnPathfinding;
+
+    /// <summary>
+    /// Fires BEFORE Actor.MoveTo() executes movement.
+    /// This is the master movement hook that catches ALL actor movement attempts.
+    /// Address: 0x1805e0a60
+    ///
+    /// Fires before pathfinding validation, AP deduction, and movement execution.
+    /// Setting cancel=true will prevent movement entirely with no state changes.
+    ///
+    /// Use Cases:
+    /// - Movement restrictions (terrain, faction, mission objectives)
+    /// - Teleportation (modify destination tile)
+    /// - Terrain penalties (modify movement flags)
+    /// - Movement tracking (analytics, achievements)
+    ///
+    /// Note: Game also fires InvokeOnMovement during movement execution.
+    /// This event fires BEFORE (prefix), game event fires DURING.
+    /// </summary>
+    /// <param name="actor">The actor attempting to move</param>
+    /// <param name="tile">The destination tile</param>
+    /// <param name="flags">Movement flags (mode, sprint, etc.)</param>
+    /// <param name="cancel">Set to true to prevent movement</param>
+    public static event MoveToInterceptor OnMoveTo;
 
     #endregion
 
@@ -1272,6 +1627,100 @@ public static class Intercept
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
+    //  COMBAT ACTION EVENTS - Damage and effect application
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region Combat Action Events
+
+    /// <summary>
+    /// Fires when DamageHandler.ApplyDamage() executes, applying damage to an entity.
+    /// This is the core damage application intercept point in the game's combat system.
+    ///
+    /// Firing Point: During skill effect execution, when the Damage effect handler processes
+    ///
+    /// Damage Calculation (from decompiled code @ 0x180702970):
+    /// - HP damage = DamageFlatAmount (0x64) + max(currentHP * pctCurrent, minCurrent) + max(maxHP * pctMax, minMax)
+    /// - Hit count = FlatDamageBase (0x5c) + ceil(elementCount * elementsHitPct)
+    /// - Armor damage = DamageToArmor (0x78) + (currentArmor * ArmorDmgPctCurrent (0x7c))
+    ///
+    /// Use Cases:
+    /// - Critical hits: Multiply damage on random chance
+    /// - Damage immunity: Cancel damage for specific units or conditions
+    /// - Damage reflection: Apply partial damage back to attacker
+    /// - Damage logging: Track all damage events for analytics
+    /// - Conditional resistance: Reduce damage based on armor, buffs, or distance
+    ///
+    /// Example:
+    /// <code>
+    /// // 10% critical hit chance with 2x damage
+    /// Intercept.OnDamageApplied += (handler, target, attacker, skill, ref damage, ref cancel) => {
+    ///     if (Random.value < 0.1f) {
+    ///         damage *= 2.0f;
+    ///         DevConsole.Log("CRITICAL HIT!");
+    ///     }
+    /// };
+    ///
+    /// // Boss immunity
+    /// Intercept.OnDamageApplied += (handler, target, attacker, skill, ref damage, ref cancel) => {
+    ///     if (target.GetName().Contains("Boss")) {
+    ///         cancel = true;
+    ///     }
+    /// };
+    /// </code>
+    /// </summary>
+    public static event DamageApplicationInterceptor OnDamageApplied;
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  EQUIPMENT SYSTEMS - Item container and inventory management
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region Equipment Systems
+
+    /// <summary>
+    /// Fired when an item is added to a container.
+    /// Address: 0x180821c80
+    /// Use for equipment restrictions, class-based loadouts, inventory limits.
+    ///
+    /// Use cases:
+    /// - Equipment restrictions: Prevent certain items from being equipped
+    /// - Class-based loadouts: Restrict items based on unit class
+    /// - Inventory management: Implement custom slot logic or weight limits
+    /// - Item type filtering: Block specific item types from containers
+    /// - Slot expansion control: Override auto-expand behavior
+    ///
+    /// Example:
+    /// <code>
+    /// // Prevent heavy weapons for scout class
+    /// Intercept.OnItemAdd += (container, item, ref expandSlots, ref cancel) => {
+    ///     var owner = container.GetOwner();
+    ///     if (owner?.GetClass() == "Scout") {
+    ///         var template = item.GetTemplate();
+    ///         if (template?.GetItemType() == ItemType.HeavyWeapon) {
+    ///             cancel = true;
+    ///             DevConsole.Log("Scouts cannot use heavy weapons!");
+    ///         }
+    ///     }
+    /// };
+    ///
+    /// // Disable auto-expand for specific containers
+    /// Intercept.OnItemAdd += (container, item, ref expandSlots, ref cancel) => {
+    ///     if (container.GetName().Contains("LimitedStorage")) {
+    ///         expandSlots = false;
+    ///     }
+    /// };
+    /// </code>
+    /// </summary>
+    /// <param name="container">The item container</param>
+    /// <param name="item">The item being added</param>
+    /// <param name="expandSlots">Whether to expand slots if full (can be modified)</param>
+    /// <param name="cancel">Set to true to prevent item addition</param>
+    public static event ItemAddInterceptor OnItemAdd;
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
     //  AI BEHAVIOR EVENTS - AIBrain decision making
     // ═══════════════════════════════════════════════════════════════════
 
@@ -1300,6 +1749,45 @@ public static class Intercept
     /// Return true to force flee, false to prevent.
     /// </summary>
     public static event AIBoolDecisionInterceptor OnAIShouldFlee;
+
+    /// <summary>
+    /// Fired when AI agent begins evaluating possible actions for this turn.
+    /// WARNING: May be called in parallel - ensure thread-safe handlers!
+    /// Use this to implement AI difficulty modifiers or force specific behaviors.
+    ///
+    /// Lua event name: ai_evaluate
+    /// Address: Menace.Tactical.AI.Agent$$Evaluate @ 0x18070eb30
+    ///
+    /// Threading: This function uses System.Threading.Tasks for parallel criterion evaluation.
+    /// Multiple agents may call this simultaneously. Handler code MUST be thread-safe.
+    /// </summary>
+    /// <param name="agent">The AI agent evaluating actions</param>
+    /// <param name="cancel">Set to true to cancel evaluation and skip AI turn</param>
+    public static event AgentEvaluateInterceptor OnAIEvaluate;
+
+    /// <summary>
+    /// Fired when AI criterion evaluates a position/tile for movement or deployment.
+    /// WARNING: Called in PARALLEL - handlers MUST be thread-safe and read-only!
+    /// This fires for EACH tile evaluation during pathfinding (20-50+ tiles per agent).
+    /// Keep handlers EXTREMELY fast - avoid heavy computation, I/O, or state modification.
+    ///
+    /// Lua event name: position_score
+    /// Address: Menace.Tactical.AI.Behaviors.Criterions.* @ various (see specific implementations)
+    ///
+    /// Threading: Called from parallel job threads during criterion evaluation.
+    /// Multiple criterions evaluate multiple tiles simultaneously.
+    /// DO NOT modify game state - only read and modify the score parameter.
+    ///
+    /// Use cases:
+    /// - Custom positioning logic (e.g., prefer high ground)
+    /// - Flanking preferences (bonus for attacking from sides/rear)
+    /// - Environmental bonuses (stay near cover, water, etc.)
+    /// - Formation-based scoring (maintain unit cohesion)
+    /// </summary>
+    /// <param name="criterion">The criterion evaluating the position</param>
+    /// <param name="tile">The tile being scored</param>
+    /// <param name="score">The position score (can be modified)</param>
+    public static event CriterionEvaluateInterceptor OnPositionScore;
 
     #endregion
 
@@ -1345,6 +1833,9 @@ public static class Intercept
             _vehicleType = gameAssembly.GetType("Menace.Strategy.Vehicle");
             // AI types
             _aiBrainType = gameAssembly.GetType("Menace.Tactical.AI.AIBrain");
+            _agentType = gameAssembly.GetType("Menace.Tactical.AI.Agent");
+            // Pathfinding types
+            _pathfindingProcessType = gameAssembly.GetType("Menace.Tactical.PathfindingProcess");
 
             if (_entityPropertiesType == null)
             {
@@ -1377,13 +1868,15 @@ public static class Intercept
             patchCount += PatchEntityPropertyMethod("GetActionPoints", nameof(GetActionPoints_Postfix));
             patchCount += PatchEntityPropertyMethod("GetMovementCostModifier", nameof(GetMovementCostModifier_Postfix));
             patchCount += PatchEntityPropertyMethodWithParam("GetPropertyValue", nameof(GetPropertyValue_Postfix));
+            patchCount += PatchEntityPropertyMethodWithParamPrefix("UpdateProperty", nameof(UpdateProperty_Prefix));
+            patchCount += PatchEntityPropertyMethodWithParamPrefix("UpdateMultProperty", nameof(UpdateMultProperty_Prefix));
 
             // Skill patches (Tier 1)
             if (_skillType != null)
             {
                 patchCount += PatchSkillMethod("GetHitchance", nameof(GetHitchance_Postfix));
                 patchCount += PatchSkillMethod("GetCoverMult", nameof(GetCoverMult_Postfix));
-                // GetExpectedDamage has overloads - patch both
+            // TODO Phase 5:                 // GetExpectedDamage has overloads - patch both
                 patchCount += PatchSkillMethodOverloads("GetExpectedDamage", nameof(GetExpectedDamage_Postfix));
 
                 // Tier 2: Skill range and cost patches
@@ -1395,12 +1888,18 @@ public static class Intercept
                 patchCount += PatchSkillMethod("IsInRange", nameof(IsInRange_Postfix));
                 patchCount += PatchSkillMethod("IsInRangeShape", nameof(IsInRangeShape_Postfix));
                 patchCount += PatchSkillMethod("IsMovementSkill", nameof(IsMovementSkill_Postfix));
+                patchCount += PatchSkillMethod("IsUsable", nameof(IsUsable_Postfix));
             }
 
             // Actor patches
             if (_actorType != null)
             {
                 patchCount += PatchActorMethod("HasLineOfSightTo", nameof(HasLineOfSightTo_Postfix));
+                patchCount += PatchActorMethodPrefix("ApplySuppression", nameof(ApplySuppression_Prefix));
+                // Actor action interceptors - Morale/Suppression application
+                patchCount += PatchActorMethodPrefix("ApplyMorale", nameof(ApplyMorale_Prefix));
+                // Actor movement interceptor - Phase 2
+                patchCount += PatchActorMethodPrefix("MoveTo", nameof(MoveTo_Prefix));
                 // TODO: Actor state interceptors (Morale, Suppression, ActionPoints, Boolean queries)
                 // require postfix implementations before enabling
             }
@@ -1436,6 +1935,17 @@ public static class Intercept
                 patchCount += PatchBaseTileMethod("HasHalfCover", nameof(BaseTileHasHalfCover_Postfix));
                 patchCount += PatchBaseTileMethod("HasHalfCoverInDir", nameof(BaseTileHasHalfCoverInDir_Postfix));
                 patchCount += PatchBaseTileMethod("IsMovementBlocked", nameof(BaseTileIsMovementBlocked_Postfix));
+            }
+
+            // PathfindingProcess patches
+            if (_pathfindingProcessType != null)
+            {
+                patchCount += PatchPathfindingMethod(_pathfindingProcessType, "FindPath", nameof(FindPath_Prefix));
+                patchCount += PatchPathfindingProcessMethod("IsTraversable", nameof(PathfindingProcessIsTraversable_Postfix));
+            }
+            else
+            {
+                SdkLogger.Warning("[Intercept] PathfindingProcess not found - pathfinding patches skipped");
             }
 
             // LineOfSight patches (static methods)
@@ -1510,6 +2020,41 @@ public static class Intercept
             else
             {
                 SdkLogger.Warning("[Intercept] AIBrain not found - AI patches skipped");
+            }
+
+            // Apply Agent patches
+            if (_agentType != null)
+            {
+                patchCount += PatchAgentMethod("Evaluate", nameof(AgentEvaluate_Prefix));
+            }
+            else
+            {
+                SdkLogger.Warning("[Intercept] Agent not found - Agent.Evaluate patch skipped");
+            }
+
+            // Apply Criterion.Evaluate patches
+            patchCount += PatchCriterionEvaluate(gameAssembly);
+
+            // Apply equipment system patches
+            var itemContainerType = gameAssembly.GetType("Menace.Items.ItemContainer");
+            if (itemContainerType != null)
+            {
+                patchCount += PatchItemContainerMethod(itemContainerType, "Add", nameof(ItemContainerAdd_Prefix));
+            }
+            else
+            {
+                SdkLogger.Warning("[Intercept] ItemContainer not found - item add intercept skipped");
+            }
+
+            // Apply combat action patches
+            var damageHandlerType = gameAssembly.GetType("Menace.Tactical.Skills.Effects.DamageHandler");
+            if (damageHandlerType != null)
+            {
+                patchCount += PatchDamageHandlerMethod(damageHandlerType, "ApplyDamage", nameof(ApplyDamage_Prefix));
+            }
+            else
+            {
+                SdkLogger.Warning("[Intercept] DamageHandler not found - damage intercept skipped");
             }
 
             _initialized = true;
@@ -1589,6 +2134,40 @@ public static class Intercept
         catch (Exception ex)
         {
             SdkLogger.Warning($"[Intercept] Failed to patch EntityProperties.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchEntityPropertyMethodWithParamPrefix(string methodName, string patchMethodName)
+    {
+        try
+        {
+            // Find method with parameters (propertyType, multiplier)
+            var targetMethod = _entityPropertiesType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length >= 2);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: EntityProperties.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            SdkLogger.Msg($"[Intercept] Patched EntityProperties.{methodName} @ 0x18060cc80 (Prefix)");
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch EntityProperties.{methodName} (prefix): {ex.Message}");
             return 0;
         }
     }
@@ -1784,6 +2363,39 @@ public static class Intercept
         }
     }
 
+    private static int PatchActorMethodPrefix(string methodName, string patchMethodName)
+    {
+        try
+        {
+            // Find the method with any number of parameters
+            var targetMethod = _actorType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(m => m.Name == methodName);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: Actor.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch Actor.{methodName} (prefix): {ex.Message}");
+            return 0;
+        }
+    }
+
     private static int PatchEntityMethod(string methodName, string patchMethodName)
     {
         try
@@ -1944,6 +2556,38 @@ public static class Intercept
         }
     }
 
+    private static int PatchPathfindingProcessMethod(string methodName, string patchMethodName)
+    {
+        try
+        {
+            var targetMethod = _pathfindingProcessType.GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: PathfindingProcess.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            _harmony.Patch(targetMethod, postfix: new HarmonyMethod(patchMethod));
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch PathfindingProcess.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
     private static int PatchStrategyMethod(Type strategyType, string methodName, string patchMethodName)
     {
         try
@@ -2036,6 +2680,210 @@ public static class Intercept
         catch (Exception ex)
         {
             SdkLogger.Warning($"[Intercept] Failed to patch AIBrain.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchDamageHandlerMethod(Type handlerType, string methodName, string patchMethodName)
+    {
+        try
+        {
+            var targetMethod = handlerType.GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: DamageHandler.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            // Use Prefix patch to intercept before damage is applied
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            SdkLogger.Msg($"[Intercept] Patched DamageHandler.{methodName} @ 0x180702970");
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch DamageHandler.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchItemContainerMethod(Type containerType, string methodName, string patchMethodName)
+    {
+        try
+        {
+            var targetMethod = containerType.GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: ItemContainer.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            // Use Prefix patch to intercept before item is added
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            SdkLogger.Msg($"[Intercept] Patched ItemContainer.{methodName} @ 0x180821c80");
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch ItemContainer.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchPathfindingMethod(Type pathfindingType, string methodName, string patchMethodName)
+    {
+        try
+        {
+            var targetMethod = pathfindingType.GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: PathfindingProcess.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            // Use Prefix patch to intercept before pathfinding executes
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            SdkLogger.Msg($"[Intercept] Patched PathfindingProcess.{methodName} @ 0x180660c20");
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch PathfindingProcess.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchAgentMethod(string methodName, string patchMethodName)
+    {
+        try
+        {
+            var targetMethod = _agentType.GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (targetMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Method not found: Agent.{methodName}");
+                return 0;
+            }
+
+            var patchMethod = typeof(Intercept).GetMethod(patchMethodName,
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (patchMethod == null)
+            {
+                SdkLogger.Warning($"[Intercept] Patch method not found: {patchMethodName}");
+                return 0;
+            }
+
+            // Use Prefix patch to intercept before evaluation starts (allows cancellation)
+            _harmony.Patch(targetMethod, prefix: new HarmonyMethod(patchMethod));
+            SdkLogger.Msg($"[Intercept] Patched Agent.{methodName} @ 0x18070eb30");
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch Agent.{methodName}: {ex.Message}");
+            return 0;
+        }
+    }
+
+    private static int PatchCriterionEvaluate(Assembly gameAssembly)
+    {
+        try
+        {
+            int patchCount = 0;
+
+            // Patch concrete Criterion implementations found via Ghidra
+            string[] criterionTypes = new[]
+            {
+                "Menace.Tactical.AI.Behaviors.Criterions.AvoidOpponents",
+                "Menace.Tactical.AI.Behaviors.Criterions.DistanceToCurrentTile",
+                "Menace.Tactical.AI.Behaviors.Criterions.FleeFromOpponents",
+                "Menace.Tactical.AI.Behaviors.Criterions.ThreatFromOpponents",
+                "Menace.Tactical.AI.Behaviors.Criterions.CoverAgainstOpponents",
+                "Menace.Tactical.AI.Behaviors.Criterions.ConsiderZones",
+                "Menace.Tactical.AI.Behaviors.Criterions.ExistingTileEffects"
+            };
+
+            foreach (var typeName in criterionTypes)
+            {
+                var criterionType = gameAssembly.GetType(typeName);
+                if (criterionType == null)
+                {
+                    SdkLogger.Warning($"[Intercept] Criterion type not found: {typeName}");
+                    continue;
+                }
+
+                var evaluateMethod = criterionType.GetMethod("Evaluate",
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                if (evaluateMethod == null)
+                {
+                    SdkLogger.Warning($"[Intercept] Evaluate method not found on {typeName}");
+                    continue;
+                }
+
+                var patchMethod = typeof(Intercept).GetMethod(nameof(CriterionEvaluate_Postfix),
+                    BindingFlags.Static | BindingFlags.NonPublic);
+
+                if (patchMethod == null)
+                {
+                    SdkLogger.Warning("[Intercept] CriterionEvaluate_Postfix patch method not found");
+                    break;
+                }
+
+                // Use Postfix - observe and modify score after evaluation
+                _harmony.Patch(evaluateMethod, postfix: new HarmonyMethod(patchMethod));
+                patchCount++;
+            }
+
+            if (patchCount > 0)
+            {
+                SdkLogger.Msg($"[Intercept] Patched {patchCount} Criterion.Evaluate implementations");
+            }
+            else
+            {
+                SdkLogger.Warning("[Intercept] No Criterion.Evaluate patches applied");
+            }
+
+            return patchCount;
+        }
+        catch (Exception ex)
+        {
+            SdkLogger.Warning($"[Intercept] Failed to patch Criterion.Evaluate: {ex.Message}");
             return 0;
         }
     }
@@ -2801,6 +3649,80 @@ public static class Intercept
         }
     }
 
+    private static void UpdateProperty_Prefix(object __instance, int propertyType, ref int amount)
+    {
+        if (OnPropertyUpdate == null) return;
+
+        try
+        {
+            var propsPtr = GetPointer(__instance);
+            var props = new GameObj(propsPtr);
+            var amt = amount;
+
+            foreach (var handler in OnPropertyUpdate.GetInvocationList().Cast<PropertyUpdateInterceptor>())
+            {
+                try
+                {
+                    handler(props, propertyType, ref amt);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnPropertyUpdate handler failed: {ex.Message}");
+                }
+            }
+
+            amount = amt;
+
+            FireLuaEvent("property_update", new Dictionary<string, object>
+            {
+                ["props_ptr"] = propsPtr.ToInt64(),
+                ["property_type"] = propertyType,
+                ["amount"] = amt
+            });
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"UpdateProperty_Prefix failed: {ex.Message}");
+        }
+    }
+
+    private static void UpdateMultProperty_Prefix(object __instance, int propertyType, ref float multiplier)
+    {
+        if (OnPropertyUpdateMult == null) return;
+
+        try
+        {
+            var propsPtr = GetPointer(__instance);
+            var props = new GameObj(propsPtr);
+            var mult = multiplier;
+
+            foreach (var handler in OnPropertyUpdateMult.GetInvocationList().Cast<PropertyUpdateMultInterceptor>())
+            {
+                try
+                {
+                    handler(props, propertyType, ref mult);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnPropertyUpdateMult handler failed: {ex.Message}");
+                }
+            }
+
+            multiplier = mult;
+
+            FireLuaEvent("property_update_mult", new Dictionary<string, object>
+            {
+                ["props_ptr"] = propsPtr.ToInt64(),
+                ["property_type"] = propertyType,
+                ["multiplier"] = mult
+            });
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"UpdateMultProperty_Prefix failed: {ex.Message}");
+        }
+    }
+
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
@@ -3285,6 +4207,58 @@ public static class Intercept
         }
     }
 
+    private static void IsUsable_Postfix(object __instance, ref bool __result)
+    {
+        if (OnSkillIsUsable == null) return;
+
+        try
+        {
+            var skillPtr = GetPointer(__instance);
+            var skill = new GameObj(skillPtr);
+
+            // Extract actor from skill (skill.SkillContainer.Entity)
+            var actor = GameObj.Null;
+            try
+            {
+                var containerPtr = skill.ReadPtr(OFFSET_SKILL_CONTAINER);
+                if (containerPtr != IntPtr.Zero)
+                {
+                    var entityPtr = System.Runtime.InteropServices.Marshal.ReadIntPtr(containerPtr + (int)OFFSET_CONTAINER_ENTITY);
+                    if (entityPtr != IntPtr.Zero)
+                        actor = new GameObj(entityPtr);
+                }
+            }
+            catch { }
+
+            var result = __result;
+
+            foreach (var handler in OnSkillIsUsable.GetInvocationList().Cast<SkillUsableInterceptor>())
+            {
+                try
+                {
+                    handler(skill, actor, ref result);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnSkillIsUsable handler failed: {ex.Message}");
+                }
+            }
+
+            __result = result;
+
+            FireLuaEvent("skill_is_usable", new Dictionary<string, object>
+            {
+                ["skill_ptr"] = skillPtr.ToInt64(),
+                ["actor_ptr"] = actor.Pointer.ToInt64(),
+                ["result"] = result
+            });
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"IsUsable_Postfix failed: {ex.Message}");
+        }
+    }
+
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
@@ -3292,6 +4266,75 @@ public static class Intercept
     // ═══════════════════════════════════════════════════════════════════
 
     #region Actor Postfixes
+
+    /// <summary>
+    /// Prefix patch for Actor.ApplySuppression - fires BEFORE suppression is applied.
+    /// Allows modification of amount, friendly fire detection, and cancellation.
+    /// Signature: void ApplySuppression(float amount, bool isFriendlyFire, object attacker, object context)
+    /// </summary>
+    private static bool ApplySuppression_Prefix(object __instance, ref float amount, ref bool isFriendlyFire, object attacker)
+    {
+        if (OnSuppressionApplied == null) return true;
+
+        try
+        {
+            var actorPtr = GetPointer(__instance);
+            var actor = new GameObj(actorPtr);
+
+            // Get attacker pointer (may be null)
+            IntPtr attackerPtr = IntPtr.Zero;
+            if (attacker != null)
+            {
+                try
+                {
+                    attackerPtr = GetPointer(attacker);
+                }
+                catch
+                {
+                    // Attacker might not be a valid pointer type
+                }
+            }
+            var attackerObj = new GameObj(attackerPtr);
+
+            var modifiedAmount = amount;
+            var modifiedFriendlyFire = isFriendlyFire;
+            var cancel = false;
+
+            foreach (var handler in OnSuppressionApplied.GetInvocationList().Cast<SuppressionApplicationInterceptor>())
+            {
+                try
+                {
+                    handler(actor, attackerObj, ref modifiedAmount, ref modifiedFriendlyFire, ref cancel);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnSuppressionApplied handler failed: {ex.Message}");
+                }
+            }
+
+            // Apply modifications
+            amount = modifiedAmount;
+            isFriendlyFire = modifiedFriendlyFire;
+
+            // Fire Lua event
+            FireLuaEvent("actor_suppression_applied", new Dictionary<string, object>
+            {
+                ["actor_ptr"] = actorPtr.ToInt64(),
+                ["attacker_ptr"] = attackerPtr.ToInt64(),
+                ["amount"] = modifiedAmount,
+                ["is_friendly_fire"] = modifiedFriendlyFire,
+                ["cancelled"] = cancel
+            });
+
+            // Return false to cancel the original method if cancel flag is set
+            return !cancel;
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"ApplySuppression_Prefix failed: {ex.Message}");
+            return true; // Don't block the original method on error
+        }
+    }
 
     private static void HasLineOfSightTo_Postfix(object __instance, ref bool __result, object entity)
     {
@@ -3338,6 +4381,127 @@ public static class Intercept
     private static void GetMoraleState_Postfix(object __instance, ref int __result) { if (OnActorGetMoraleState == null) return; try { var a = GetPointer(__instance); var actor = new GameObj(a); var r = __result; foreach (var h in OnActorGetMoraleState.GetInvocationList().Cast<ActorIntStateInterceptor>()) { try { h(actor, ref r); } catch { } } __result = r; } catch { } }
     private static void GetSuppressionPct_Postfix(object __instance, ref float __result) { if (OnActorGetSuppressionPct == null) return; try { var a = GetPointer(__instance); var actor = new GameObj(a); var r = __result; foreach (var h in OnActorGetSuppressionPct.GetInvocationList().Cast<ActorFloatStateInterceptor>()) { try { h(actor, ref r); } catch { } } __result = r; } catch { } }
     private static void GetSuppressionState_Postfix(object __instance, ref int __result, float additionalSuppression) { if (OnActorGetSuppressionState == null) return; try { var a = GetPointer(__instance); var actor = new GameObj(a); var r = __result; foreach (var h in OnActorGetSuppressionState.GetInvocationList().Cast<ActorSuppressionStateInterceptor>()) { try { h(actor, additionalSuppression, ref r); } catch { } } __result = r; } catch { } }
+
+    // Actor action prefixes - Morale/Suppression application
+    private static bool ApplyMorale_Prefix(object __instance, ref uint eventType, ref float amount)
+    {
+        if (OnMoraleApplied == null) return true;
+
+        try
+        {
+            var actorPtr = GetPointer(__instance);
+            var actor = new GameObj(actorPtr);
+            var modifiedAmount = amount;
+            var cancel = false;
+
+            foreach (var handler in OnMoraleApplied.GetInvocationList().Cast<MoraleApplicationInterceptor>())
+            {
+                try
+                {
+                    handler(actor, (int)eventType, ref modifiedAmount, ref cancel);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnMoraleApplied handler failed: {ex.Message}");
+                }
+            }
+
+            amount = modifiedAmount;
+
+            // Fire Lua event for script integration
+            FireLuaEvent("morale_applied", new Dictionary<string, object>
+            {
+                ["actor_ptr"] = actorPtr.ToInt64(),
+                ["event_type"] = (int)eventType,
+                ["amount"] = modifiedAmount,
+                ["canceled"] = cancel
+            });
+
+            // Return false to skip original method if cancelled
+            return !cancel;
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"ApplyMorale_Prefix failed: {ex.Message}");
+            return true;
+        }
+    }
+
+
+    /// <summary>
+    /// Prefix patch for Actor.MoveTo @ 0x1805e0a60 - fires BEFORE movement execution.
+    /// This is the master movement hook, catching ALL actor movement attempts.
+    /// Allows modification of movement parameters and complete cancellation.
+    ///
+    /// Signature: bool MoveTo(Tile tile, MovementAction action, MovementFlags flags)
+    /// - param_1: Actor instance (this)
+    /// - param_2: Destination Tile pointer
+    /// - param_3: Pointer to MovementAction enum
+    /// - param_4: MovementFlags bitfield
+    ///
+    /// Returns false to cancel movement, true to proceed.
+    /// </summary>
+    private static bool MoveTo_Prefix(object __instance, object tile, object action, uint flags)
+    {
+        if (OnMoveTo == null) return true;
+
+        try
+        {
+            var actorPtr = GetPointer(__instance);
+            var actor = new GameObj(actorPtr);
+
+            // Extract tile pointer (may be null for some movement modes)
+            IntPtr tilePtr = IntPtr.Zero;
+            if (tile != null)
+            {
+                try
+                {
+                    tilePtr = GetPointer(tile);
+                }
+                catch
+                {
+                    // Tile may be null or invalid - game handles this internally
+                }
+            }
+            var tileObj = new GameObj(tilePtr);
+
+            // Extract movement action from pointer (param_3 is pointer to uint)
+            // However, Harmony may have already dereferenced it for us
+            // The action parameter should be the MovementAction enum value
+            // Based on ApplySuppression pattern, flags is direct uint
+
+            var cancel = false;
+
+            foreach (var handler in OnMoveTo.GetInvocationList().Cast<MoveToInterceptor>())
+            {
+                try
+                {
+                    handler(actor, tileObj, (int)flags, ref cancel);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnMoveTo handler failed: {ex.Message}");
+                }
+            }
+
+            // Fire Lua event for script integration
+            FireLuaEvent("actor_move_to", new Dictionary<string, object>
+            {
+                ["actor_ptr"] = actorPtr.ToInt64(),
+                ["tile_ptr"] = tilePtr.ToInt64(),
+                ["flags"] = flags,
+                ["cancelled"] = cancel
+            });
+
+            // Return false to cancel movement (skip original method)
+            return !cancel;
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"MoveTo_Prefix failed: {ex.Message}");
+            return true; // Don't block movement on error
+        }
+    }
 
     // Actor state query postfixes - Action Points
     private static void GetActionPointsAtTurnStart_Postfix(object __instance, ref int __result) { if (OnActorGetActionPointsAtTurnStart == null) return; try { var a = GetPointer(__instance); var actor = new GameObj(a); var r = __result; foreach (var h in OnActorGetActionPointsAtTurnStart.GetInvocationList().Cast<ActorIntStateInterceptor>()) { try { h(actor, ref r); } catch { } } __result = r; } catch { } }
@@ -4078,6 +5242,56 @@ public static class Intercept
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
+    //  HARMONY POSTFIX PATCHES - PathfindingProcess
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region PathfindingProcess Postfixes
+
+    private static void PathfindingProcessIsTraversable_Postfix(object __instance, ref bool __result, object tile)
+    {
+        // CRITICAL PERFORMANCE: Early exit if no subscribers
+        if (OnTileTraversable == null) return;
+
+        try
+        {
+            var processPtr = GetPointer(__instance);
+            var process = new GameObj(processPtr);
+            var tilePtr = GetPointer(tile);
+            var tileObj = new GameObj(tilePtr);
+            var result = __result;
+
+            // Invoke C# handlers
+            foreach (var handler in OnTileTraversable.GetInvocationList().Cast<TraversableCheckInterceptor>())
+            {
+                try
+                {
+                    handler(process, tileObj, ref result);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnTileTraversable handler failed: {ex.Message}");
+                }
+            }
+
+            __result = result;
+
+            // Fire Lua event
+            FireLuaEvent("tile_traversable", new Dictionary<string, object>
+            {
+                ["process_ptr"] = processPtr.ToInt64(),
+                ["tile_ptr"] = tilePtr.ToInt64(),
+                ["is_traversable"] = result
+            });
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"PathfindingProcessIsTraversable_Postfix failed: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
     //  HARMONY POSTFIX PATCHES - LineOfSight
     // ═══════════════════════════════════════════════════════════════════
 
@@ -4699,6 +5913,323 @@ public static class Intercept
         catch (Exception ex) { ModError.WarnInternal("Intercept", $"AIShouldFlee_Postfix failed: {ex.Message}"); }
     }
 
+    private static void AgentEvaluate_Prefix(object __instance, ref bool __runOriginal)
+    {
+        if (OnAIEvaluate == null) return;
+
+        try
+        {
+            var agentPtr = GetPointer(__instance);
+            var agent = new GameObj(agentPtr);
+            var cancel = false;
+
+            foreach (var handler in OnAIEvaluate.GetInvocationList().Cast<AgentEvaluateInterceptor>())
+            {
+                try { handler(agent, ref cancel); }
+                catch (Exception ex) { ModError.WarnInternal("Intercept", $"OnAIEvaluate handler failed: {ex.Message}"); }
+            }
+
+            if (cancel)
+            {
+                __runOriginal = false;
+            }
+
+            FireLuaEvent("ai_evaluate", new Dictionary<string, object>
+            {
+                ["agent_ptr"] = agentPtr.ToInt64(),
+                ["cancel"] = cancel
+            });
+        }
+        catch (Exception ex) { ModError.WarnInternal("Intercept", $"AgentEvaluate_Prefix failed: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// Postfix for Criterion.Evaluate - observes and modifies position scoring.
+    /// This hooks ALL criterion evaluations for AI positioning decisions.
+    ///
+    /// Based on Ghidra analysis:
+    /// - Signature: void Evaluate(criterion, context, tile)
+    /// - param_1: this (Criterion instance)
+    /// - param_2: context (Agent/Entity)
+    /// - param_3: tile being evaluated (has score at offset 0x28)
+    ///
+    /// Threading: Called in PARALLEL by AI evaluation jobs - MUST be thread-safe!
+    /// </summary>
+    private static void CriterionEvaluate_Postfix(object __instance, object __1, object __2)
+    {
+        // Early exit if no subscribers (performance optimization for parallel calls)
+        if (OnPositionScore == null) return;
+
+        try
+        {
+            var criterionPtr = GetPointer(__instance);
+            var tilePtr = GetPointer(__2);  // Third parameter is the tile
+
+            // Null check - bail if we don't have valid pointers
+            if (criterionPtr == IntPtr.Zero || tilePtr == IntPtr.Zero) return;
+
+            var criterion = new GameObj(criterionPtr);
+            var tile = new GameObj(tilePtr);
+
+            // Extract score from tile object (offset 0x28 based on Ghidra decompilation)
+            // Use Marshal to read/write the float at this offset
+            var scoreAddress = IntPtr.Add(tilePtr, 0x28);
+            float score = System.Runtime.InteropServices.Marshal.PtrToStructure<float>(scoreAddress);
+
+            // Invoke all handlers
+            foreach (var handler in OnPositionScore.GetInvocationList().Cast<CriterionEvaluateInterceptor>())
+            {
+                try
+                {
+                    handler(criterion, tile, ref score);
+                }
+                catch (Exception ex)
+                {
+                    ModError.WarnInternal("Intercept", $"OnPositionScore handler failed: {ex.Message}");
+                }
+            }
+
+            // Write modified score back to tile
+            System.Runtime.InteropServices.Marshal.StructureToPtr(score, scoreAddress, false);
+
+            // Fire Lua event (note: may have performance impact due to parallel calls)
+            FireLuaEvent("position_score", new Dictionary<string, object>
+            {
+                ["criterion_ptr"] = criterionPtr.ToInt64(),
+                ["tile_ptr"] = tilePtr.ToInt64(),
+                ["score"] = score
+            });
+        }
+        catch (Exception ex)
+        {
+            ModError.WarnInternal("Intercept", $"CriterionEvaluate_Postfix failed: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  PATHFINDING PREFIXES - PathfindingProcess hooks
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region Pathfinding Prefixes
+
+    private static void FindPath_Prefix(object __instance, object __0, object __1, object __2, object __3, ref bool __runOriginal)
+    {
+        if (OnPathfinding == null) return;
+
+        try
+        {
+            // Extract PathfindingProcess instance (this pointer = param_1)
+            var processPtr = GetPointer(__instance);
+            var process = new GameObj(processPtr);
+
+            // Extract start tile (__0 = param_2)
+            var startPtr = GetPointer(__0);
+            var start = new GameObj(startPtr);
+
+            // Extract end tile (__1 = param_3)
+            var endPtr = GetPointer(__1);
+            var end = new GameObj(endPtr);
+
+            // Extract entity parameter (__2 = param_4)
+            // var entityPtr = GetPointer(__2);  // Not currently exposed in delegate
+
+            // Extract path result pointer (__3 = param_5)
+            var pathResultPtr = GetPointer(__3);
+
+            bool cancel = false;
+
+            foreach (var handlerFunc in OnPathfinding.GetInvocationList().Cast<FindPathInterceptor>())
+            {
+                try { handlerFunc(process, start, end, ref pathResultPtr, ref cancel); }
+                catch (Exception ex) { ModError.WarnInternal("Intercept", $"OnPathfinding handler failed: {ex.Message}"); }
+            }
+
+            if (cancel)
+            {
+                __runOriginal = false;
+                return;
+            }
+
+            FireLuaEvent("pathfinding", new Dictionary<string, object>
+            {
+                ["process_ptr"] = processPtr.ToInt64(),
+                ["start_ptr"] = startPtr.ToInt64(),
+                ["end_ptr"] = endPtr.ToInt64(),
+                ["path_result_ptr"] = pathResultPtr.ToInt64()
+            });
+        }
+        catch (Exception ex) { ModError.WarnInternal("Intercept", $"FindPath_Prefix failed: {ex.Message}"); }
+    }
+
+    #endregion
+
+    // ═══════════════════════════════════════════════════════════════════
+    //  ACTION PREFIXES - Damage/Morale/Suppression Application
+    // ═══════════════════════════════════════════════════════════════════
+
+    #region Action Prefixes
+
+    private static void ApplyDamage_Prefix(object __instance, ref bool __runOriginal)
+    {
+        if (OnDamageApplied == null) return;
+
+        try
+        {
+            var handlerPtr = GetPointer(__instance);
+            var handler = new GameObj(handlerPtr);
+
+            // Extract target entity from handler via GetEntity(0)
+            // Based on decompiled code @ 0x180702970
+            var targetPtr = IntPtr.Zero;
+            var target = GameObj.Null;
+
+            // Call GetEntity(0) on the skill event handler
+            var getEntityMethod = __instance.GetType().GetMethod("GetEntity",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (getEntityMethod != null)
+            {
+                var targetObj = getEntityMethod.Invoke(__instance, new object[] { 0 });
+                if (targetObj != null)
+                {
+                    targetPtr = GetPointer(targetObj);
+                    target = new GameObj(targetPtr);
+                }
+            }
+
+            // Extract attacker and skill from handler context (handler+0x10)
+            var skillContextPtr = handler.ReadPtr(0x10);
+            var attacker = GameObj.Null;
+            var skill = GameObj.Null;
+
+            if (skillContextPtr != IntPtr.Zero)
+            {
+                skill = new GameObj(skillContextPtr);
+                // Skill owner at +0xE8
+                var attackerPtr = skill.ReadPtr(0xE8);
+                if (attackerPtr != IntPtr.Zero)
+                {
+                    attacker = new GameObj(attackerPtr);
+                }
+            }
+
+            // Calculate damage from effect data (handler+0x18)
+            var effectDataPtr = handler.ReadPtr(0x18);
+            float damage = 0f;
+
+            if (effectDataPtr != IntPtr.Zero && targetPtr != IntPtr.Zero)
+            {
+                var effectData = new GameObj(effectDataPtr);
+
+                // Read damage components from effect data offsets
+                var flatDamage = effectData.ReadFloat(0x64);  // DamageFlatAmount
+                var currentHP = target.ReadFloat(0x54);       // Entity current HP
+                var maxHP = target.ReadInt(0x58);             // Entity max HP
+
+                var pctCurrent = effectData.ReadFloat(0x68);   // DamagePctCurrentHitpoints
+                var pctCurrentMin = effectData.ReadFloat(0x6c); // DamagePctCurrentHitpointsMin
+                var pctMax = effectData.ReadFloat(0x70);        // DamagePctMaxHitpoints
+                var pctMaxMin = effectData.ReadFloat(0x74);     // DamagePctMaxHitpointsMin
+
+                var currentHPDmg = Math.Max(currentHP * pctCurrent, pctCurrentMin);
+                var maxHPDmg = Math.Max(maxHP * pctMax, pctMaxMin);
+
+                damage = flatDamage + currentHPDmg + maxHPDmg;
+            }
+
+            bool cancel = false;
+
+            foreach (var handlerFunc in OnDamageApplied.GetInvocationList().Cast<DamageApplicationInterceptor>())
+            {
+                try { handlerFunc(handler, target, attacker, skill, ref damage, ref cancel); }
+                catch (Exception ex) { ModError.WarnInternal("Intercept", $"OnDamageApplied handler failed: {ex.Message}"); }
+            }
+
+            if (cancel)
+            {
+                __runOriginal = false;
+                return;
+            }
+
+            // Write modified damage back to effect data
+            if (effectDataPtr != IntPtr.Zero)
+            {
+                var effectData = new GameObj(effectDataPtr);
+                // Set flat damage to the modified total
+                effectData.WriteFloat("DamageFlatAmount", damage);
+                // Zero out percentage damages to prevent double-application
+                effectData.WriteFloat("DamagePctCurrentHitpoints", 0f);
+                effectData.WriteFloat("DamagePctMaxHitpoints", 0f);
+            }
+
+            FireLuaEvent("damage_applied", new Dictionary<string, object>
+            {
+                ["handler_ptr"] = handlerPtr.ToInt64(),
+                ["target_ptr"] = targetPtr.ToInt64(),
+                ["attacker_ptr"] = (attacker.IsNull ? 0 : attacker.Pointer.ToInt64()),
+                ["skill_ptr"] = (skill.IsNull ? 0 : skill.Pointer.ToInt64()),
+                ["damage"] = damage,
+                ["cancelled"] = cancel
+            });
+        }
+        catch (Exception ex) { ModError.WarnInternal("Intercept", $"ApplyDamage_Prefix failed: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// Prefix patch for ItemContainer.Add @ 0x180821c80
+    /// Signature: bool Add(ItemContainer this, Item item, bool expandSlots)
+    /// </summary>
+    private static void ItemContainerAdd_Prefix(object __instance, object __0, ref bool __1, ref bool __runOriginal)
+    {
+        if (OnItemAdd == null) return;
+
+        try
+        {
+            var containerPtr = GetPointer(__instance);
+            var container = new GameObj(containerPtr);
+
+            // Extract item parameter (__0)
+            var itemPtr = IntPtr.Zero;
+            var item = GameObj.Null;
+
+            if (__0 != null)
+            {
+                itemPtr = GetPointer(__0);
+                item = new GameObj(itemPtr);
+            }
+
+            // expandSlots parameter is __1 (ref bool)
+            bool expandSlots = __1;
+            bool cancel = false;
+
+            foreach (var handlerFunc in OnItemAdd.GetInvocationList().Cast<ItemAddInterceptor>())
+            {
+                try { handlerFunc(container, item, ref expandSlots, ref cancel); }
+                catch (Exception ex) { ModError.WarnInternal("Intercept", $"OnItemAdd handler failed: {ex.Message}"); }
+            }
+
+            // Write modified expandSlots back
+            __1 = expandSlots;
+
+            if (cancel)
+            {
+                __runOriginal = false;
+                return;
+            }
+
+            FireLuaEvent("item_add", new Dictionary<string, object>
+            {
+                ["container_ptr"] = containerPtr.ToInt64(),
+                ["item_ptr"] = itemPtr.ToInt64(),
+                ["expand_slots"] = expandSlots,
+                ["cancelled"] = cancel
+            });
+        }
+        catch (Exception ex) { ModError.WarnInternal("Intercept", $"ItemContainerAdd_Prefix failed: {ex.Message}"); }
+    }
+
     #endregion
 
     // ═══════════════════════════════════════════════════════════════════
@@ -4733,6 +6264,8 @@ public static class Intercept
 
             // Tier 1: Actor
             AddEventInfo("OnHasLineOfSightTo", OnHasLineOfSightTo);
+            AddEventInfo("OnSuppressionApplied", OnSuppressionApplied);
+            AddEventInfo("OnMoraleApplied", OnMoraleApplied);
 
             // Tier 2: Skill Range and Cost
             AddEventInfo("OnGetExpectedSuppression", OnGetExpectedSuppression);
@@ -4743,6 +6276,7 @@ public static class Intercept
             AddEventInfo("OnIsInRange", OnIsInRange);
             AddEventInfo("OnIsInRangeShape", OnIsInRangeShape);
             AddEventInfo("OnIsMovementSkill", OnIsMovementSkill);
+            AddEventInfo("OnSkillIsUsable", OnSkillIsUsable);
 
             // Tier 2: Entity State
             AddEventInfo("OnGetHitpointsPct", OnGetHitpointsPct);
@@ -4779,6 +6313,9 @@ public static class Intercept
             AddEventInfo("OnGetSlowdownDistance", OnGetSlowdownDistance);
             AddEventInfo("OnGetMaxAngleTurnSlowdown", OnGetMaxAngleTurnSlowdown);
             AddEventInfo("OnClipPathToCost", OnClipPathToCost);
+            AddEventInfo("OnMoveTo", OnMoveTo);
+            AddEventInfo("OnPathfinding", OnPathfinding);
+            AddEventInfo("OnTileTraversable", OnTileTraversable);
 
             // Strategy Layer
             AddEventInfo("OnStrategyGetActionPoints", OnStrategyGetActionPoints);
@@ -4790,11 +6327,21 @@ public static class Intercept
             AddEventInfo("OnStrategyGetEntityProperty", OnStrategyGetEntityProperty);
             AddEventInfo("OnStrategyGetVehicleArmor", OnStrategyGetVehicleArmor);
 
+            // Combat Actions
+            AddEventInfo("OnDamageApplied", OnDamageApplied);
+
+            // Equipment Systems
+            AddEventInfo("OnItemAdd", OnItemAdd);
+            AddEventInfo("OnPropertyUpdate", OnPropertyUpdate);
+            AddEventInfo("OnPropertyUpdateMult", OnPropertyUpdateMult);
+
             // AI Behavior
             AddEventInfo("OnAIGetAttackScore", OnAIGetAttackScore);
             AddEventInfo("OnAIGetThreatValue", OnAIGetThreatValue);
             AddEventInfo("OnAIGetActionPriority", OnAIGetActionPriority);
             AddEventInfo("OnAIShouldFlee", OnAIShouldFlee);
+            AddEventInfo("OnAIEvaluate", OnAIEvaluate);
+            AddEventInfo("OnPositionScore", OnPositionScore);
 
             return lines.Count > 1 ? string.Join("\n", lines) : "No interceptors registered";
         });

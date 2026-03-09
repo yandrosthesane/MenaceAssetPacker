@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Menace.Modkit.App.Controls;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 namespace Menace.Modkit.App.Views;
@@ -38,8 +39,8 @@ public class ModpacksView : UserControl
     // Left: Unified Modpack List (darker panel)
     _leftPanel = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#141414")),
-      BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBgPanelLeft,
+      BorderBrush = ThemeColors.BrushBorder,
       BorderThickness = new Thickness(0, 0, 1, 0),
     };
     // Build the list AFTER _leftPanel is set so bindings can reference it
@@ -50,7 +51,7 @@ public class ModpacksView : UserControl
     // Splitter
     var splitter = new GridSplitter
     {
-      Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      Background = ThemeColors.BrushBorder,
       ResizeDirection = GridResizeDirection.Columns
     };
     contentGrid.Children.Add(splitter);
@@ -123,7 +124,7 @@ public class ModpacksView : UserControl
     // Row 2: Unified modpack list (fills remaining space)
     var modpackList = new ListBox
     {
-      Background = new SolidColorBrush(Color.Parse("#252525")),
+      Background = ThemeColors.BrushBgElevated,
       BorderThickness = new Thickness(0),
     };
     modpackList.Bind(ListBox.ItemsSourceProperty,
@@ -304,7 +305,7 @@ public class ModpacksView : UserControl
     // [DLL] badge for standalone mods
     var dllBadge = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#333333")),
+      Background = ThemeColors.BrushBgHover,
       CornerRadius = new CornerRadius(3),
       Padding = new Thickness(4, 1),
       VerticalAlignment = VerticalAlignment.Center,
@@ -384,7 +385,7 @@ public class ModpacksView : UserControl
     var securityText = new TextBlock
     {
       FontSize = 10,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center
     };
     securityText.Bind(TextBlock.TextProperty,
@@ -409,11 +410,11 @@ public class ModpacksView : UserControl
     var conflictBgConverter = new FuncValueConverter<bool, IBrush>(
       deployed => deployed
         ? new SolidColorBrush(Color.Parse("#3d2e00"))
-        : new SolidColorBrush(Color.Parse("#333333")));
+        : ThemeColors.BrushBgHover);
     var conflictFgConverter = new FuncValueConverter<bool, IBrush>(
       deployed => deployed
-        ? new SolidColorBrush(Color.Parse("#c89b3c"))
-        : new SolidColorBrush(Color.Parse("#888888")));
+        ? ThemeColors.BrushWarning
+        : ThemeColors.BrushTextTertiary);
     conflictBadge.Bind(Border.BackgroundProperty,
       new Avalonia.Data.Binding("IsDeployed") { Converter = conflictBgConverter });
     conflictBadgeText.Bind(TextBlock.ForegroundProperty,
@@ -449,7 +450,7 @@ public class ModpacksView : UserControl
       FontSize = 8,
       Padding = new Thickness(4, 1),
       Background = Brushes.Transparent,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       BorderThickness = new Thickness(0),
       MinWidth = 0,
       MinHeight = 0,
@@ -474,7 +475,7 @@ public class ModpacksView : UserControl
       FontSize = 8,
       Padding = new Thickness(4, 1),
       Background = Brushes.Transparent,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       BorderThickness = new Thickness(0),
       MinWidth = 0,
       MinHeight = 0,
@@ -581,7 +582,7 @@ public class ModpacksView : UserControl
   {
     var border = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+      Background = ThemeColors.BrushBgSurface,
       Padding = new Thickness(24)
     };
 
@@ -599,7 +600,7 @@ public class ModpacksView : UserControl
     {
       Text = "\u2630", // hamburger menu icon as placeholder
       FontSize = 48,
-      Foreground = new SolidColorBrush(Color.Parse("#3E3E3E")),
+      Foreground = ThemeColors.BrushBorderLight,
       HorizontalAlignment = HorizontalAlignment.Center
     };
     emptyState.Children.Add(emptyIcon);
@@ -659,7 +660,7 @@ public class ModpacksView : UserControl
     {
       Text = "by",
       FontSize = 14,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center,
       Margin = new Thickness(8, 0, 8, 0)
     };
@@ -701,7 +702,7 @@ public class ModpacksView : UserControl
     {
       Text = "v",
       FontSize = 12,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center
     });
     var versionBox = new TextBox
@@ -739,7 +740,7 @@ public class ModpacksView : UserControl
     {
       Text = "Order:",
       FontSize = 12,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center
     });
     var loadOrderBox = new TextBox
@@ -771,7 +772,7 @@ public class ModpacksView : UserControl
     var secText = new TextBlock
     {
       FontSize = 12,
-      Foreground = new SolidColorBrush(Color.Parse("#888888")),
+      Foreground = ThemeColors.BrushTextTertiary,
       VerticalAlignment = VerticalAlignment.Center
     };
     secText.Bind(TextBlock.TextProperty, new Avalonia.Data.Binding("SelectedModpack.SecurityStatusDisplay"));
@@ -820,7 +821,7 @@ public class ModpacksView : UserControl
     });
     var statsCountBadge = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#333333")),
+      Background = ThemeColors.BrushBgHover,
       CornerRadius = new CornerRadius(8),
       Padding = new Thickness(6, 2),
       VerticalAlignment = VerticalAlignment.Center,
@@ -905,7 +906,7 @@ public class ModpacksView : UserControl
     });
     var assetsCountBadge = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#333333")),
+      Background = ThemeColors.BrushBgHover,
       CornerRadius = new CornerRadius(8),
       Padding = new Thickness(6, 2),
       VerticalAlignment = VerticalAlignment.Center,
@@ -992,14 +993,14 @@ public class ModpacksView : UserControl
     });
     var filesCountBadge = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#333333")),
+      Background = ThemeColors.BrushBgHover,
       CornerRadius = new CornerRadius(8),
       Padding = new Thickness(6, 2),
       VerticalAlignment = VerticalAlignment.Center,
       Child = new TextBlock
       {
         FontSize = 10,
-        Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+        Foreground = ThemeColors.BrushTextSecondary,
         VerticalAlignment = VerticalAlignment.Center
       }
     };
@@ -1010,7 +1011,7 @@ public class ModpacksView : UserControl
 
     var filesListBox = new ListBox
     {
-      Background = new SolidColorBrush(Color.Parse("#252525")),
+      Background = ThemeColors.BrushBgElevated,
       Foreground = Brushes.White,
       BorderThickness = new Thickness(0),
       Padding = new Thickness(8),
@@ -1036,7 +1037,7 @@ public class ModpacksView : UserControl
 
     var standaloneBadge = new Border
     {
-      Background = new SolidColorBrush(Color.Parse("#333333")),
+      Background = ThemeColors.BrushBgHover,
       CornerRadius = new CornerRadius(3),
       Padding = new Thickness(6, 2),
       HorizontalAlignment = HorizontalAlignment.Left,
@@ -1094,14 +1095,14 @@ public class ModpacksView : UserControl
     var bannerBgConverter = new FuncValueConverter<bool, IBrush>(
       deployed => deployed
         ? new SolidColorBrush(Color.Parse("#2e2400"))
-        : new SolidColorBrush(Color.Parse("#2a2a2a")));
+        : ThemeColors.BrushBgInput);
     var bannerBorderConverter = new FuncValueConverter<bool, IBrush>(
       deployed => deployed
-        ? new SolidColorBrush(Color.Parse("#c89b3c"))
+        ? ThemeColors.BrushWarning
         : new SolidColorBrush(Color.Parse("#555555")));
     var bannerFgConverter = new FuncValueConverter<bool, IBrush>(
       deployed => deployed
-        ? new SolidColorBrush(Color.Parse("#c89b3c"))
+        ? ThemeColors.BrushWarning
         : new SolidColorBrush(Color.Parse("#999999")));
     conflictBanner.Bind(Border.BackgroundProperty,
       new Avalonia.Data.Binding("SelectedModpack.IsDeployed") { Converter = bannerBgConverter });
@@ -1137,7 +1138,7 @@ public class ModpacksView : UserControl
       ModUpdateState.Error => new SolidColorBrush(Color.Parse("#2A1A1A")),
       ModUpdateState.Checking => new SolidColorBrush(Color.Parse("#1F2937")),
       ModUpdateState.UpToDate => new SolidColorBrush(Color.Parse("#0F2A1F")),
-      _ => new SolidColorBrush(Color.Parse("#252525"))
+      _ => ThemeColors.BrushBgElevated
     });
     var updateStateToBorder = new FuncValueConverter<ModUpdateState, IBrush>(state => state switch
     {
@@ -1153,7 +1154,7 @@ public class ModpacksView : UserControl
       ModUpdateState.Error => new SolidColorBrush(Color.Parse("#FCA5A5")),
       ModUpdateState.Checking => new SolidColorBrush(Color.Parse("#93C5FD")),
       ModUpdateState.UpToDate => new SolidColorBrush(Color.Parse("#6EE7B7")),
-      _ => new SolidColorBrush(Color.Parse("#CCCCCC"))
+      _ => ThemeColors.BrushTextSecondary
     });
     updateStatusPanel.Bind(Border.BackgroundProperty,
       new Avalonia.Data.Binding("SelectedModpack.UpdateState") { Converter = updateStateToBackground });
@@ -1208,7 +1209,7 @@ public class ModpacksView : UserControl
     var deployBgConverter = new FuncValueConverter<string, IBrush>(
       text => text == "Undeploy"
         ? new SolidColorBrush(Color.Parse("#4b0606"))
-        : new SolidColorBrush(Color.Parse("#004f43")));
+        : ThemeColors.BrushPrimary);
     deployToggleButton.Bind(Button.BackgroundProperty,
       new Avalonia.Data.Binding("DeployToggleText") { Converter = deployBgConverter });
     deployToggleButton.Bind(Button.IsEnabledProperty,
@@ -1279,7 +1280,7 @@ public class ModpacksView : UserControl
     var footer = new Border
     {
       Background = new SolidColorBrush(Color.Parse("#0F0F0F")),
-      BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+      BorderBrush = ThemeColors.BrushBorder,
       BorderThickness = new Thickness(0, 1, 0, 0),
       Padding = new Thickness(16, 12)
     };
@@ -1316,7 +1317,7 @@ public class ModpacksView : UserControl
     var conflictStatus = new SelectableTextBlock
     {
       FontSize = 12,
-      Foreground = new SolidColorBrush(Color.Parse("#CCCCCC")),
+      Foreground = ThemeColors.BrushTextSecondary,
       TextWrapping = TextWrapping.Wrap
     };
     conflictStatus.Bind(SelectableTextBlock.TextProperty,
@@ -1404,8 +1405,22 @@ public class ModpacksView : UserControl
       Margin = new Thickness(4, 2)
     };
     deployAllBtn.Classes.Add("primary");
+    // Enable only when not deploying AND health allows deployment
     deployAllBtn.Bind(Button.IsEnabledProperty,
-      new Avalonia.Data.Binding("IsDeploying") { Converter = InvertBoolConverter });
+      new Avalonia.Data.MultiBinding
+      {
+        Converter = new Avalonia.Data.Converters.FuncMultiValueConverter<bool, bool>(vals =>
+        {
+          var isDeploying = vals.ElementAtOrDefault(0);
+          var canDeploy = vals.ElementAtOrDefault(1);
+          return !isDeploying && canDeploy;
+        }),
+        Bindings =
+        {
+          new Avalonia.Data.Binding("IsDeploying"),
+          new Avalonia.Data.Binding("CanDeploy")
+        }
+      });
     deployAllBtn.Click += OnDeployAllClick;
     buttonsWrap.Children.Add(deployAllBtn);
 

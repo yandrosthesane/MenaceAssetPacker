@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -21,6 +22,9 @@ public class AppSettings
     private bool _hasUsedModdingTools = false;
     private string _updateChannel = "stable";
     private ExtractionSettings _extractionSettings = new();
+    private List<string> _statsEditorFavourites = new();
+    private List<string> _assetBrowserFavourites = new();
+    private List<string> _docsFavourites = new();
 
     private class PersistedSettings
     {
@@ -41,6 +45,15 @@ public class AppSettings
 
         [JsonPropertyName("updateChannel")]
         public string UpdateChannel { get; set; } = "stable";
+
+        [JsonPropertyName("statsEditorFavourites")]
+        public List<string>? StatsEditorFavourites { get; set; }
+
+        [JsonPropertyName("assetBrowserFavourites")]
+        public List<string>? AssetBrowserFavourites { get; set; }
+
+        [JsonPropertyName("docsFavourites")]
+        public List<string>? DocsFavourites { get; set; }
     }
 
     private static string GetSettingsFilePath()
@@ -97,6 +110,15 @@ public class AppSettings
                 if (_updateChannel == "beta")
                     ModkitLog.Info("Update channel: beta");
             }
+
+            if (data.StatsEditorFavourites != null)
+                _statsEditorFavourites = new List<string>(data.StatsEditorFavourites);
+
+            if (data.AssetBrowserFavourites != null)
+                _assetBrowserFavourites = new List<string>(data.AssetBrowserFavourites);
+
+            if (data.DocsFavourites != null)
+                _docsFavourites = new List<string>(data.DocsFavourites);
         }
         catch (Exception ex)
         {
@@ -120,7 +142,10 @@ public class AppSettings
                 EnableDeveloperTools = _enableDeveloperTools,
                 EnableMcpServer = _enableMcpServer,
                 HasUsedModdingTools = _hasUsedModdingTools,
-                UpdateChannel = _updateChannel
+                UpdateChannel = _updateChannel,
+                StatsEditorFavourites = _statsEditorFavourites.Count > 0 ? _statsEditorFavourites : null,
+                AssetBrowserFavourites = _assetBrowserFavourites.Count > 0 ? _assetBrowserFavourites : null,
+                DocsFavourites = _docsFavourites.Count > 0 ? _docsFavourites : null
             };
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
@@ -508,12 +533,31 @@ public class AppSettings
     /// </summary>
     public bool IsBetaChannel => _updateChannel == "beta";
 
+    /// <summary>
+    /// List of favourited template keys in Stats Editor.
+    /// Format: "TemplateType/instanceName"
+    /// </summary>
+    public IReadOnlyList<string> StatsEditorFavourites => _statsEditorFavourites;
+
+    /// <summary>
+    /// List of favourited asset paths in Asset Browser.
+    /// </summary>
+    public IReadOnlyList<string> AssetBrowserFavourites => _assetBrowserFavourites;
+
+    /// <summary>
+    /// List of favourited doc paths in Docs viewer.
+    /// </summary>
+    public IReadOnlyList<string> DocsFavourites => _docsFavourites;
+
     public event EventHandler? GameInstallPathChanged;
     public event EventHandler? ExtractedAssetsPathChanged;
     public event EventHandler? ExtractionSettingsChanged;
     public event EventHandler? EnableDeveloperToolsChanged;
     public event EventHandler? EnableMcpServerChanged;
     public event EventHandler? UpdateChannelChanged;
+    public event EventHandler? StatsEditorFavouritesChanged;
+    public event EventHandler? AssetBrowserFavouritesChanged;
+    public event EventHandler? DocsFavouritesChanged;
 
     public void SetGameInstallPath(string path)
     {
@@ -577,6 +621,166 @@ public class AppSettings
                 ModkitLog.Info("User has used Modding Tools - data extraction enabled");
         }
     }
+
+    #region Stats Editor Favourites
+
+    /// <summary>
+    /// Add a template to Stats Editor favourites.
+    /// </summary>
+    /// <param name="templateKey">Key in format "TemplateType/instanceName"</param>
+    public void AddStatsEditorFavourite(string templateKey)
+    {
+        if (!_statsEditorFavourites.Contains(templateKey))
+        {
+            _statsEditorFavourites.Add(templateKey);
+            SaveToDisk();
+            StatsEditorFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Remove a template from Stats Editor favourites.
+    /// </summary>
+    public void RemoveStatsEditorFavourite(string templateKey)
+    {
+        if (_statsEditorFavourites.Remove(templateKey))
+        {
+            SaveToDisk();
+            StatsEditorFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Check if a template is in Stats Editor favourites.
+    /// </summary>
+    public bool IsStatsEditorFavourite(string templateKey)
+        => _statsEditorFavourites.Contains(templateKey);
+
+    /// <summary>
+    /// Toggle a template's favourite status in Stats Editor.
+    /// Returns true if now favourited, false if removed.
+    /// </summary>
+    public bool ToggleStatsEditorFavourite(string templateKey)
+    {
+        if (IsStatsEditorFavourite(templateKey))
+        {
+            RemoveStatsEditorFavourite(templateKey);
+            return false;
+        }
+        else
+        {
+            AddStatsEditorFavourite(templateKey);
+            return true;
+        }
+    }
+
+    #endregion
+
+    #region Asset Browser Favourites
+
+    /// <summary>
+    /// Add an asset path to Asset Browser favourites.
+    /// </summary>
+    public void AddAssetBrowserFavourite(string assetPath)
+    {
+        if (!_assetBrowserFavourites.Contains(assetPath))
+        {
+            _assetBrowserFavourites.Add(assetPath);
+            SaveToDisk();
+            AssetBrowserFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Remove an asset path from Asset Browser favourites.
+    /// </summary>
+    public void RemoveAssetBrowserFavourite(string assetPath)
+    {
+        if (_assetBrowserFavourites.Remove(assetPath))
+        {
+            SaveToDisk();
+            AssetBrowserFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Check if an asset path is in Asset Browser favourites.
+    /// </summary>
+    public bool IsAssetBrowserFavourite(string assetPath)
+        => _assetBrowserFavourites.Contains(assetPath);
+
+    /// <summary>
+    /// Toggle an asset's favourite status in Asset Browser.
+    /// Returns true if now favourited, false if removed.
+    /// </summary>
+    public bool ToggleAssetBrowserFavourite(string assetPath)
+    {
+        if (IsAssetBrowserFavourite(assetPath))
+        {
+            RemoveAssetBrowserFavourite(assetPath);
+            return false;
+        }
+        else
+        {
+            AddAssetBrowserFavourite(assetPath);
+            return true;
+        }
+    }
+
+    #endregion
+
+    #region Docs Favourites
+
+    /// <summary>
+    /// Add a doc path to Docs favourites.
+    /// </summary>
+    public void AddDocsFavourite(string docPath)
+    {
+        if (!_docsFavourites.Contains(docPath))
+        {
+            _docsFavourites.Add(docPath);
+            SaveToDisk();
+            DocsFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Remove a doc path from Docs favourites.
+    /// </summary>
+    public void RemoveDocsFavourite(string docPath)
+    {
+        if (_docsFavourites.Remove(docPath))
+        {
+            SaveToDisk();
+            DocsFavouritesChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Check if a doc path is in Docs favourites.
+    /// </summary>
+    public bool IsDocsFavourite(string docPath)
+        => _docsFavourites.Contains(docPath);
+
+    /// <summary>
+    /// Toggle a doc's favourite status.
+    /// Returns true if now favourited, false if removed.
+    /// </summary>
+    public bool ToggleDocsFavourite(string docPath)
+    {
+        if (IsDocsFavourite(docPath))
+        {
+            RemoveDocsFavourite(docPath);
+            return false;
+        }
+        else
+        {
+            AddDocsFavourite(docPath);
+            return true;
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// Validate the game install path has the expected structure for compilation.

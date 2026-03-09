@@ -10,6 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Menace.Modkit.App.Controls;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -37,7 +38,7 @@ public class EventHandlerEditorDialog : Window
     private static IBrush GetPrimaryBrush()
     {
         return Application.Current?.FindResource("BrushPrimary") as IBrush
-            ?? new SolidColorBrush(Color.Parse("#004f43"));
+            ?? ThemeColors.BrushPrimary;
     }
 
     public EventHandlerEditorDialog(
@@ -49,7 +50,7 @@ public class EventHandlerEditorDialog : Window
         Width = 900;
         Height = 600;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
         CanResize = true;
         SystemDecorations = SystemDecorations.Full;
 
@@ -81,7 +82,7 @@ public class EventHandlerEditorDialog : Window
         // Splitter
         var splitter = new GridSplitter
         {
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             ResizeDirection = GridResizeDirection.Columns
         };
         mainGrid.Children.Add(splitter);
@@ -108,8 +109,8 @@ public class EventHandlerEditorDialog : Window
     {
         var panel = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252526")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBgElevated,
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(8)
         };
@@ -144,9 +145,9 @@ public class EventHandlerEditorDialog : Window
         {
             Content = "+ Add EventHandler",
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1)
         };
         addButton.Click += OnAddHandler;
@@ -166,7 +167,7 @@ public class EventHandlerEditorDialog : Window
 
         var indexBlock = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 8, 0)
@@ -198,7 +199,7 @@ public class EventHandlerEditorDialog : Window
         var deleteBtn = new Button
         {
             Content = "×",
-            Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
+            Foreground = ThemeColors.BrushError,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             FontSize = 16,
@@ -216,8 +217,8 @@ public class EventHandlerEditorDialog : Window
     {
         var panel = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252526")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBgElevated,
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(12)
         };
@@ -298,9 +299,9 @@ public class EventHandlerEditorDialog : Window
         {
             ItemsSource = allTypes,
             SelectedItem = item.TypeName,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             FontSize = 12
         };
@@ -331,7 +332,7 @@ public class EventHandlerEditorDialog : Window
             _editorPanel.Children.Add(new TextBlock
             {
                 Text = "No schema found for this type",
-                Foreground = new SolidColorBrush(Color.Parse("#FFB347")),
+                Foreground = ThemeColors.BrushStatusWarning,
                 FontStyle = FontStyle.Italic,
                 Margin = new Thickness(0, 8)
             });
@@ -420,9 +421,9 @@ public class EventHandlerEditorDialog : Window
         {
             ItemsSource = displayItems,
             SelectedItem = selectedItem,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             FontSize = 12
         };
@@ -460,9 +461,9 @@ public class EventHandlerEditorDialog : Window
             ItemsSource = instanceNames,
             FilterMode = AutoCompleteFilterMode.ContainsOrdinal,
             MinimumPrefixLength = 0,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             FontSize = 12
         };
@@ -500,8 +501,8 @@ public class EventHandlerEditorDialog : Window
         var listBox = new ListBox
         {
             ItemsSource = items,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             MaxHeight = 150,
             Margin = new Thickness(0, 4)
@@ -516,18 +517,18 @@ public class EventHandlerEditorDialog : Window
         {
             Content = "+",
             Width = 30,
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"))
+            BorderBrush = ThemeColors.BrushBorderLight
         };
 
         var removeButton = new Button
         {
             Content = "−",
             Width = 30,
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"))
+            BorderBrush = ThemeColors.BrushBorderLight
         };
 
         // Add handler - show list of available items to select from
@@ -549,8 +550,8 @@ public class EventHandlerEditorDialog : Window
                     {
                         ItemsSource = availableInstances,
                         Height = 300,
-                        Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
-                        BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+                        Background = ThemeColors.BrushBgSurfaceAlt,
+                        BorderBrush = ThemeColors.BrushBorderLight,
                         BorderThickness = new Thickness(1),
                         Margin = new Thickness(0, 8)
                     };
@@ -629,7 +630,7 @@ public class EventHandlerEditorDialog : Window
                     }
                 },
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                Background = ThemeColors.BrushBgSurfaceAlt,
                 SystemDecorations = SystemDecorations.Full
             };
 
@@ -703,9 +704,9 @@ public class EventHandlerEditorDialog : Window
         var textBox = new TextBox
         {
             Text = currentValue?.ToString() ?? "",
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(8, 6),
             FontSize = 12
@@ -752,7 +753,7 @@ public class EventHandlerEditorDialog : Window
 
         var validationText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
+            Foreground = ThemeColors.BrushError,
             FontSize = 11,
             Margin = new Thickness(0, 4),
             IsVisible = false
@@ -765,9 +766,9 @@ public class EventHandlerEditorDialog : Window
             TextWrapping = TextWrapping.NoWrap,
             FontFamily = new FontFamily("monospace"),
             FontSize = 11,
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             MinHeight = 400
         };
 
@@ -780,19 +781,19 @@ public class EventHandlerEditorDialog : Window
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     validationText.IsVisible = false;
-                    _jsonTextBox.BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"));
+                    _jsonTextBox.BorderBrush = ThemeColors.BrushBorderLight;
                     return;
                 }
 
                 JsonDocument.Parse(text);
                 validationText.IsVisible = false;
-                _jsonTextBox.BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"));
+                _jsonTextBox.BorderBrush = ThemeColors.BrushBorderLight;
             }
             catch (JsonException ex)
             {
                 validationText.Text = $"Invalid JSON: {ex.Message}";
                 validationText.IsVisible = true;
-                _jsonTextBox.BorderBrush = new SolidColorBrush(Color.Parse("#CC4444"));
+                _jsonTextBox.BorderBrush = ThemeColors.BrushError;
             }
         };
 
@@ -810,9 +811,9 @@ public class EventHandlerEditorDialog : Window
             Margin = new Thickness(0, 8, 0, 0)
         };
 
-        _jsonToggleBtn.Background = new SolidColorBrush(Color.Parse("#2D2D2D"));
+        _jsonToggleBtn.Background = ThemeColors.BrushBorder;
         _jsonToggleBtn.Foreground = Brushes.White;
-        _jsonToggleBtn.BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E"));
+        _jsonToggleBtn.BorderBrush = ThemeColors.BrushBorderLight;
         _jsonToggleBtn.BorderThickness = new Thickness(1);
         _jsonToggleBtn.Click += (_, _) =>
         {
@@ -826,9 +827,9 @@ public class EventHandlerEditorDialog : Window
         var cancelBtn = new Button
         {
             Content = "Cancel",
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1)
         };
         cancelBtn.Click += (_, _) =>
@@ -868,7 +869,7 @@ public class EventHandlerEditorDialog : Window
                             Width = 400,
                             Height = 200,
                             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+                            Background = ThemeColors.BrushBgSurfaceAlt,
                             SystemDecorations = SystemDecorations.Full
                         };
 
@@ -888,7 +889,7 @@ public class EventHandlerEditorDialog : Window
                         panel.Children.Add(new TextBlock
                         {
                             Text = ex.Message,
-                            Foreground = new SolidColorBrush(Color.Parse("#CC4444")),
+                            Foreground = ThemeColors.BrushError,
                             TextWrapping = TextWrapping.Wrap
                         });
 

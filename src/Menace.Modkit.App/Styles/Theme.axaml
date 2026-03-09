@@ -33,6 +33,30 @@
     <Thickness x:Key="PaddingTreeItem">8,6</Thickness>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- FLUENT THEME ACCENT OVERRIDES                                       -->
+    <!-- These override the default blue accent with our teal                -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <Color x:Key="SystemAccentColor">#004f43</Color>
+    <Color x:Key="SystemAccentColorDark1">#003d34</Color>
+    <Color x:Key="SystemAccentColorDark2">#002b25</Color>
+    <Color x:Key="SystemAccentColorDark3">#001a17</Color>
+    <Color x:Key="SystemAccentColorLight1">#006657</Color>
+    <Color x:Key="SystemAccentColorLight2">#008272</Color>
+    <Color x:Key="SystemAccentColorLight3">#0d9488</Color>
+
+    <!-- Selection/highlight backgrounds using our primary color -->
+    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#004f43"/>
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="#33004f43"/>
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentMediumBrush" Color="#66004f43"/>
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentHighBrush" Color="#99004f43"/>
+
+    <!-- TreeView/ListBox selection -->
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelected" Color="#004f43"/>
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedPointerOver" Color="#006657"/>
+    <SolidColorBrush x:Key="ListBoxItemBackgroundSelected" Color="#004f43"/>
+    <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPointerOver" Color="#006657"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- COLORS                                                              -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
@@ -50,20 +74,40 @@
 
     <!-- Semantic -->
     <SolidColorBrush x:Key="BrushSuccess" Color="#22c55e"/>
+    <SolidColorBrush x:Key="BrushSuccessBg" Color="#1a3a2a"/>
     <SolidColorBrush x:Key="BrushWarning" Color="#c89b3c"/>
     <SolidColorBrush x:Key="BrushWarningBg" Color="#3d2e00"/>
+    <SolidColorBrush x:Key="BrushWarningLight" Color="#F59E0B"/>
     <SolidColorBrush x:Key="BrushError" Color="#ef4444"/>
     <SolidColorBrush x:Key="BrushErrorMuted" Color="#FF8888"/>
+    <SolidColorBrush x:Key="BrushErrorBg" Color="#3d1a1a"/>
+    <SolidColorBrush x:Key="BrushErrorDark" Color="#991b1b"/>
     <SolidColorBrush x:Key="BrushInfo" Color="#8ECDC8"/>
+    <SolidColorBrush x:Key="BrushInfoBg" Color="#1a2a3a"/>
+
+    <!-- Status indicator colors (for icons in dialogs/status displays) -->
+    <SolidColorBrush x:Key="BrushStatusSuccess" Color="#4EC9B0"/>
+    <SolidColorBrush x:Key="BrushStatusWarning" Color="#FFB347"/>
+    <SolidColorBrush x:Key="BrushStatusError" Color="#FF6B6B"/>
+
+    <!-- Accent colors (desaturated to blend with grey palette) -->
+    <SolidColorBrush x:Key="BrushGold" Color="#4c4937"/>
+    <SolidColorBrush x:Key="BrushTealActive" Color="#0d9488"/>
+    <SolidColorBrush x:Key="BrushPurple" Color="#403859"/>
 
     <!-- Backgrounds - Standardized for panels -->
     <Color x:Key="ColorBgBase">#0A0A0A</Color>
     <Color x:Key="ColorBgSurface">#1A1A1A</Color>
     <Color x:Key="ColorBgElevated">#252525</Color>
     <SolidColorBrush x:Key="BrushBgBase" Color="#0A0A0A"/>
+    <SolidColorBrush x:Key="BrushBgDark" Color="#0D0D0D"/>
+    <SolidColorBrush x:Key="BrushBgDarker" Color="#0F0F0F"/>
     <SolidColorBrush x:Key="BrushBgSurface" Color="#1A1A1A"/>
+    <SolidColorBrush x:Key="BrushBgSurfaceAlt" Color="#1E1E1E"/>
     <SolidColorBrush x:Key="BrushBgElevated" Color="#252525"/>
     <SolidColorBrush x:Key="BrushBgInput" Color="#2A2A2A"/>
+    <SolidColorBrush x:Key="BrushBgHover" Color="#333333"/>
+    <SolidColorBrush x:Key="BrushBgWindow" Color="#121212"/>
 
     <!-- Panel backgrounds (left panel darker, right panel lighter) -->
     <SolidColorBrush x:Key="BrushPanelLeft" Color="#141414"/>
@@ -77,7 +121,10 @@
     <!-- Text -->
     <SolidColorBrush x:Key="BrushTextPrimary" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="BrushTextSecondary" Color="#AAAAAA"/>
+    <SolidColorBrush x:Key="BrushTextTertiary" Color="#888888"/>
     <SolidColorBrush x:Key="BrushTextMuted" Color="#666666"/>
+    <SolidColorBrush x:Key="BrushTextDim" Color="#999999"/>
+    <SolidColorBrush x:Key="BrushTextLink" Color="#6DB3F2"/>
 
     <!-- Destructive -->
     <SolidColorBrush x:Key="BrushDestructive" Color="#410511"/>
@@ -111,6 +158,40 @@
     <SolidColorBrush x:Key="BrushIconFunction" Color="#3B7DD8"/>
     <SolidColorBrush x:Key="BrushIconEvent" Color="#8B5CF6"/>
     <SolidColorBrush x:Key="BrushIconInterceptor" Color="#004f43"/>
+
+    <!-- Code Editor colors -->
+    <SolidColorBrush x:Key="BrushCodeForeground" Color="#D4D4D4"/>
+    <SolidColorBrush x:Key="BrushCodeIdentifier" Color="#9CDCFE"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- UNICODE ICONS (for use in TextBlocks)                              -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- Status indicators -->
+    <x:String x:Key="IconCheckmark">✓</x:String>
+    <x:String x:Key="IconCross">✗</x:String>
+    <x:String x:Key="IconWarning">⚠</x:String>
+    <x:String x:Key="IconInfo">ℹ</x:String>
+    <x:String x:Key="IconNoEntry">⛔</x:String>
+
+    <!-- Stars (favorites) -->
+    <x:String x:Key="IconStarFilled">★</x:String>
+    <x:String x:Key="IconStarEmpty">☆</x:String>
+
+    <!-- Arrows and navigation -->
+    <x:String x:Key="IconArrowUp">▲</x:String>
+    <x:String x:Key="IconArrowDown">▼</x:String>
+    <x:String x:Key="IconArrowUpSmall">↑</x:String>
+    <x:String x:Key="IconArrowDownSmall">↓</x:String>
+
+    <!-- Misc -->
+    <x:String x:Key="IconDelete">✕</x:String>
+    <x:String x:Key="IconMenu">≡</x:String>
+    <x:String x:Key="IconVerticalDots">⋮</x:String>
+    <x:String x:Key="IconEllipsis">…</x:String>
+    <x:String x:Key="IconRefresh">↻</x:String>
+    <x:String x:Key="IconHourglass">⏳</x:String>
+    <x:String x:Key="IconDash">—</x:String>
+    <x:String x:Key="IconBullet">•</x:String>
   </Styles.Resources>
 
 </Styles>

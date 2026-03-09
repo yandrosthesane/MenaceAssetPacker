@@ -28,18 +28,19 @@ Start here if you want to make mods. Step-by-step tutorials from beginner to adv
 
 ### [Coding SDK](coding-sdk/index.md)
 
-Comprehensive API reference for the Menace SDK. 28 documented APIs across 9 tiers:
+Comprehensive API reference for the Menace SDK. 34 documented APIs across 10 tiers:
 
 Start here for code mods:
 - [What Is the SDK?](coding-sdk/what-is-sdk.md)
 - [Getting Started: Your First Plugin](coding-sdk/getting-started.md)
 
 - **Core**: GameType, GameObj, GameQuery, Templates, GameState
-- **Tactical**: EntitySpawner, EntityMovement, EntityCombat, TacticalController
-- **Map**: TileMap, Pathfinding, LineOfSight, TileEffects
+- **Tactical**: EntitySpawner, EntityMovement, EntityCombat, EntityState, EntitySkills, EntityVisibility, TacticalController
+- **Map**: TileMap, Pathfinding, LineOfSight, TileEffects, TileManipulation
 - **Strategy**: Mission, Operation, Roster, Inventory, ArmyGeneration, Vehicle, BlackMarket
 - **Social**: Conversation, Emotions
-- **Tools**: DevConsole, ModSettings, ModError, REPL
+- **AI**: AI, EntityAI, AICoordination
+- **Tools**: DevConsole, ModSettings, ModError, REPL, Intercept
 
 All systems have console commands accessible via `~` key.
 
@@ -107,6 +108,8 @@ Connect an AI assistant to help with modding. The AI can query game state, explo
 | Replace textures | [Textures & Icons](modding-guides/04-textures-icons.md) |
 | Replace sounds | [Audio](modding-guides/06-audio.md) |
 | Write code mods | [SDK Getting Started](coding-sdk/getting-started.md) |
+| Intercept combat events | [Combat Intercepts](modding-guides/13-combat-intercepts.md) |
+| Control game state with actions | [Action API Guide](modding-guides/15-action-api-guide.md) |
 | Add custom UI | [DevConsole API](coding-sdk/api/dev-console.md) |
 | Use Harmony patches | [Patching Guide](coding-sdk/guides/patching-guide.md) |
 | Look up an API | [Coding SDK](coding-sdk/index.md) |

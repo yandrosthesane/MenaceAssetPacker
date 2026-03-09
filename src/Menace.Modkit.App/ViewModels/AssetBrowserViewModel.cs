@@ -84,6 +84,9 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
         AvailableModpacks = new ObservableCollection<string>();
         AssetBacklinks = new ObservableCollection<ReferenceEntry>();
 
+        // Subscribe to favourites changes to rebuild tree
+        AppSettings.Instance.AssetBrowserFavouritesChanged += OnFavouritesChanged;
+
         LoadModpacks();
         RefreshAssets();
     }
@@ -259,6 +262,65 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
         }
     }
 
+    private bool _folderSearchEnabled;
+    /// <summary>
+    /// When enabled, search is scoped to the folder that was selected when search began.
+    /// </summary>
+    public bool FolderSearchEnabled
+    {
+        get => _folderSearchEnabled;
+        set
+        {
+            if (_folderSearchEnabled != value)
+            {
+                this.RaiseAndSetIfChanged(ref _folderSearchEnabled, value);
+                // If enabling and currently searching, capture the scope now
+                if (value && IsSearching && _searchScopeFolder == null)
+                {
+                    CaptureSearchScope();
+                }
+                // If disabling, clear scope and re-search
+                if (!value)
+                {
+                    _searchScopeFolder = null;
+                    this.RaisePropertyChanged(nameof(SearchScopeName));
+                }
+                if (IsSearching)
+                {
+                    GenerateSearchResults();
+                }
+            }
+        }
+    }
+
+    private AssetTreeNode? _searchScopeFolder;
+    /// <summary>
+    /// The folder that search is scoped to (when FolderSearchEnabled is true).
+    /// </summary>
+    public string SearchScopeName => _searchScopeFolder?.Name ?? "All";
+
+    /// <summary>
+    /// Captures the current selection as the search scope folder.
+    /// </summary>
+    private void CaptureSearchScope()
+    {
+        // Find the nearest folder ancestor (or the node itself if it's a folder)
+        var node = _selectedNode;
+        while (node != null)
+        {
+            if (!node.IsFile)
+            {
+                _searchScopeFolder = node;
+                this.RaisePropertyChanged(nameof(SearchScopeName));
+                return;
+            }
+            node = node.Parent;
+        }
+        // If no folder found, use null (search all)
+        _searchScopeFolder = null;
+        this.RaisePropertyChanged(nameof(SearchScopeName));
+    }
+
     public async Task ExtractAssetsAsync()
     {
         IsExtracting = true;
@@ -302,11 +364,77 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
             {
                 this.RaiseAndSetIfChanged(ref _selectedNode, value);
                 this.RaisePropertyChanged(nameof(CanAddAsset));
+                this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
                 LoadAssetPreview();
                 LoadModifiedPreview();
             }
         }
     }
+
+    #region Favourites
+
+    /// <summary>
+    /// Toggle the favourite status of the selected node.
+    /// </summary>
+    public void ToggleFavourite()
+    {
+        if (SelectedNode == null) return;
+        if (string.IsNullOrEmpty(SelectedNode.FullPath)) return;  // Skip virtual folders like Favourites itself
+
+        AppSettings.Instance.ToggleAssetBrowserFavourite(SelectedNode.FullPath);
+        this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
+    }
+
+    /// <summary>
+    /// Check if a tree node is favourited.
+    /// </summary>
+    public bool IsFavourite(AssetTreeNode? node)
+    {
+        if (node == null) return false;
+        if (string.IsNullOrEmpty(node.FullPath)) return false;  // Virtual folders can't be favourited
+        return AppSettings.Instance.IsAssetBrowserFavourite(node.FullPath);
+    }
+
+    /// <summary>
+    /// Check if the currently selected node is favourited.
+    /// </summary>
+    public bool IsSelectedNodeFavourite => IsFavourite(SelectedNode);
+
+    private void OnFavouritesChanged(object? sender, EventArgs e)
+    {
+        // Remember current selection
+        var selectedPath = SelectedNode?.FullPath;
+
+        // Rebuild tree with updated favourites folder
+        RefreshAssets();
+
+        // Restore selection if possible
+        if (selectedPath != null)
+        {
+            var target = FindNodeByPath(_allTreeNodes, selectedPath);
+            if (target != null)
+                SelectedNode = target;
+        }
+
+        // Notify UI that favourite status may have changed
+        this.RaisePropertyChanged(nameof(IsSelectedNodeFavourite));
+    }
+
+    private static AssetTreeNode? FindNodeByPath(IEnumerable<AssetTreeNode> nodes, string fullPath)
+    {
+        foreach (var node in nodes)
+        {
+            if (node.FullPath == fullPath)
+                return node;
+
+            var found = FindNodeByPath(node.Children, fullPath);
+            if (found != null)
+                return found;
+        }
+        return null;
+    }
+
+    #endregion
 
     /// <summary>
     /// Returns true when an asset can be added - requires a modpack selected and a folder/file selected.
@@ -1019,8 +1147,66 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
                 continue;
             child.Parent = null;  // These are now top-level (clear stale parent from skipped folders)
             _topLevelNodes.Add(child);
-            FolderTree.Add(child);
         }
+
+        // Add Favourites folder at top if there are any favourites
+        var favourites = AppSettings.Instance.AssetBrowserFavourites;
+        if (favourites.Count > 0)
+        {
+            var favouritesNode = new AssetTreeNode
+            {
+                Name = "\u2b50 Favourites",
+                IsFile = false,
+                IsExpanded = true,
+                FullPath = ""  // Virtual folder
+            };
+
+            foreach (var assetPath in favourites)
+            {
+                // Find the original node in the tree
+                var originalNode = FindNodeByPath(_topLevelNodes, assetPath);
+                if (originalNode != null)
+                {
+                    if (originalNode.IsFile)
+                    {
+                        // Create a reference node for file
+                        var refNode = new AssetTreeNode
+                        {
+                            Name = originalNode.Name,
+                            IsFile = true,
+                            FullPath = originalNode.FullPath,
+                            FileType = originalNode.FileType,
+                            Size = originalNode.Size,
+                            Parent = favouritesNode
+                        };
+                        favouritesNode.Children.Add(refNode);
+                    }
+                    else
+                    {
+                        // Create a reference node for folder
+                        var refNode = new AssetTreeNode
+                        {
+                            Name = originalNode.Name,
+                            IsFile = false,
+                            FullPath = originalNode.FullPath,
+                            IsExpanded = false,
+                            Parent = favouritesNode
+                        };
+                        // Copy children references
+                        foreach (var child in originalNode.Children)
+                            refNode.Children.Add(child);
+                        favouritesNode.Children.Add(refNode);
+                    }
+                }
+            }
+
+            // Only add if we found at least one valid favourite
+            if (favouritesNode.Children.Count > 0)
+                FolderTree.Add(favouritesNode);
+        }
+
+        foreach (var node in _topLevelNodes)
+            FolderTree.Add(node);
 
         BuildSearchIndex(FolderTree);
 
@@ -1512,6 +1698,14 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
         {
             if (_searchText != value)
             {
+                var wasSearching = IsSearching;
+
+                // Capture scope when entering search mode with folder search enabled
+                if (!wasSearching && value.Length >= 3 && _folderSearchEnabled)
+                {
+                    CaptureSearchScope();
+                }
+
                 this.RaiseAndSetIfChanged(ref _searchText, value);
                 this.RaisePropertyChanged(nameof(IsSearching));
 
@@ -1523,6 +1717,12 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
                 else
                 {
                     SearchResults.Clear();
+                    // Clear scope when exiting search
+                    if (wasSearching)
+                    {
+                        _searchScopeFolder = null;
+                        this.RaisePropertyChanged(nameof(SearchScopeName));
+                    }
                 }
             }
         }
@@ -1616,6 +1816,9 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
         var sectionFilter = _selectedSectionFilter;
         var filterBySection = !string.IsNullOrEmpty(sectionFilter) && sectionFilter != "All Sections";
 
+        // Folder search: only search within the scoped folder
+        var folderScope = _folderSearchEnabled ? _searchScopeFolder : null;
+
         void SearchNode(AssetTreeNode node, string parentPath, string topLevelFolder)
         {
             var currentPath = string.IsNullOrEmpty(parentPath)
@@ -1649,9 +1852,16 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
             }
         }
 
-        // Search from top-level nodes (not flat list)
-        foreach (var root in _topLevelNodes)
-            SearchNode(root, "", root.Name);
+        // Search from scoped folder or all top-level nodes
+        if (folderScope != null)
+        {
+            SearchNode(folderScope, "", folderScope.Name);
+        }
+        else
+        {
+            foreach (var root in _topLevelNodes)
+                SearchNode(root, "", root.Name);
+        }
 
         ApplySearchSort(results);
     }
@@ -1954,9 +2164,12 @@ public sealed class AssetBrowserViewModel : ViewModelBase, ISearchableViewModel
     private int ScoreMatch(AssetTreeNode node, string query)
     {
         if (!_searchEntries.TryGetValue(node, out var entry)) return -1;
-        if (entry.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) return 100;
-        if (entry.Path.Contains(query, StringComparison.OrdinalIgnoreCase)) return 40;
-        if (entry.FileType.Contains(query, StringComparison.OrdinalIgnoreCase)) return 20;
+
+        int score;
+        if ((score = Services.SearchService.ScoreTokenMatchFuzzy(query, entry.Name, 100)) >= 0) return score;
+        if ((score = Services.SearchService.ScoreTokenMatchFuzzy(query, entry.Path, 40)) >= 0) return score;
+        if ((score = Services.SearchService.ScoreTokenMatchFuzzy(query, entry.FileType, 20)) >= 0) return score;
+
         return -1;
     }
 

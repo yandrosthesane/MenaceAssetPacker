@@ -7,6 +7,7 @@ using Menace.Modkit.App.Controls;
 using Menace.Modkit.App.Converters;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -83,8 +84,8 @@ public class DocsView : UserControl
         // Left panel: Document tree (darker panel)
         var leftWrapper = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgPanelLeft,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 1, 0),
             Child = BuildDocTreePanel()
         };
@@ -94,7 +95,7 @@ public class DocsView : UserControl
         // Splitter
         var splitter = new GridSplitter
         {
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             ResizeDirection = GridResizeDirection.Columns
         };
         mainGrid.Children.Add(splitter);
@@ -201,7 +202,7 @@ public class DocsView : UserControl
         {
             Text = "Sort:",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0)
         };
@@ -317,7 +318,7 @@ public class DocsView : UserControl
                         Width = 14,
                         Height = 14,
                         Stretch = Stretch.Uniform,
-                        Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                        Fill = ThemeColors.BrushTextSecondary,
                         Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
                         VerticalAlignment = VerticalAlignment.Center
                     };
@@ -367,7 +368,7 @@ public class DocsView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+            Background = ThemeColors.BrushBgSurface,
             Padding = new Thickness(24)
         };
 
@@ -376,18 +377,59 @@ public class DocsView : UserControl
             RowDefinitions = new RowDefinitions("Auto,*")
         };
 
-        // Title
+        // Title row with star button
+        var titleRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 12,
+            Margin = new Thickness(0, 0, 0, 16)
+        };
+
         var titleText = new TextBlock
         {
             FontSize = 20,
             FontWeight = FontWeight.SemiBold,
             Foreground = Brushes.White,
-            Margin = new Thickness(0, 0, 0, 16)
+            VerticalAlignment = VerticalAlignment.Center
         };
         titleText.Bind(TextBlock.TextProperty,
             new Avalonia.Data.Binding("SelectedTitle"));
-        grid.Children.Add(titleText);
-        Grid.SetRow(titleText, 0);
+        titleRow.Children.Add(titleText);
+
+        // Favourite toggle button (star)
+        var favouriteButton = new Button
+        {
+            FontSize = 16,
+            Width = 32,
+            Height = 28,
+            Padding = new Thickness(0),
+            Background = Brushes.Transparent,
+            Foreground = Brushes.White,
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
+            VerticalContentAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center
+        };
+        ToolTip.SetTip(favouriteButton, "Toggle Favourite");
+        favouriteButton.Click += (_, _) =>
+        {
+            if (DataContext is DocsViewModel vm)
+                vm.ToggleFavourite();
+        };
+        // Bind content to show filled/empty star based on favourite status
+        favouriteButton.Bind(Button.ContentProperty, new Avalonia.Data.Binding("IsSelectedNodeFavourite")
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, string>(isFav => isFav ? "\u2605" : "\u2606")
+        });
+        // Only show when a doc is selected
+        favouriteButton.Bind(Button.IsVisibleProperty, new Avalonia.Data.Binding("SelectedNode")
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<object?, bool>(obj =>
+                obj is DocTreeNode node && !string.IsNullOrEmpty(node.FullPath))
+        });
+        titleRow.Children.Add(favouriteButton);
+
+        grid.Children.Add(titleRow);
+        Grid.SetRow(titleRow, 0);
 
         // Content container for rendered markdown
         var scrollViewer = new ScrollViewer

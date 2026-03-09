@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 
 namespace Menace.Modkit.App.Views;
@@ -95,7 +96,7 @@ public partial class BulkEditorPanel : UserControl
         var countText = new TextBlock
         {
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0)
         };
@@ -189,13 +190,13 @@ public partial class BulkEditorPanel : UserControl
             HeadersVisibility = DataGridHeadersVisibility.Column,
             SelectionMode = DataGridSelectionMode.Extended,
             // Dark theme colors
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             Foreground = Brushes.White,
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(1),
-            RowBackground = new SolidColorBrush(Color.Parse("#252525")),
-            HorizontalGridLinesBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
-            VerticalGridLinesBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            RowBackground = ThemeColors.BrushBgElevated,
+            HorizontalGridLinesBrush = ThemeColors.BrushBorderLight,
+            VerticalGridLinesBrush = ThemeColors.BrushBorderLight,
             // Ensure the DataGrid fills available space
             MinHeight = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -223,7 +224,7 @@ public partial class BulkEditorPanel : UserControl
         var modifiedText = new TextBlock
         {
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             VerticalAlignment = VerticalAlignment.Center
         };
         modifiedText.Bind(TextBlock.TextProperty, new Binding("ModifiedRowCount")
@@ -236,7 +237,7 @@ public partial class BulkEditorPanel : UserControl
         var selectedText = new TextBlock
         {
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center
         };
         selectedText.Bind(TextBlock.TextProperty, new Binding("SelectedRowCount")
@@ -249,7 +250,7 @@ public partial class BulkEditorPanel : UserControl
         var statusMessage = new TextBlock
         {
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(24, 0, 0, 0)
         };
@@ -270,7 +271,7 @@ public partial class BulkEditorPanel : UserControl
             Width = 16,
             Height = 16,
             CornerRadius = new CornerRadius(2),
-            BorderBrush = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            BorderBrush = ThemeColors.BrushPrimaryLight,
             BorderThickness = new Thickness(1)
         };
         legendPanel.Children.Add(legendBox);
@@ -279,7 +280,7 @@ public partial class BulkEditorPanel : UserControl
         {
             Text = "= Modified from vanilla",
             FontSize = 10,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center
         });
 
@@ -504,7 +505,7 @@ public partial class BulkEditorPanel : UserControl
             {
                 Text = value?.ToString() ?? "",
                 Foreground = Brushes.White,
-                Background = new SolidColorBrush(Color.Parse("#333333")),
+                Background = ThemeColors.BrushBgHover,
                 BorderThickness = new Thickness(0),
                 Padding = new Thickness(4, 2)
             };
@@ -556,7 +557,7 @@ public partial class BulkEditorPanel : UserControl
             {
                 Text = displayText,
                 FontStyle = FontStyle.Italic,
-                Foreground = new SolidColorBrush(Color.Parse("#888888")),
+                Foreground = ThemeColors.BrushTextTertiary,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(4, 0)
             };

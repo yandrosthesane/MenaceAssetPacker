@@ -14,6 +14,7 @@ using Menace.Modkit.App.Controls;
 using Menace.Modkit.App.Converters;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 using Menace.Modkit.App.ViewModels;
 using ReactiveUI;
 
@@ -45,8 +46,8 @@ public class AssetBrowserView : UserControl
         // Left: Asset Navigation Tree (darker panel)
         var leftPanel = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#141414")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgPanelLeft,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 0, 1, 0),
             Child = BuildNavigation()
         };
@@ -56,7 +57,7 @@ public class AssetBrowserView : UserControl
         // Splitter
         var splitter = new GridSplitter
         {
-            Background = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBorder,
             ResizeDirection = GridResizeDirection.Columns
         };
         mainGrid.Children.Add(splitter);
@@ -147,6 +148,20 @@ public class AssetBrowserView : UserControl
             });
         buttonPanel.Children.Add(modpackOnlyToggle);
 
+        var folderSearchToggle = new ToggleButton
+        {
+            Content = "Folder Search",
+            FontSize = 11
+        };
+        folderSearchToggle.Classes.Add("secondary");
+        folderSearchToggle.Bind(ToggleButton.IsCheckedProperty,
+            new Avalonia.Data.Binding("FolderSearchEnabled")
+            {
+                Mode = Avalonia.Data.BindingMode.TwoWay
+            });
+        ToolTip.SetTip(folderSearchToggle, "Scope search to the currently selected folder");
+        buttonPanel.Children.Add(folderSearchToggle);
+
         var addAssetButton = new Button
         {
             Content = "Add Asset",
@@ -192,7 +207,7 @@ public class AssetBrowserView : UserControl
         {
             Text = "Sort:",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0)
         };
@@ -258,7 +273,7 @@ public class AssetBrowserView : UserControl
                         Width = 14,
                         Height = 14,
                         Stretch = Stretch.Uniform,
-                        Fill = new SolidColorBrush(Color.Parse("#AAAAAA")),
+                        Fill = ThemeColors.BrushTextSecondary,
                         Data = Avalonia.Media.Geometry.Parse("M2 4.5A2.5 2.5 0 014.5 2h3.172a2 2 0 011.414.586l.828.828a1 1 0 00.708.293H14.5A2.5 2.5 0 0117 6.207V13.5a2.5 2.5 0 01-2.5 2.5h-10A2.5 2.5 0 012 13.5v-9z"),
                         VerticalAlignment = VerticalAlignment.Center
                     };
@@ -371,7 +386,7 @@ public class AssetBrowserView : UserControl
     {
         var border = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
+            Background = ThemeColors.BrushBgSurface,
             Padding = new Thickness(24)
         };
 
@@ -439,7 +454,7 @@ public class AssetBrowserView : UserControl
 
         var statusText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = 11,
             Opacity = 0.9
@@ -447,6 +462,38 @@ public class AssetBrowserView : UserControl
         statusText.Bind(TextBlock.TextProperty,
             new Avalonia.Data.Binding("SaveStatus"));
         toolbar.Children.Add(statusText);
+
+        // Favourite toggle button (star)
+        var favouriteButton = new Button
+        {
+            FontSize = 16,
+            Width = 32,
+            Height = 28,
+            Padding = new Thickness(0),
+            Background = Brushes.Transparent,
+            Foreground = Brushes.White,
+            Cursor = new Cursor(StandardCursorType.Hand),
+            VerticalContentAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Center
+        };
+        ToolTip.SetTip(favouriteButton, "Toggle Favourite");
+        favouriteButton.Click += (_, _) =>
+        {
+            if (DataContext is AssetBrowserViewModel vm)
+                vm.ToggleFavourite();
+        };
+        // Bind content to show filled/empty star based on favourite status
+        favouriteButton.Bind(Button.ContentProperty, new Avalonia.Data.Binding("IsSelectedNodeFavourite")
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, string>(isFav => isFav ? "\u2605" : "\u2606")
+        });
+        // Show when any node with a real path is selected (file or folder, but not the virtual Favourites folder)
+        favouriteButton.Bind(Button.IsVisibleProperty, new Avalonia.Data.Binding("SelectedNode")
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<object?, bool>(obj =>
+                obj is AssetTreeNode node && !string.IsNullOrEmpty(node.FullPath))
+        });
+        toolbar.Children.Add(favouriteButton);
 
         // Spacer
         toolbar.Children.Add(new Border { Width = 1 });
@@ -516,8 +563,8 @@ public class AssetBrowserView : UserControl
     {
         var panel = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1A1A1A")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2D2D2D")),
+            Background = ThemeColors.BrushBgSurface,
+            BorderBrush = ThemeColors.BrushBorder,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(12, 8),
             Margin = new Thickness(0, 12, 0, 0)
@@ -530,7 +577,7 @@ public class AssetBrowserView : UserControl
             Text = "Referenced By",
             FontSize = 13,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             Margin = new Thickness(0, 0, 0, 4)
         };
         stack.Children.Add(header);
@@ -562,7 +609,7 @@ public class AssetBrowserView : UserControl
             typeBadge.Child = new TextBlock
             {
                 Text = entry.SourceTemplateType,
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 10
             };
             textPanel.Children.Add(typeBadge);
@@ -675,7 +722,7 @@ public class AssetBrowserView : UserControl
         var countText = new TextBlock
         {
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center
         };
         header.Children.Add(countText);
@@ -690,7 +737,7 @@ public class AssetBrowserView : UserControl
         };
         legendPanel.Children.Add(new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Background = ThemeColors.BrushPrimaryLight,
             Width = 12,
             Height = 12,
             CornerRadius = new CornerRadius(2)
@@ -699,7 +746,7 @@ public class AssetBrowserView : UserControl
         {
             Text = "= Has replacement",
             FontSize = 11,
-            Foreground = new SolidColorBrush(Color.Parse("#888888")),
+            Foreground = ThemeColors.BrushTextTertiary,
             VerticalAlignment = VerticalAlignment.Center
         });
         header.Children.Add(legendPanel);
@@ -772,11 +819,11 @@ public class AssetBrowserView : UserControl
             Height = 120,
             Margin = new Thickness(4),
             CornerRadius = new CornerRadius(4),
-            Background = new SolidColorBrush(Color.Parse("#252525")),
+            Background = ThemeColors.BrushBgElevated,
             BorderThickness = new Thickness(2),
             BorderBrush = hasReplacement
-                ? new SolidColorBrush(Color.Parse("#8ECDC8"))  // Teal for replaced
-                : new SolidColorBrush(Color.Parse("#3E3E3E")), // Grey for normal
+                ? ThemeColors.BrushPrimaryLight  // Teal for replaced
+                : ThemeColors.BrushBorderLight, // Grey for normal
             Cursor = new Cursor(StandardCursorType.Hand)
         };
 
@@ -857,8 +904,8 @@ public class AssetBrowserView : UserControl
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(0, 16, 0, 8),
             Foreground = hasReplacement
-                ? new SolidColorBrush(Color.Parse("#8ECDC8"))
-                : new SolidColorBrush(Color.Parse("#888888"))
+                ? ThemeColors.BrushPrimaryLight
+                : ThemeColors.BrushTextTertiary
         };
         stack.Children.Add(icon);
     }
@@ -951,7 +998,7 @@ public class AssetBrowserView : UserControl
 
         var previewBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(16)
         };
@@ -1086,7 +1133,7 @@ public class AssetBrowserView : UserControl
             Text = "Linked Textures",
             FontSize = 13,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             Margin = new Thickness(0, 0, 0, 4)
         };
         panel.Children.Add(header);
@@ -1111,7 +1158,7 @@ public class AssetBrowserView : UserControl
                 CornerRadius = new CornerRadius(4),
                 VerticalAlignment = VerticalAlignment.Center,
                 Background = texture.IsFound
-                    ? new SolidColorBrush(Color.Parse("#8ECDC8")) // Teal for found/embedded
+                    ? ThemeColors.BrushPrimaryLight // Teal for found/embedded
                     : new SolidColorBrush(Color.Parse("#FF8888")) // Red for missing
             };
             row.Children.Add(statusDot);
@@ -1127,7 +1174,7 @@ public class AssetBrowserView : UserControl
             materialBadge.Child = new TextBlock
             {
                 Text = texture.MaterialName,
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 FontSize = 10
             };
             row.Children.Add(materialBadge);
@@ -1148,7 +1195,7 @@ public class AssetBrowserView : UserControl
             {
                 Text = texture.IsEmbedded ? "(embedded)" : texture.IsFound ? "(linked)" : "(missing)",
                 Foreground = texture.IsFound
-                    ? new SolidColorBrush(Color.Parse("#8ECDC8")) // Teal for found
+                    ? ThemeColors.BrushPrimaryLight // Teal for found
                     : new SolidColorBrush(Color.Parse("#FF8888")), // Red for missing
                 FontSize = 10,
                 VerticalAlignment = VerticalAlignment.Center
@@ -1162,7 +1209,7 @@ public class AssetBrowserView : UserControl
                 {
                     Content = "→",
                     Background = Brushes.Transparent,
-                    Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                    Foreground = ThemeColors.BrushPrimaryLight,
                     BorderThickness = new Thickness(0),
                     Padding = new Thickness(4, 0),
                     FontSize = 14,
@@ -1202,7 +1249,7 @@ public class AssetBrowserView : UserControl
             Text = "Linked Prefabs",
             FontSize = 13,
             FontWeight = FontWeight.SemiBold,
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             Margin = new Thickness(0, 10, 0, 4)
         };
         panel.Children.Add(prefabHeader);
@@ -1272,7 +1319,7 @@ public class AssetBrowserView : UserControl
             {
                 Content = "→",
                 Background = Brushes.Transparent,
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 BorderThickness = new Thickness(0),
                 Padding = new Thickness(4, 0),
                 FontSize = 14,
@@ -1300,7 +1347,7 @@ public class AssetBrowserView : UserControl
             row.Children.Add(new TextBlock
             {
                 Text = match.Evidence,
-                Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+                Foreground = ThemeColors.BrushPrimaryLight,
                 Opacity = 0.9,
                 FontSize = 10
             });
@@ -1420,7 +1467,7 @@ public class AssetBrowserView : UserControl
         // Width label (centered above image)
         var widthLabel = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 10,
             FontFamily = new FontFamily("monospace"),
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -1447,7 +1494,7 @@ public class AssetBrowserView : UserControl
         };
         var heightLabel = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.Parse("#8ECDC8")),
+            Foreground = ThemeColors.BrushPrimaryLight,
             FontSize = 10,
             FontFamily = new FontFamily("monospace"),
             RenderTransform = new RotateTransform(-90),
@@ -1463,7 +1510,7 @@ public class AssetBrowserView : UserControl
         // Image with subtle border
         var imageBorder = new Border
         {
-            BorderBrush = new SolidColorBrush(Color.Parse("#3E3E3E")),
+            BorderBrush = ThemeColors.BrushBorderLight,
             BorderThickness = new Thickness(1),
             Background = new SolidColorBrush(Color.Parse("#0A0A0A")),
             Padding = new Thickness(2)
@@ -1504,7 +1551,7 @@ public class AssetBrowserView : UserControl
 
         var previewBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#1E1E1E")),
+            Background = ThemeColors.BrushBgSurfaceAlt,
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(16)
         };

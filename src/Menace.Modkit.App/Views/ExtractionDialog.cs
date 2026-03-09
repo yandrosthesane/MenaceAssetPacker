@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Menace.Modkit.App.Models;
 using Menace.Modkit.App.Services;
+using Menace.Modkit.App.Styles;
 
 namespace Menace.Modkit.App.Views;
 
@@ -81,7 +82,7 @@ public class ExtractionDialog : Window
         Width = 500;
         Height = 400;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        Background = ThemeColors.BrushBgSurfaceAlt;
         CanResize = false;
 
         // Build UI
@@ -138,7 +139,7 @@ public class ExtractionDialog : Window
         // Details/mod list area
         var detailsBorder = new Border
         {
-            Background = new SolidColorBrush(Color.Parse("#252526")),
+            Background = ThemeColors.BrushBgElevated,
             CornerRadius = new CornerRadius(4),
             Padding = new Thickness(12),
             MinHeight = 120,
@@ -152,7 +153,7 @@ public class ExtractionDialog : Window
         _detailsText = new TextBlock
         {
             FontSize = 12,
-            Foreground = new SolidColorBrush(Color.Parse("#AAAAAA")),
+            Foreground = ThemeColors.BrushTextSecondary,
             TextWrapping = TextWrapping.Wrap
         };
         detailsStack.Children.Add(_detailsText);
@@ -215,8 +216,8 @@ public class ExtractionDialog : Window
         switch (_currentState)
         {
             case ExtractionDialogState.ModsDetected:
-                _statusIcon.Text = "\u26a0"; // Warning
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#FFB347"));
+                _statusIcon.Text = ThemeIcons.Warning;
+                _statusIcon.Foreground = ThemeColors.BrushStatusWarning;
                 _statusText.Text = "Mods are currently deployed. They must be temporarily undeployed to extract vanilla game data.";
                 _detailsText.Text = "The following mods will be undeployed and automatically redeployed after extraction:";
 
@@ -238,8 +239,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.Undeploying:
-                _statusIcon.Text = "\u23f3"; // Hourglass
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+                _statusIcon.Text = ThemeIcons.Hourglass;
+                _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
                 _statusText.Text = "Undeploying mods...";
                 _detailsText.Text = "Please wait while mods are being undeployed.";
                 _progressBar.IsVisible = true;
@@ -248,8 +249,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.PendingLaunch:
-                _statusIcon.Text = "\U0001F3AE"; // Game controller
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+                _statusIcon.Text = "\U0001F3AE"; // Game controller (no theme icon for this)
+                _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
                 _statusText.Text = "Launch the game to extract data.";
                 _detailsText.Text = "The DataExtractor mod will automatically extract vanilla game data when the game starts. " +
                     "You can close the game after reaching the main menu.";
@@ -260,8 +261,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.WaitingForExtraction:
-                _statusIcon.Text = "\u23f3"; // Hourglass
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+                _statusIcon.Text = ThemeIcons.Hourglass;
+                _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
                 _statusText.Text = "Waiting for extraction to complete...";
                 _detailsText.Text = "The game is extracting data. This dialog will automatically detect when extraction is complete. " +
                     "You can close the game once you see the main menu.";
@@ -273,8 +274,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.Redeploying:
-                _statusIcon.Text = "\u23f3"; // Hourglass
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+                _statusIcon.Text = ThemeIcons.Hourglass;
+                _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
                 _statusText.Text = "Redeploying mods...";
                 _detailsText.Text = "Please wait while mods are being redeployed.";
                 _progressBar.IsVisible = true;
@@ -283,8 +284,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.Complete:
-                _statusIcon.Text = "\u2714"; // Checkmark
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#4EC9B0"));
+                _statusIcon.Text = ThemeIcons.CheckmarkHeavy;
+                _statusIcon.Foreground = ThemeColors.BrushStatusSuccess;
                 _statusText.Text = "Extraction complete!";
                 _detailsText.Text = "Vanilla game data has been extracted and mods have been redeployed successfully.";
                 _primaryButton.Content = "Close";
@@ -293,8 +294,8 @@ public class ExtractionDialog : Window
                 break;
 
             case ExtractionDialogState.Error:
-                _statusIcon.Text = "\u2716"; // X
-                _statusIcon.Foreground = new SolidColorBrush(Color.Parse("#FF6B6B"));
+                _statusIcon.Text = ThemeIcons.CrossHeavy;
+                _statusIcon.Foreground = ThemeColors.BrushStatusError;
                 _statusText.Text = "An error occurred";
                 _detailsText.Text = _errorMessage ?? "Unknown error";
                 _primaryButton.Content = "Redeploy Anyway";
